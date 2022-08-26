@@ -1,0 +1,35 @@
+*.jssn
+*.ssn
+*.db
+*.lnk
+*.pptx
+*.docx
+*.xlsx
+*.bat
+*.cmd
+*.l
+*.log
+*.out
+*.txt
+Makefile
+exclude_files
+
+# Resources
+docs/
+test*/
+icons*/
+vclips*/
+
+*.WinMerge
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+build/
+dist/
+lib/
+lib64/
+*.egg-info/
+*.egg
