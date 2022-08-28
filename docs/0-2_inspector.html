@@ -1,0 +1,276 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>2. How to inspect &#8212; wxpyNautilus  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="3. How to debug" href="0-3_debugger.html" />
+    <link rel="prev" title="1. Shell standalone" href="0-1_shellframe.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="0-3_debugger.html" title="3. How to debug"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="0-1_shellframe.html" title="1. Shell standalone"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">wxpyNautilus  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><span class="section-number">2. </span>How to inspect</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="how-to-inspect">
+<h1><span class="section-number">2. </span>How to inspect<a class="headerlink" href="#how-to-inspect" title="Permalink to this heading"></a></h1>
+<section id="autocomp">
+<h2><span class="section-number">2.1. </span>Autocomp<a class="headerlink" href="#autocomp" title="Permalink to this heading"></a></h2>
+<p>Typing a dot [.] automatically invokes word-comp-mode and the autocompletion list popups at the caret.
+It can also be invoked manually by pressing [M-.].
+Word-comp-mode displays a list of keys in the object that <em>matches</em> the entered word.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">sh</span><span class="o">|</span>
+<span class="go">           ^ press [M-.]</span>
+</pre></div>
+</div>
+<img alt="_images/0-1b_autocomp-word.png" src="_images/0-1b_autocomp-word.png" />
+<p>Another useful autocomp function is apropos-comp-mode, which can be invoked by pressing [M-/].
+Apropos-comp-mode displays a list of keys in the object <em>searched</em> for the entered word.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">sh</span><span class="o">|</span>
+<span class="go">           ^ press [M-/]</span>
+</pre></div>
+</div>
+<img alt="_images/0-1b_autocomp-apropos.png" src="_images/0-1b_autocomp-apropos.png" />
+</section>
+<section id="apropos">
+<h2><span class="section-number">2.2. </span>Apropos<a class="headerlink" href="#apropos" title="Permalink to this heading"></a></h2>
+<p>Similar to the apropos-comp-mode, there is apropos command that outputs keys and values in the object <em>searched</em> for the entered word.</p>
+<p>Apropos command is especially useful to inspect what attributes an object has or has not.
+Suppose that you want to know what kind of blurring functions are contained in <code class="docutils literal notranslate"><span class="pre">cv2</span></code> module.
+You can inspect it by typing:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; cv2.blur?
+</pre></div>
+</div>
+<img alt="_images/2-1a_apropos.png" src="_images/2-1a_apropos.png" />
+<p>You can see two things.
+1. There are three kind of blurring functions;
+2. There are no functions other than these three blurring functions.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The argspec information is displayed on the statusbar as you move the caret over the output string.</p>
+</div>
+<p>Apropos command uses <code class="docutils literal notranslate"><span class="pre">dir()</span></code> to list as many attributes as possible.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; self.sh?
+</pre></div>
+</div>
+<img alt="_images/0-1b_apropos.png" src="_images/0-1b_apropos.png" />
+<p>It can be combined with predicates that placed after <code class="docutils literal notranslate"><span class="pre">?</span></code> as follows:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; self.sh? atom
+&gt;&gt;&gt; self.sh? callable
+</pre></div>
+</div>
+<img alt="_images/0-1b_apropos_pred.png" src="_images/0-1b_apropos_pred.png" />
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The syntax of apropos command is as follows:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; x.y? [not] p
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">p</span></code> can be any predicates such as <code class="docutils literal notranslate"><span class="pre">atom</span></code>, <code class="docutils literal notranslate"><span class="pre">callable</span></code>, <code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">(e.g.,</span> <span class="pre">int,</span> <span class="pre">str,</span> <span class="pre">...)</span></code>,
+<code class="docutils literal notranslate"><span class="pre">inspect</span></code> functions, and a combination of those using <code class="docutils literal notranslate"><span class="pre">not,</span> <span class="pre">and,</span> <span class="pre">or</span></code> operators.</p>
+</div>
+<p>Let’s take a look at the predicates available in the <code class="docutils literal notranslate"><span class="pre">inspect</span></code> module, which starts with ‘is’,</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; inspect.^is? callable
+</pre></div>
+</div>
+<p>which gives,</p>
+<img alt="_images/0-1b_apropos_pred2.png" src="_images/0-1b_apropos_pred2.png" />
+</section>
+<section id="tooltip">
+<h2><span class="section-number">2.3. </span>Tooltip<a class="headerlink" href="#tooltip" title="Permalink to this heading"></a></h2>
+<p>While typing, you may want to check if the code and the syntax is correct.
+Pressing [C-j] shows a tooltip of evaluated results for the selected word or line.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cv2</span><span class="o">.</span><span class="n">GaussianBlur</span><span class="o">|</span>
+<span class="go">                    ^ press [C-j]</span>
+</pre></div>
+</div>
+<img alt="_images/0-1b_tooltip-eval.png" src="_images/0-1b_tooltip-eval.png" />
+<p>Pressing [C-h] shows a tooltip of argspec for the selected word.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cv2</span><span class="o">.</span><span class="n">GaussianBlur</span><span class="o">|</span>
+<span class="go">                    ^ press [C-h]</span>
+</pre></div>
+</div>
+<img alt="_images/0-1b_tooltip-help.png" src="_images/0-1b_tooltip-help.png" />
+<p>If the tooltip text is too long to display, it will be snipped.
+If you want to read the document, <strong>click the tooltip</strong>.
+Then, the full text will be displayed in the <strong>Help</strong> window.
+The help window can also be displayed by typing <code class="docutils literal notranslate"><span class="pre">&#64;help</span></code> after the object for which you want documentation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cv2</span><span class="o">.</span><span class="n">GaussianBlur</span> <span class="nd">@help</span>
+</pre></div>
+</div>
+<img alt="_images/0-1c_help.png" src="_images/0-1c_help.png" />
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div id="toc" class="sidebarRow">
+<h3><a href="http://docs.sphinx-users.jp/">Sphinxリファレンス</a></h3>
+
+<h3><a href="index.html">Table Of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Tutorial:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="0-1_shellframe.html">1. Shell standalone</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="0-1_shellframe.html#basic-access">1.1. Basic access</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. How to inspect</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#autocomp">2.1. Autocomp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#apropos">2.2. Apropos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tooltip">2.3. Tooltip</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="0-3_debugger.html">3. How to debug</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="0-3_debugger.html#command-hook">3.1. command-hook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0-3_debugger.html#trace-hook">3.2. trace-hook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0-3_debugger.html#event-hook">3.3. event-hook</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="0-4_dive.html">4. How to dive</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="0-4_dive.html#scratch">4.1. Scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0-4_dive.html#magic-syntax">4.2. Magic syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0-4_dive.html#built-in-utilities">4.3. Built-in utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="0-5_mainframe.html">5. Mainframe</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="0-5_mainframe.html#basic-operation">5.1. Basic operation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="0-6_showcase.html">6. Showcase</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="0-6_showcase.html#wing-of-phoenix">6.1. Wing of Phoenix</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Feature:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="1_config.html">1. Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="1_config.html#shellframe">1.1. ShellFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1_config.html#mainframe">1.2. Mainframe</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="2_inspect.html">2. Inspection in the Shell</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="2_inspect.html#autocomp">2.1. Autocomp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2_inspect.html#apropos">2.2. Apropos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2_inspect.html#tooltip">2.3. Tooltip</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="3_debug.html">3. Debugger in the Shell</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="3_debug.html#command-hook">3.1. command-hook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3_debug.html#trace-hook">3.2. trace-hook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3_debug.html#event-hook">3.3. event-hook</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="debut.html">debut module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="siteinit.html">siteinit module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wxpyNautilus.html">wxpyNautilus module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo.html">demo package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="demo.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo.html#module-demo">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+</div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="0-1_shellframe.html"
+                          title="previous chapter"><span class="section-number">1. </span>Shell standalone</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="0-3_debugger.html"
+                          title="next chapter"><span class="section-number">3. </span>How to debug</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/0-2_inspector.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="0-3_debugger.html" title="3. How to debug"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="0-1_shellframe.html" title="1. Shell standalone"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">wxpyNautilus  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><span class="section-number">2. </span>How to inspect</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Kazuya O&#39;moto.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+    </div>
+  </body>
+</html>

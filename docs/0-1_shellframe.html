@@ -1,0 +1,232 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>1. Shell standalone &#8212; wxpyNautilus  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2. How to inspect" href="0-2_inspector.html" />
+    <link rel="prev" title="Welcome to wxpyNautilus’s documentation!" href="index.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="0-2_inspector.html" title="2. How to inspect"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to wxpyNautilus’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">wxpyNautilus  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><span class="section-number">1. </span>Shell standalone</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="shell-standalone">
+<h1><span class="section-number">1. </span>Shell standalone<a class="headerlink" href="#shell-standalone" title="Permalink to this heading"></a></h1>
+<p>Move to wxpyNautilus directory and run “debut.py” to startup REPL:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ py -3 debut.py
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>mwxlib creates ~/.mwxlib/ in your home directory.
+This includes history, logs, dump files used to report when an error occurs.</p></li>
+<li><p>At the first startup, it takes some time to collect module information and create a dictionary.
+The collected module name is used for completion at the time of input in the shell.
+If you start the shell while pressing [C-S-], the dictionary will be recreated.</p></li>
+</ul>
+</div>
+<section id="basic-access">
+<h2><span class="section-number">1.1. </span>Basic access<a class="headerlink" href="#basic-access" title="Permalink to this heading"></a></h2>
+<p>Objects in the process can be accessed through <code class="docutils literal notranslate"><span class="pre">self</span></code> and <code class="docutils literal notranslate"><span class="pre">this</span></code>, e.g.,</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">this</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">shell</span>
+</pre></div>
+</div>
+<img alt="_images/0-1a_startup.png" src="_images/0-1a_startup.png" />
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">self</span></code> is the target object of the shell, that is, <code class="docutils literal notranslate"><span class="pre">__main__</span></code> module in the startup root shell.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">this</span></code> is the module that includes <code class="docutils literal notranslate"><span class="pre">self</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">self.shell</span></code> is a special variable that points to the current shell instance.</p></li>
+</ul>
+</div>
+<p>There are many shortcut keys defined as default.
+Hereafter, we use the following abbreviations:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[C-x] Control (Command) + x.</p></li>
+<li><p>[M-x] Alt (Meta) + x.</p></li>
+<li><p>[S-x] Shift + x.</p></li>
+<li><p>[C-x y] press [C-x] followed by [y] (aka. two-stroke key)</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div id="toc" class="sidebarRow">
+<h3><a href="http://docs.sphinx-users.jp/">Sphinxリファレンス</a></h3>
+
+<h3><a href="index.html">Table Of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Tutorial:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Shell standalone</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-access">1.1. Basic access</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="0-2_inspector.html">2. How to inspect</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="0-2_inspector.html#autocomp">2.1. Autocomp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0-2_inspector.html#apropos">2.2. Apropos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0-2_inspector.html#tooltip">2.3. Tooltip</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="0-3_debugger.html">3. How to debug</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="0-3_debugger.html#command-hook">3.1. command-hook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0-3_debugger.html#trace-hook">3.2. trace-hook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0-3_debugger.html#event-hook">3.3. event-hook</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="0-4_dive.html">4. How to dive</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="0-4_dive.html#scratch">4.1. Scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0-4_dive.html#magic-syntax">4.2. Magic syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0-4_dive.html#built-in-utilities">4.3. Built-in utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="0-5_mainframe.html">5. Mainframe</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="0-5_mainframe.html#basic-operation">5.1. Basic operation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="0-6_showcase.html">6. Showcase</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="0-6_showcase.html#wing-of-phoenix">6.1. Wing of Phoenix</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Feature:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="1_config.html">1. Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="1_config.html#shellframe">1.1. ShellFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1_config.html#mainframe">1.2. Mainframe</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="2_inspect.html">2. Inspection in the Shell</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="2_inspect.html#autocomp">2.1. Autocomp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2_inspect.html#apropos">2.2. Apropos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2_inspect.html#tooltip">2.3. Tooltip</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="3_debug.html">3. Debugger in the Shell</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="3_debug.html#command-hook">3.1. command-hook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3_debug.html#trace-hook">3.2. trace-hook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3_debug.html#event-hook">3.3. event-hook</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="debut.html">debut module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="siteinit.html">siteinit module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wxpyNautilus.html">wxpyNautilus module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo.html">demo package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="demo.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo.html#module-demo">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+</div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">Welcome to wxpyNautilus’s documentation!</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="0-2_inspector.html"
+                          title="next chapter"><span class="section-number">2. </span>How to inspect</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/0-1_shellframe.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="0-2_inspector.html" title="2. How to inspect"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to wxpyNautilus’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">wxpyNautilus  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><span class="section-number">1. </span>Shell standalone</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Kazuya O&#39;moto.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+    </div>
+  </body>
+</html>

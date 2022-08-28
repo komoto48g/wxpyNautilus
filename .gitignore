@@ -15,10 +15,9 @@ Makefile
 exclude_files
 
 # Resources
-docs/
 test*/
 icons*/
-vclips*/
+docfiles/
 
 *.WinMerge
 
