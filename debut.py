@@ -47,6 +47,11 @@ if 1:
 ## to be implemented in the future 
 ## --------------------------------
 if 1:
+    Editor.wildcards = [
+        "PY files (*.py)|*.py",
+        "ALL files (*.*)|*.*",
+    ]
+
     def _load(self):
         if not self.confirm_load():
             return None
@@ -80,6 +85,7 @@ if 1:
                       os.path.basename(self.buffer.filename or ''))
         with wx.FileDialog(self, "Save buffer as",
                 defaultFile=name,
+                wildcard='|'.join(self.wildcards),
                 style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT) as dlg:
             if dlg.ShowModal() != wx.ID_OK:
                 return
@@ -94,6 +100,7 @@ if 1:
         if not self.confirm_load():
             return None
         with wx.FileDialog(self, "Open buffer",
+                wildcard='|'.join(self.wildcards),
                 style=wx.FD_OPEN|wx.FD_MULTIPLE|wx.FD_FILE_MUST_EXIST) as dlg:
             if dlg.ShowModal() != wx.ID_OK:
                 return

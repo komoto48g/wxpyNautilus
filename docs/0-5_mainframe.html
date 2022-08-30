@@ -19,7 +19,7 @@
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="6. Showcase" href="0-6_showcase.html" />
+    <link rel="next" title="6. Showcase" href="0-0_showcase.html" />
     <link rel="prev" title="4. How to dive" href="0-4_dive.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <!--[if lt IE 9]>
@@ -36,7 +36,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="0-6_showcase.html" title="6. Showcase"
+          <a href="0-0_showcase.html" title="6. Showcase"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="0-4_dive.html" title="4. How to dive"
@@ -125,6 +125,26 @@ where plugins and key-bindings are defined in <code class="docutils literal notr
 Please change <code class="docutils literal notranslate"><span class="pre">self.Editor</span></code> that is called when editing the plugin.</p>
 </div>
 </section>
+<section id="basic-access-to-plugins">
+<h2><span class="section-number">5.2. </span>Basic access to plugins<a class="headerlink" href="#basic-access-to-plugins" title="Permalink to this heading"></a></h2>
+<p>Right-click on the plugin’s panel and select the menu <code class="docutils literal notranslate"><span class="pre">Dive</span> <span class="pre">into</span> <span class="pre">...</span></code> to open the plugin’s shell.</p>
+<img alt="_images/0-5b_graph.png" src="_images/0-5b_graph.png" />
+<p>From the shell, you can access objects like this:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span>
+<span class="go"># A plugins object.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
+<span class="go"># A parent (mainframe) object.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span>
+<span class="go"># A reference of parent graph view (left view pane).</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">output</span>
+<span class="go"># A reference of parent output view (right view pane).</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">frame</span>
+<span class="go"># Currently selected graph frame proxy of &lt;matplotlib.image.AxesImage&gt;.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">buffer</span>
+<span class="go"># Currently selected graph frame.buffer array.</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -161,10 +181,11 @@ Please change <code class="docutils literal notranslate"><span class="pre">self.
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">5. Mainframe</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#basic-operation">5.1. Basic operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-access-to-plugins">5.2. Basic access to plugins</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="0-6_showcase.html">6. Showcase</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="0-6_showcase.html#wing-of-phoenix">6.1. Wing of Phoenix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0-0_showcase.html">6. Showcase</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="0-0_showcase.html#wing-of-phoenix">6.1. Wing of Phoenix</a></li>
 </ul>
 </li>
 </ul>
@@ -209,7 +230,7 @@ Please change <code class="docutils literal notranslate"><span class="pre">self.
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="0-6_showcase.html"
+    <p class="topless"><a href="0-0_showcase.html"
                           title="next chapter"><span class="section-number">6. </span>Showcase</a></p>
   </div>
   <div role="note" aria-label="source link">
@@ -243,7 +264,7 @@ Please change <code class="docutils literal notranslate"><span class="pre">self.
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="0-6_showcase.html" title="6. Showcase"
+          <a href="0-0_showcase.html" title="6. Showcase"
              >next</a> |</li>
         <li class="right" >
           <a href="0-4_dive.html" title="4. How to dive"
