@@ -13,14 +13,14 @@ To accomplish this, the framework consists of two main classes:
     A `Plugin` means a python script file to process images, 
     which user can load, edit, reload, unload, and debug without terminating the program.
     
-    .. image:: ./images/1a_template.png
+    .. image:: ./images/1a_mainframe.png
 
 2. An interactive shellframe
 
     You can communicate with the main process using an interactive shell, 
     inspect, test, and debug the code at runtime.
-
-    .. image:: ./images/1a_snapshot.png
+    
+    .. image:: ./images/1a_shellframe.png
 
 
 Getting Started
@@ -29,13 +29,14 @@ Getting Started
 Prerequisites
 +++++++++++++
 
-1. Download the zip from `this repository` and extract it to a suitable directory.
+1. Download the zip file from `GitHub repository <https://github.com/komoto48g/wxpyNautilus>`_
+   and extract it to a suitable directory.
 
-2. Install ``mwxlib``.
+2. Install mwxlib from `PyPI <https://pypi.org/project/mwxlib/>`_.
 
     >>> pip install mwxlib
 
-The ``mwxlib`` depends on the following packages:
+The mwxlib depends on the following packages:
 
 - wxPython (Phoenix) [2]_
 - matplotlib
