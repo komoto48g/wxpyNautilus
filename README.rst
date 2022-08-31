@@ -29,6 +29,8 @@ Getting Started
 Prerequisites
 +++++++++++++
 
+This software works with **Python 3.6 and later versions**.
+
 1. Download the zip file from `GitHub repository <https://github.com/komoto48g/wxpyNautilus>`_
    and extract it to a suitable directory.
 
@@ -50,4 +52,4 @@ The mwxlib depends on the following packages:
 
 .. [2] For Python 3.6 -- 3.9, wxpython >= 4.1.1 is required.
        For Python 3.10, wxpython >= 4.2.0 is required. 
-       You can download the latest snapshot from https://wxpython.org/Phoenix/snapshot-builds/.
+       You can also download the latest snapshot from https://wxpython.org/Phoenix/snapshot-builds/.
