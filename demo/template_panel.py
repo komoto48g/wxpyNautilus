@@ -13,7 +13,7 @@ def _pack(*args, orient=wx.HORIZONTAL):
 class Panel(wx.Panel):
     """Template panel
     """
-    menukey = "Plugins/&Templates"
+    menukey = "Plugins/&Templates/"
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

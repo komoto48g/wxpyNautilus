@@ -10,7 +10,7 @@ from mwx.graphman import Layer, Frame
 class Plugin(Layer):
     """Template layer
     """
-    menukey = "Plugins/&Templates"
+    menukey = "Plugins/&Templates/"
     
     def Init(self):
         self.ksize = LParam("ksize", (1,99,2), 13,
