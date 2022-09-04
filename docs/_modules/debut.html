@@ -250,17 +250,29 @@
 <div class="viewcode-block" id="init_editor"><a class="viewcode-back" href="../debut.html#debut.init_editor">[docs]</a><span class="k">def</span> <span class="nf">init_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Customize the keymaps of the Editor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-enter&#39;</span><span class="p">)</span>
     <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;enter&#39;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">newline_and_indent</span><span class="p">():</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">linesep</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_electric_indent</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">AddText</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_electric_indent</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">linesep</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+
+    <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-enter&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">newline_and_indent</span><span class="p">():</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_electric_indent</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goto_char</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">linesep</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
 
     <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;S-enter&#39;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">insert_linebreak</span><span class="p">():</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">back_to_indentation</span><span class="p">()</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">linesep</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_current_indent</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">InsertText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cpos</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">open_line_and_indent_relative</span><span class="p">():</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_current_indent</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goto_char</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">InsertText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bol</span><span class="p">,</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="n">n</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">linesep</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goto_char</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cpos</span> <span class="o">+</span> <span class="n">n</span><span class="p">)</span> <span class="c1"># relative indentation position</span>
+
+    <span class="c1">## @self.define_key(&#39;S-enter&#39;)</span>
+    <span class="c1">## def open_line_and_indent_relative():</span>
+    <span class="c1">##     self.goto_char(self.bol)</span>
+    <span class="c1">##     self.InsertText(self.bol, os.linesep) # open-line</span>
+    <span class="c1">##     self.py_indent_line() # indent (Note: Undo is recorded twice)</span>
 
     <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;M-w&#39;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">copy_region</span><span class="p">():</span>
@@ -596,6 +608,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../0-5_mainframe.html">5. Mainframe</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../0-5_mainframe.html#basic-operation">5.1. Basic operation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../0-5_mainframe.html#basic-access-to-plugins">5.2. Basic access to plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../0-5_mainframe.html#usage-of-the-shell">5.3. Usage of the shell</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../0-0_showcase.html">6. Showcase</a><ul>
