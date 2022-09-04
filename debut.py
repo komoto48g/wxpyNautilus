@@ -204,17 +204,29 @@ def init_editor_interface(self):
 def init_editor(self):
     """Customize the keymaps of the Editor.
     """
-    @self.define_key('C-enter')
     @self.define_key('enter')
     def newline_and_indent():
-        line = os.linesep + ' ' * self.py_electric_indent()
-        self.AddText(line)
+        n = self.py_electric_indent()
+        self.AddText(os.linesep + ' ' * n)
+
+    @self.define_key('C-enter')
+    def newline_and_indent():
+        n = self.py_electric_indent()
+        self.goto_char(self.eol)
+        self.AddText(os.linesep + ' ' * n)
 
     @self.define_key('S-enter')
-    def insert_linebreak():
-        self.back_to_indentation()
-        line = os.linesep + ' ' * self.py_current_indent()
-        self.InsertText(self.cpos, line)
+    def open_line_and_indent_relative():
+        n = self.py_current_indent()
+        self.goto_char(self.bol)
+        self.InsertText(self.bol, ' ' * n + os.linesep)
+        self.goto_char(self.cpos + n) # relative indentation position
+
+    ## @self.define_key('S-enter')
+    ## def open_line_and_indent_relative():
+    ##     self.goto_char(self.bol)
+    ##     self.InsertText(self.bol, os.linesep) # open-line
+    ##     self.py_indent_line() # indent (Note: Undo is recorded twice)
 
     @self.define_key('M-w')
     def copy_region():
