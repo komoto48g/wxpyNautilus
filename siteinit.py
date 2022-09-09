@@ -9,6 +9,7 @@ import os
 
 
 def init_mainframe(self):
+    ## Specify an editor to edit plugins.
     self.Editor = "C:/usr/home/bin/xyzzy/xyzzy.exe"
 
     ## Image/CCD unit length per pixel [mm/pixel]

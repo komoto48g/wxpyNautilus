@@ -451,6 +451,11 @@ def stylus(self):
 
     self.Config.set_style(py_text_mode.STYLE)
     self.Scratch.set_style(py_interactive_mode.STYLE)
+    
+    ## Don't clear Config buffer. => after stylus
+    self.Config.undefine_key('C-x k')
+    self.Config.undefine_key('C-x C-k')
+
 
 ## --------------------------------
 ## Main program
@@ -484,10 +489,6 @@ def main(self):
         
         ## Set conf buffer traceable.
         self.set_traceable(self.Config)
-        
-        ## Don't clear Config buffer.
-        self.Config.undefine_key('C-x k')
-        self.Config.undefine_key('C-x C-k')
 
     @self.Config.define_key('M-j')
     def eval_buffer():
@@ -497,12 +498,13 @@ def main(self):
         if "stylus" in locals:
             locals["stylus"](self)
 
+    stylus(self)
+
     ## Set scratch window to accept drop-file.
     self.ghost.SetDropTarget(MyFileDropLoader(self.Scratch))
-    
+
     self.handler.bind('add_shell', init_shell)
     self.handler.bind('add_shell', init_editor_interface)
-    stylus(self)
     self.post_message("Startup process has completed successfully.")
 
 
