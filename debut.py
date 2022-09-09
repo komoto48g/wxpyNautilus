@@ -375,7 +375,10 @@ class py_interactive_mode:
 def init_shellframe(self):
     """Customize the keymaps of the ShellFrame.
     """
-    import debut as this
+    try:
+        import debut as this
+    except ImportError:
+        from . import debut as this
     
     @self.define_key('f5')
     def reload_this():
