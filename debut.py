@@ -52,6 +52,64 @@ if 1:
         "ALL files (*.*)|*.*",
     ]
 
+    def need_buffer_save_p(self, buf):
+        if buf.mtdelta is None:
+            return False
+        if buf is self.buffer:
+            return self.IsModified()
+        else:
+            ## self.push_current() # need to update current buffer.text
+            return buf.text != buf.filetext
+    Editor.need_buffer_save_p = need_buffer_save_p
+
+    def confirm_load(self):
+        """Confirm the load with the dialog."""
+        if self.need_buffer_save_p(self.buffer):
+            if wx.MessageBox(
+                    "You are leaving unsaved content.\n\n"
+                    "Changes to the content will be discarded.\n"
+                    "Continue loading?",
+                    ## "Load",
+                    f"Load {self.buffer.filename}".replace(os.sep, '/'),
+                    style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
+                self.post_message("The load has been canceled.")
+                return None
+        return True
+    Editor.confirm_load = confirm_load
+
+    def confirm_save(self):
+        """Confirm the save with the dialog."""
+        if self.buffer.mtdelta:
+            if wx.MessageBox(
+                    "The file has been modified externally.\n\n"
+                    "The contents of the file will be overwritten.\n"
+                    "Continue saving?",
+                    ## "Save",
+                    f"Save {self.buffer.filename}".replace(os.sep, '/'),
+                    style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
+                self.post_message("The save has been canceled.")
+                return None
+        elif not self.IsModified():
+            self.post_message("No need to save.")
+            return False
+        return True
+    Editor.confirm_save = confirm_save
+
+    def confirm_close(self):
+        """Confirm the close with the dialog."""
+        if self.need_buffer_save_p(self.buffer):
+            if wx.MessageBox(
+                    "You are closing unsaved content.\n\n"
+                    "Changes to the content will be discarded.\n"
+                    "Continue closing?",
+                    ## "Close",
+                    f"Close {self.buffer.filename}".replace(os.sep, '/'),
+                    style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
+                self.post_message("The close has been canceled.")
+                return None
+        return True
+    Editor.confirm_close = confirm_close
+
     def _load(self):
         if not self.confirm_load():
             return None
@@ -97,8 +155,6 @@ if 1:
     Editor.saveas = _saveas
 
     def _open(self):
-        if not self.confirm_load():
-            return None
         with wx.FileDialog(self, "Open buffer",
                 wildcard='|'.join(self.wildcards),
                 style=wx.FD_OPEN|wx.FD_MULTIPLE|wx.FD_FILE_MUST_EXIST) as dlg:
@@ -112,34 +168,38 @@ if 1:
     Editor.open = _open
 
     def _kill_buffer(self):
-        if self.confirm_load():
-            self.pop_current()
+        if not self.confirm_close():
+            return
+        self.pop_current()
     Editor.kill_buffer = _kill_buffer
 
     def _kill_all_buffers(self):
-        if self.confirm_load():
-            self.clear_all()
+        for buf in filter(self.need_buffer_save_p, self.buffer_list):
+            self.swap_buffer(buf)
+            if not self.confirm_close():
+                return
+        self.clear_all()
     Editor.kill_all_buffers = _kill_all_buffers
 
     def _new_buffer(self):
-        buffer = self.default_buffer
-        if buffer.mtdelta is not None: # is saved?
-            buffer = buffer.__class__(self.default_name)
-            self.default_buffer = buffer
-        self.buffer = buffer
+        buf = self.default_buffer
+        if buf.mtdelta is not None: # is saved?
+            buf = buf.__class__(self.default_name)
+            self.default_buffer = buf
+        self.buffer = buf
         self._reset()
         self.push_current()
     Editor.new_buffer = _new_buffer
 
     def _next_buffer(self):
         j = self.buffer_index
-        if j+1 < len(self.buffer_list) and self.confirm_load():
+        if j+1 < len(self.buffer_list):
             self.swap_buffer(self.buffer_list[j+1])
     Editor.next_buffer = _next_buffer
 
     def _prev_buffer(self):
         j = self.buffer_index
-        if j > 0 and self.confirm_load():
+        if j > 0:
             self.swap_buffer(self.buffer_list[j-1])
     Editor.previous_buffer = _prev_buffer
 
@@ -413,7 +473,7 @@ def init_shellframe(self):
     self.define_key('C-f12', self.clone_shell)
     self.define_key('M-f12', self.close_shell)
 
-    self.define_key('C-x s', self.save_session)
+    self.define_key('C-x M-s', self.save_session)
 
     self.define_key('C-x p', self.other_editor, p=-1) # cf. [Xbutton1]
     self.define_key('C-x n', self.other_editor, p=+1) # cf. [Xbutton2]
