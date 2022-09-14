@@ -103,7 +103,7 @@ if 1:
                     "Changes to the content will be discarded.\n"
                     "Continue closing?",
                     ## "Close",
-                    f"Close {self.buffer.filename}".replace(os.sep, '/'),
+                    "Close {!r}".format(os.path.basename(self.buffer.filename)),
                     style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
                 self.post_message("The close has been canceled.")
                 return None
@@ -167,41 +167,19 @@ if 1:
         return True
     Editor.open = _open
 
-    def _kill_buffer(self):
+    def kill_buffer(self):
         if not self.confirm_close():
             return
         self.pop_current()
-    Editor.kill_buffer = _kill_buffer
+    Editor.kill_buffer = kill_buffer
 
-    def _kill_all_buffers(self):
+    def kill_all_buffers(self):
         for buf in filter(self.need_buffer_save_p, self.buffer_list):
             self.swap_buffer(buf)
             if not self.confirm_close():
                 return
         self.clear_all()
-    Editor.kill_all_buffers = _kill_all_buffers
-
-    def _new_buffer(self):
-        buf = self.default_buffer
-        if buf.mtdelta is not None: # is saved?
-            buf = buf.__class__(self.default_name)
-            self.default_buffer = buf
-        self.buffer = buf
-        self._reset()
-        self.push_current()
-    Editor.new_buffer = _new_buffer
-
-    def _next_buffer(self):
-        j = self.buffer_index
-        if j+1 < len(self.buffer_list):
-            self.swap_buffer(self.buffer_list[j+1])
-    Editor.next_buffer = _next_buffer
-
-    def _prev_buffer(self):
-        j = self.buffer_index
-        if j > 0:
-            self.swap_buffer(self.buffer_list[j-1])
-    Editor.previous_buffer = _prev_buffer
+    Editor.kill_all_buffers = kill_all_buffers
 
 if 1:
     def gen_atoms_forward(self, start=0, end=-1):
@@ -297,9 +275,6 @@ def init_editor(self):
     def kill_region():
         self.anchor = self.mark
         self.Cut()
-
-    self.define_key('M-up', self.previous_buffer)
-    self.define_key('M-down', self.next_buffer)
 
     self.define_key('C-x k',   self.kill_all_buffers)
     self.define_key('C-x C-k', self.kill_buffer)
