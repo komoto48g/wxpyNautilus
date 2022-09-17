@@ -51,29 +51,29 @@
 <span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.0rc&quot;</span>
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kazuya O&#39;moto &lt;komoto@jeol.co.jp&gt;&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (c) 2018-2022&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">This program is under MIT license</span>
+<span class="s2">see https://opensource.org/licenses/MIT</span>
 
+<span class="s2">logo icon: Submarine icons created by Smashicons - Flaticon</span>
+<span class="s2">see https://www.flaticon.com/free-icons/submarine</span>
+<span class="s2">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">getopt</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">wx</span>
 <span class="kn">import</span> <span class="nn">wx.adv</span>
 <span class="kn">from</span> <span class="nn">wx.lib.embeddedimage</span> <span class="kn">import</span> <span class="n">PyEmbeddedImage</span>
-<span class="kn">import</span> <span class="nn">textwrap</span>
-<span class="kn">import</span> <span class="nn">cv2</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="nn">sp</span>
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="kn">import</span> <span class="nn">mwx</span>
 <span class="kn">from</span> <span class="nn">mwx.graphman</span> <span class="kn">import</span> <span class="n">Frame</span>
 
 
-<div class="viewcode-block" id="wxpyNautilus"><a class="viewcode-back" href="../wxpyNautilus.html#wxpyNautilus.wxpyNautilus">[docs]</a><span class="k">class</span> <span class="nc">wxpyNautilus</span><span class="p">(</span><span class="n">Frame</span><span class="p">):</span>
+<div class="viewcode-block" id="MainFrame"><a class="viewcode-back" href="../wxpyNautilus.html#wxpyNautilus.MainFrame">[docs]</a><span class="k">class</span> <span class="nc">MainFrame</span><span class="p">(</span><span class="n">Frame</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;the Frontend of Graph and Plug manager</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="wxpyNautilus.About"><a class="viewcode-back" href="../wxpyNautilus.html#wxpyNautilus.wxpyNautilus.About">[docs]</a>    <span class="k">def</span> <span class="nf">About</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">Name</span> <span class="o">=</span> <span class="s2">&quot;wxpyNautilus&quot;</span>
+    
+<div class="viewcode-block" id="MainFrame.About"><a class="viewcode-back" href="../wxpyNautilus.html#wxpyNautilus.MainFrame.About">[docs]</a>    <span class="k">def</span> <span class="nf">About</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">info</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">adv</span><span class="o">.</span><span class="n">AboutDialogInfo</span><span class="p">()</span>
-        <span class="n">info</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Name</span>
         <span class="n">info</span><span class="o">.</span><span class="n">Version</span> <span class="o">=</span> <span class="n">__version__</span>
         <span class="n">info</span><span class="o">.</span><span class="n">Copyright</span> <span class="o">=</span> <span class="n">__copyright__</span> <span class="o">+</span><span class="s1">&#39; &#39;</span><span class="o">+</span> <span class="n">__author__</span>
         <span class="n">info</span><span class="o">.</span><span class="n">Description</span> <span class="o">=</span> <span class="vm">__doc__</span>
@@ -81,17 +81,11 @@
         <span class="n">info</span><span class="o">.</span><span class="n">DocWriters</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">info</span><span class="o">.</span><span class="n">Artists</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">info</span><span class="o">.</span><span class="n">SetWebSite</span><span class="p">(</span><span class="s2">&quot;https://github.com/komoto48g&quot;</span><span class="p">)</span>
-        <span class="n">info</span><span class="o">.</span><span class="n">SetLicense</span><span class="p">(</span><span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">        This program is under MIT license</span>
-<span class="s2">        see https://opensource.org/licenses/MIT</span>
-<span class="s2">        </span>
-<span class="s2">        logo icon: Submarine icons created by Smashicons - Flaticon</span>
-<span class="s2">        see https://www.flaticon.com/free-icons/submarine</span>
-<span class="s2">        &quot;&quot;&quot;</span><span class="p">))</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">SetLicense</span><span class="p">(</span><span class="n">__license__</span><span class="p">)</span>
         <span class="n">wx</span><span class="o">.</span><span class="n">adv</span><span class="o">.</span><span class="n">AboutBox</span><span class="p">(</span><span class="n">info</span><span class="p">)</span></div>
     
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">Frame</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">SetIcon</span><span class="p">(</span><span class="n">submarine</span><span class="o">.</span><span class="n">GetIcon</span><span class="p">())</span></div>
 
@@ -127,7 +121,7 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     
     <span class="n">app</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">App</span><span class="p">()</span>
-    <span class="n">frm</span> <span class="o">=</span> <span class="n">wxpyNautilus</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">frm</span> <span class="o">=</span> <span class="n">MainFrame</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
     
     <span class="k">try</span><span class="p">:</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
