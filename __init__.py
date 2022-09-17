@@ -2,4 +2,4 @@
 # -*- coding: utf-8 -*-
 """Nautilus package
 """
-from .wxpyNautilus import wxpyNautilus as Frame
+from .wxpyNautilus import MainFrame as Frame
