@@ -17,7 +17,7 @@ exclude_files
 # Resources
 test*/
 icons*/
-docfiles/
+docfiles*/
 
 *.WinMerge
 
