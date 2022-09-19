@@ -9,7 +9,16 @@ import numpy as np
 from matplotlib import pyplot as plt
 from mwx.controls import Button, LParam
 from mwx.graphman import Layer
-from GM_map import F, G, calc
+
+
+def G(x, mu):
+    return mu * x + 2 * (1 - mu) * x**2 / (1 + x**2)
+
+
+def F(x, y, alpha, sigma, mu):
+    x_next = y + alpha * (1 - sigma * y**2) * y + G(x, mu)
+    y_next = - x + G(x_next, mu)
+    return (x_next, y_next)
 
 
 class Plugin(Layer):
@@ -45,16 +54,17 @@ class Plugin(Layer):
                               picker=True, pickradius=4)
         self.graph.load(np.resize(0, (1024,1024)), "*background*", localunit=0.05)
     
-    def calc(self, N):
-        x, y = self.xy
-        data = calc(N, x, y, self.alpha.value, self.sigma.value, self.mu.value)
-        self.xy = data[-1] # update the last x, y
-        self.XY = np.hstack((self.XY, np.array(data).T)) # stack new data
-        return data
-    
     def run(self, evt):
         self.message("calculating...")
-        data = self.calc(N=100000)
+        x, y = self.xy
+        N = 100000
+        data = []
+        for j in range(N):
+            x, y = F(x, y, self.alpha.value, self.sigma.value, self.mu.value)
+            data.append((x, y))
+        self.xy = data[-1] # update the last x, y
+        self.XY = np.hstack((self.XY, np.array(data).T)) # stack new data
+        
         art = self.Arts[0]
         art.set_data(*self.XY)
         self.message("\b drawing to graph...")
@@ -65,6 +75,7 @@ class Plugin(Layer):
         h, x, y, mesh = plt.hist2d(*self.XY, bins=1024)
         self.output.load(np.int16(h), "*histogram*", localunit=1)
         self.output.draw()
+        ## plt.show()
         plt.close()
 
 
