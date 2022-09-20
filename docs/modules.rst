@@ -1,7 +1,7 @@
-demo
-====
+wxpyNautilus
+============
 
 .. toctree::
    :maxdepth: 4
 
-   demo
+   wxpyNautilus

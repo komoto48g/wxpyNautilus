@@ -7,8 +7,8 @@ Author: Kazuya O'moto <komoto@jeol.co.jp>
 from pprint import pformat
 import wx
 from wx import aui
-from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
-import numpy as np
+from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin, TextEditMixin
+## import numpy as np
 from mwx.controls import Icon
 from mwx.graphman import Layer
 from mwx.framework import CtrlInterface
@@ -34,7 +34,7 @@ else:
             self.EnableCheckBoxes()
 
 
-class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
+class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, TextEditMixin, CtrlInterface):
     """ CheckList of Graph buffers
     
     list item order = buffer order
@@ -58,6 +58,7 @@ class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
         CheckListCtrl.__init__(self, parent, size=(400,130),
                                style=wx.LC_REPORT|wx.LC_HRULES, **kwargs)
         ListCtrlAutoWidthMixin.__init__(self)
+        TextEditMixin.__init__(self)
         CtrlInterface.__init__(self)
         
         self.parent = parent
@@ -153,7 +154,7 @@ class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
         evt.Skip()
     
     def OnShowItems(self, evt):
-        self.Target.select(self.FocusedItem)
+        self.Target.select(self.focused_item)
     
     def OnRemoveItems(self, evt):
         del self.Target[self.selected_items]

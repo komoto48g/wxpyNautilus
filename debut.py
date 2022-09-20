@@ -553,16 +553,16 @@ if __name__ == "__main__":
     np.set_printoptions(linewidth=256) # default 75
     
     app = wx.App()
-    frm = mwx.deb(app=0, introText=__doc__ + quote_unqoute,)
+    frame = mwx.deb(loop=0, introText=__doc__ + quote_unqoute,)
     if 1:
         ## If you want debugger skip a specific module,
         ## add the module:str to debugger.skip:list here.
-        frm.debugger.skip.remove(mwx.FSM.__module__) # for debug mwx.utilus
+        frame.debugger.skip.remove(mwx.FSM.__module__) # for debug mwx.utilus
         pass
-    frm.Show()
+    frame.Show()
     if 1:
-        dive(frm)
-        dive(frm.Scratch)
-        dive(frm.rootshell)
-    main(frm)
+        dive(frame)
+        dive(frame.Scratch)
+        dive(frame.rootshell)
+    main(frame)
     app.MainLoop()

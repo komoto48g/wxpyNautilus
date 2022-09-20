@@ -54,23 +54,19 @@ class Plugin(Layer):
                               picker=True, pickradius=4)
         self.graph.load(np.resize(0, (1024,1024)), "*background*", localunit=0.05)
     
-    def calc(self, N):
-        data = []
+    def run(self, evt):
+        self.message("calculating...")
         x, y = self.xy
+        N = 100000
+        data = []
         for j in range(N):
             x, y = F(x, y, self.alpha.value, self.sigma.value, self.mu.value)
             data.append((x, y))
-        data = np.array(data).T
-        self.xy = x, y # update the last x, y
-        self.XY = np.hstack((self.XY, data)) # stack new data
-        return data
-    
-    def run(self, evt):
-        self.message("calculating...")
-        data = self.calc(N=100000)
+        self.xy = data[-1] # update the last x, y
+        self.XY = np.hstack((self.XY, np.array(data).T)) # stack new data
+        
         art = self.Arts[0]
-        ## art.set_data(*self.XY)
-        art.set_data(*data)
+        art.set_data(*self.XY)
         self.message("\b drawing to graph...")
         self.graph.draw(art)
         self.message("\b done. Total {:,} points".format(self.XY.shape[1]))
@@ -79,6 +75,8 @@ class Plugin(Layer):
         h, x, y, mesh = plt.hist2d(*self.XY, bins=1024)
         self.output.load(np.int16(h), "*histogram*", localunit=1)
         self.output.draw()
+        ## plt.show()
+        plt.close()
 
 
 if __name__ == "__main__":

@@ -5,29 +5,29 @@
 __version__ = "1.0rc"
 __author__ = "Kazuya O'moto <komoto@jeol.co.jp>"
 __copyright__ = "Copyright (c) 2018-2022"
+__license__ = """\
+This program is under MIT license
+see https://opensource.org/licenses/MIT
 
+logo icon: Submarine icons created by Smashicons - Flaticon
+see https://www.flaticon.com/free-icons/submarine
+"""
 import getopt
 import sys
-import os
 import wx
 import wx.adv
 from wx.lib.embeddedimage import PyEmbeddedImage
-import textwrap
-import cv2
-import numpy as np
-import scipy as sp
-from PIL import Image
-import matplotlib as mpl
-import mwx
 from mwx.graphman import Frame
 
 
-class wxpyNautilus(Frame):
+class MainFrame(Frame):
     """the Frontend of Graph and Plug manager
     """
+    Name = "wxpyNautilus"
+    
     def About(self):
         info = wx.adv.AboutDialogInfo()
-        info.Name = self.__class__.__name__
+        info.Name = self.Name
         info.Version = __version__
         info.Copyright = __copyright__ +' '+ __author__
         info.Description = __doc__
@@ -35,17 +35,11 @@ class wxpyNautilus(Frame):
         info.DocWriters = []
         info.Artists = []
         info.SetWebSite("https://github.com/komoto48g")
-        info.SetLicense(textwrap.dedent("""
-        This program is under MIT license
-        see https://opensource.org/licenses/MIT
-        
-        logo icon: Submarine icons created by Smashicons - Flaticon
-        see https://www.flaticon.com/free-icons/submarine
-        """))
+        info.SetLicense(__license__)
         wx.adv.AboutBox(info)
     
     def __init__(self, *args, **kwargs):
-        Frame.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         
         self.SetIcon(submarine.GetIcon())
 
@@ -81,7 +75,7 @@ if __name__ == "__main__":
         sys.exit(1)
     
     app = wx.App()
-    frm = wxpyNautilus(None)
+    frm = MainFrame(None)
     
     try:
         sys.path.insert(0, '')
