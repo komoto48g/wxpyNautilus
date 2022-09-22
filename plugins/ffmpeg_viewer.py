@@ -126,14 +126,14 @@ class Plugin(Layer):
             (),
         ]
         
-        @self.handler.bind('page_loaded')
-        def activate(*v):
-            self.parent.handler.bind("unknown_format", self.load_media)
-        
-        @self.handler.bind('page_unloaded')
-        def deactivate(*v):
+        self.parent.handler.bind("unknown_format", self.load_media)
+    
+    def Destroy(self):
+        try:
             self.parent.handler.unbind("unknown_format", self.load_media)
             self.mc.Stop()
+        finally:
+            return Layer.Destroy(self)
     
     def load_session(self, session):
         Layer.load_session(self, session)
