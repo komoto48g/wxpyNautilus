@@ -20,7 +20,8 @@ class Plugin(Layer):
                 self.ksize,
                 self.btn,
             ),
-            row=2, type='vspin', lw=30, tw=30
+            ## title='randn',
+            row=2, type='vspin', lw=30, tw=30,
         )
     
     def run(self, N=2048):
@@ -38,6 +39,6 @@ class Plugin(Layer):
 if __name__ == "__main__":
     app = wx.App()
     frm = Frame(None)
-    frm.load_plug(Plugin, show=1, dock=3)
+    frm.load_plug(Plugin, show=1)
     frm.Show()
     app.MainLoop()
