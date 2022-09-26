@@ -53,66 +53,26 @@ if 1:
     ]
 
     def need_buffer_save_p(self, buf):
-        if buf.mtdelta is None:
+        if buf.mtdelta is None: # no file
             return False
-        if buf is self.buffer:
+        if buf is self.buffer:  # check if currently selected
             return self.IsModified()
         else:
             ## self.push_current() # need to update current buffer.text
             return buf.text != buf.filetext
     Editor.need_buffer_save_p = need_buffer_save_p
 
-    def confirm_load(self):
+    def _load(self):
         """Confirm the load with the dialog."""
         if self.need_buffer_save_p(self.buffer):
             if wx.MessageBox(
                     "You are leaving unsaved content.\n\n"
                     "Changes to the content will be discarded.\n"
                     "Continue loading?",
-                    ## "Load",
-                    f"Load {self.buffer.filename}".replace(os.sep, '/'),
+                    "Load {!r}".format(os.path.basename(self.buffer.filename)),
                     style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
                 self.post_message("The load has been canceled.")
                 return None
-        return True
-    Editor.confirm_load = confirm_load
-
-    def confirm_save(self):
-        """Confirm the save with the dialog."""
-        if self.buffer.mtdelta:
-            if wx.MessageBox(
-                    "The file has been modified externally.\n\n"
-                    "The contents of the file will be overwritten.\n"
-                    "Continue saving?",
-                    ## "Save",
-                    f"Save {self.buffer.filename}".replace(os.sep, '/'),
-                    style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
-                self.post_message("The save has been canceled.")
-                return None
-        elif not self.IsModified():
-            self.post_message("No need to save.")
-            return False
-        return True
-    Editor.confirm_save = confirm_save
-
-    def confirm_close(self):
-        """Confirm the close with the dialog."""
-        if self.need_buffer_save_p(self.buffer):
-            if wx.MessageBox(
-                    "You are closing unsaved content.\n\n"
-                    "Changes to the content will be discarded.\n"
-                    "Continue closing?",
-                    ## "Close",
-                    "Close {!r}".format(os.path.basename(self.buffer.filename)),
-                    style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
-                self.post_message("The close has been canceled.")
-                return None
-        return True
-    Editor.confirm_close = confirm_close
-
-    def _load(self):
-        if not self.confirm_load():
-            return None
         f = self.buffer.filename
         p = self.cpos
         if not f:
@@ -127,7 +87,18 @@ if 1:
     Editor.load = _load
 
     def _save(self):
-        if not self.confirm_save():
+        """Confirm the save with the dialog."""
+        if self.buffer.mtdelta:
+            if wx.MessageBox(
+                    "The file has been modified externally.\n\n"
+                    "The contents of the file will be overwritten.\n"
+                    "Continue saving?",
+                    "Save {!r}".format(os.path.basename(self.buffer.filename)),
+                    style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
+                self.post_message("The save has been canceled.")
+                return None
+        elif not self.IsModified():
+            self.post_message("No need to save.")
             return None
         f = self.buffer.filename
         if not f:
@@ -146,7 +117,7 @@ if 1:
                 wildcard='|'.join(self.wildcards),
                 style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT) as dlg:
             if dlg.ShowModal() != wx.ID_OK:
-                return
+                return None
             f = dlg.Path
         if self.save_file(f):
             self.post_message(f"Saved {f!r} successfully.")
@@ -159,7 +130,7 @@ if 1:
                 wildcard='|'.join(self.wildcards),
                 style=wx.FD_OPEN|wx.FD_MULTIPLE|wx.FD_FILE_MUST_EXIST) as dlg:
             if dlg.ShowModal() != wx.ID_OK:
-                return
+                return None
             paths = dlg.Paths
         for f in paths:
             if self.load_file(f):
@@ -168,16 +139,31 @@ if 1:
     Editor.open = _open
 
     def kill_buffer(self):
-        if not self.confirm_close():
-            return
+        """Confirm the close with the dialog."""
+        if self.need_buffer_save_p(self.buffer):
+            if wx.MessageBox(
+                    "You are closing unsaved content.\n\n"
+                    "Changes to the content will be discarded.\n"
+                    "Continue closing?",
+                    "Close {!r}".format(os.path.basename(self.buffer.filename)),
+                    style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
+                self.post_message("The close has been canceled.")
+                return None
         self.pop_current()
     Editor.kill_buffer = kill_buffer
 
     def kill_all_buffers(self):
         for buf in filter(self.need_buffer_save_p, self.buffer_list):
             self.swap_buffer(buf)
-            if not self.confirm_close():
-                return
+            if self.need_buffer_save_p(buf):
+                if wx.MessageBox(
+                        "You are closing unsaved content.\n\n"
+                        "Changes to the content will be discarded.\n"
+                        "Continue closing?",
+                        "Close {!r}".format(os.path.basename(buf.filename)),
+                        style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
+                    self.post_message("The close has been canceled.")
+                    return None
         self.clear_all()
     Editor.kill_all_buffers = kill_all_buffers
 
@@ -502,8 +488,6 @@ class MyFileDropLoader(wx.FileDropTarget):
         self.target = target
     
     def OnDropFiles(self, x, y, filenames):
-        if not self.target.confirm_load():
-            return False
         for f in filenames:
             if self.target.load_file(f):
                 self.target.post_message(f"Loaded {f!r} successfully.")
