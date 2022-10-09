@@ -46,102 +46,24 @@
   <h1>Source code for wxpyNautilus</h1><div class="highlight"><pre>
 <span></span><span class="ch">#! python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;The frontend of Graph and Plug manager</span>
+<span class="sd">&quot;&quot;&quot;Nautilus package</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.0rc&quot;</span>
-<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kazuya O&#39;moto &lt;komoto@jeol.co.jp&gt;&quot;</span>
-<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (c) 2018-2022&quot;</span>
-<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
-<span class="s2">This program is under MIT license</span>
-<span class="s2">see https://opensource.org/licenses/MIT</span>
-
-<span class="s2">logo icon: Submarine icons created by Smashicons - Flaticon</span>
-<span class="s2">see https://www.flaticon.com/free-icons/submarine</span>
-<span class="s2">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">getopt</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">wx</span>
-<span class="kn">import</span> <span class="nn">wx.adv</span>
-<span class="kn">from</span> <span class="nn">wx.lib.embeddedimage</span> <span class="kn">import</span> <span class="n">PyEmbeddedImage</span>
-<span class="kn">from</span> <span class="nn">mwx.graphman</span> <span class="kn">import</span> <span class="n">Frame</span>
+<span class="kn">from</span> <span class="nn">mwx.graphman</span> <span class="kn">import</span> <span class="n">Layer</span>
+<span class="kn">from</span> <span class="nn">.wxpyNautilus</span> <span class="kn">import</span> <span class="n">MainFrame</span> <span class="k">as</span> <span class="n">Frame</span>
 
 
-<div class="viewcode-block" id="MainFrame"><a class="viewcode-back" href="../wxpyNautilus.html#wxpyNautilus.MainFrame">[docs]</a><span class="k">class</span> <span class="nc">MainFrame</span><span class="p">(</span><span class="n">Frame</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;the Frontend of Graph and Plug manager</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">Name</span> <span class="o">=</span> <span class="s2">&quot;wxpyNautilus&quot;</span>
-    
-<div class="viewcode-block" id="MainFrame.About"><a class="viewcode-back" href="../wxpyNautilus.html#wxpyNautilus.MainFrame.About">[docs]</a>    <span class="k">def</span> <span class="nf">About</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">info</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">adv</span><span class="o">.</span><span class="n">AboutDialogInfo</span><span class="p">()</span>
-        <span class="n">info</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Name</span>
-        <span class="n">info</span><span class="o">.</span><span class="n">Version</span> <span class="o">=</span> <span class="n">__version__</span>
-        <span class="n">info</span><span class="o">.</span><span class="n">Copyright</span> <span class="o">=</span> <span class="n">__copyright__</span> <span class="o">+</span><span class="s1">&#39; &#39;</span><span class="o">+</span> <span class="n">__author__</span>
-        <span class="n">info</span><span class="o">.</span><span class="n">Description</span> <span class="o">=</span> <span class="vm">__doc__</span>
-        <span class="n">info</span><span class="o">.</span><span class="n">Developers</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">info</span><span class="o">.</span><span class="n">DocWriters</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">info</span><span class="o">.</span><span class="n">Artists</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">info</span><span class="o">.</span><span class="n">SetWebSite</span><span class="p">(</span><span class="s2">&quot;https://github.com/komoto48g&quot;</span><span class="p">)</span>
-        <span class="n">info</span><span class="o">.</span><span class="n">SetLicense</span><span class="p">(</span><span class="n">__license__</span><span class="p">)</span>
-        <span class="n">wx</span><span class="o">.</span><span class="n">adv</span><span class="o">.</span><span class="n">AboutBox</span><span class="p">(</span><span class="n">info</span><span class="p">)</span></div>
-    
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">SetIcon</span><span class="p">(</span><span class="n">submarine</span><span class="o">.</span><span class="n">GetIcon</span><span class="p">())</span></div>
-
-
-<span class="n">submarine</span> <span class="o">=</span> <span class="n">PyEmbeddedImage</span><span class="p">(</span>
-    <span class="sa">b</span><span class="s1">&#39;iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlw&#39;</span>
-    <span class="sa">b</span><span class="s1">&#39;SFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoA&#39;</span>
-    <span class="sa">b</span><span class="s1">&#39;AAJvSURBVDiNlZNPSJNhHMc/7/vu3eswN//MLUXJtliGosxhgSZ6sALN/iAYQacIA8Uu3rpU&#39;</span>
-    <span class="sa">b</span><span class="s1">&#39;YIdIqUOHKCzqIB2SohAKlbxkFpWplEttUG6mhPln6qZuezqo5LTCvpeHD9/f78vz8Px+sHWl&#39;</span>
-    <span class="sa">b</span><span class="s1">&#39;A+p/1EcpCbgFxG40dKunDOQBb9eb8bHkxsXgXFzCshwidiqACZiPDrC7WlAUK7MTTcRZu5n0&#39;</span>
-    <span class="sa">b</span><span class="s1">&#39;1fPT9wpQimy0XqiQ7ADhIFzrFHkP+tizPkAm6G9mMdCMznBMOljtRDNUAKgqTgFpHYMw4ANX&#39;</span>
-    <span class="sa">b</span><span class="s1">&#39;GsSo6Dc9IV8dqjaoON6MUhm8WfuI8GInkJ6RwJmaYkmzGEFVwDMJ00FUYBswtxYglWXTdbVS&#39;</span>
-    <span class="sa">b</span><span class="s1">&#39;Kj58QzQkpmLL2U1+ph2jpqLIIZSVKh2EIwglRvKNB5aGPMy4v4hKt5cBHcDMAhGjmdNtt0m1&#39;</span>
-    <span class="sa">b</span><span class="s1">&#39;mjd/QVgrQQ6PEtLKEXIywckXltr6jm63N5KjGA2cG5dRHt8hZdovcbFlBxlJc5gTBF/HVthm&#39;</span>
-    <span class="sa">b</span><span class="s1">&#39;6ifZ9IPv3h4a7o3gMH+gqkTWf/aIIor34vF1IyLDiKzyfUJpfCdMhYdE4GM0Bz8hco8X/uZ+&#39;</span>
-    <span class="sa">b</span><span class="s1">&#39;SdRVyTOyf564nl4IhSGoJSNS7CxrZuYWonkhAAv6VTZYCEVAliVFidc45cpCc+USk8gEo23P&#39;</span>
-    <span class="sa">b</span><span class="s1">&#39;qSke4EDeLOu51DmLVTeO91k7dSV97LfNcf+pGJPKsuk6kis5h/Qi0HgeqyT9Y6DXJODKdWW5&#39;</span>
-    <span class="sa">b</span><span class="s1">&#39;7XX4pA6gNBPjpSbaB0awnT1BZrYDg/qXtfF+kyN3HzI17BOXX76nVSqw07UzCUenm6Pjs/Tq&#39;</span>
-    <span class="sa">b</span><span class="s1">&#39;dOTvSqdAVtA2NhtjZcO0PzLo9vBk/TBZgO1buPgf9QutQu0u5lCEPQAAAABJRU5ErkJggg==&#39;</span><span class="p">)</span>
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">session</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">opts</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">getopt</span><span class="o">.</span><span class="n">gnu_getopt</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="s2">&quot;s:&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;-s&quot;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.jssn&quot;</span><span class="p">):</span>
-                    <span class="n">v</span> <span class="o">+=</span> <span class="s1">&#39;.jssn&#39;</span>
-                <span class="n">session</span> <span class="o">=</span> <span class="n">v</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;- Exception occurs in getopt;&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    
-    <span class="n">app</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">App</span><span class="p">()</span>
-    <span class="n">frm</span> <span class="o">=</span> <span class="n">MainFrame</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-    
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">si</span> <span class="o">=</span> <span class="nb">__import__</span><span class="p">(</span><span class="s1">&#39;siteinit&#39;</span><span class="p">)</span> <span class="c1"># try import si:local first</span>
-    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;- No siteinit file.&quot;</span><span class="p">)</span>
-        <span class="k">pass</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Executing </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">si</span><span class="o">.</span><span class="vm">__file__</span><span class="p">))</span>
-        <span class="n">si</span><span class="o">.</span><span class="n">init_mainframe</span><span class="p">(</span><span class="n">frm</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="n">session</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting session </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">session</span><span class="p">))</span>
-            <span class="n">frm</span><span class="o">.</span><span class="n">load_session</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;- No such file </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">session</span><span class="p">))</span>
-    
-    <span class="n">frm</span><span class="o">.</span><span class="n">Show</span><span class="p">()</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">MainLoop</span><span class="p">()</span>
+<div class="viewcode-block" id="deb"><a class="viewcode-back" href="../wxpyNautilus.html#wxpyNautilus.deb">[docs]</a><span class="k">def</span> <span class="nf">deb</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">wx</span>
+    <span class="kn">import</span> <span class="nn">mwx</span>
+    <span class="kn">from</span> <span class="nn">.debut</span> <span class="kn">import</span> <span class="n">main</span>
+    <span class="k">if</span> <span class="n">loop</span><span class="p">:</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">GetApp</span><span class="p">()</span> <span class="ow">or</span> <span class="n">wx</span><span class="o">.</span><span class="n">App</span><span class="p">()</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">mwx</span><span class="o">.</span><span class="n">deb</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># Don&#39;t enter loop.</span>
+    <span class="n">frame</span><span class="o">.</span><span class="n">Show</span><span class="p">()</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">loop</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">app</span><span class="o">.</span><span class="n">GetMainLoop</span><span class="p">():</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">MainLoop</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">frame</span></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -208,9 +130,11 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../debut.html">debut module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../siteinit.html">siteinit module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../wxpyNautilus.html">wxpyNautilus module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wxpyNautilus.html">wxpyNautilus package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../wxpyNautilus.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wxpyNautilus.html#module-wxpyNautilus">Module contents</a></li>
+</ul>
+</li>
 </ul>
 
 

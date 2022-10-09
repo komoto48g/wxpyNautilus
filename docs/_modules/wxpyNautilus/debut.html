@@ -100,66 +100,26 @@
     <span class="p">]</span>
 
 <div class="viewcode-block" id="need_buffer_save_p"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.need_buffer_save_p">[docs]</a>    <span class="k">def</span> <span class="nf">need_buffer_save_p</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buf</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">buf</span><span class="o">.</span><span class="n">mtdelta</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">buf</span><span class="o">.</span><span class="n">mtdelta</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># no file</span>
             <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="n">buf</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">buf</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">:</span>  <span class="c1"># check if currently selected</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">IsModified</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1">## self.push_current() # need to update current buffer.text</span>
             <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">text</span> <span class="o">!=</span> <span class="n">buf</span><span class="o">.</span><span class="n">filetext</span></div>
     <span class="n">Editor</span><span class="o">.</span><span class="n">need_buffer_save_p</span> <span class="o">=</span> <span class="n">need_buffer_save_p</span>
 
-<div class="viewcode-block" id="confirm_load"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.confirm_load">[docs]</a>    <span class="k">def</span> <span class="nf">confirm_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Confirm the load with the dialog.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">need_buffer_save_p</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span>
                     <span class="s2">&quot;You are leaving unsaved content.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
                     <span class="s2">&quot;Changes to the content will be discarded.</span><span class="se">\n</span><span class="s2">&quot;</span>
                     <span class="s2">&quot;Continue loading?&quot;</span><span class="p">,</span>
-                    <span class="c1">## &quot;Load&quot;,</span>
-                    <span class="sa">f</span><span class="s2">&quot;Load </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">),</span>
+                    <span class="s2">&quot;Load </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">filename</span><span class="p">)),</span>
                     <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">YES_NO</span><span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">ICON_INFORMATION</span><span class="p">)</span> <span class="o">!=</span> <span class="n">wx</span><span class="o">.</span><span class="n">YES</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="s2">&quot;The load has been canceled.&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
-    <span class="n">Editor</span><span class="o">.</span><span class="n">confirm_load</span> <span class="o">=</span> <span class="n">confirm_load</span>
-
-<div class="viewcode-block" id="confirm_save"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.confirm_save">[docs]</a>    <span class="k">def</span> <span class="nf">confirm_save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Confirm the save with the dialog.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">mtdelta</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span>
-                    <span class="s2">&quot;The file has been modified externally.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-                    <span class="s2">&quot;The contents of the file will be overwritten.</span><span class="se">\n</span><span class="s2">&quot;</span>
-                    <span class="s2">&quot;Continue saving?&quot;</span><span class="p">,</span>
-                    <span class="c1">## &quot;Save&quot;,</span>
-                    <span class="sa">f</span><span class="s2">&quot;Save </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">),</span>
-                    <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">YES_NO</span><span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">ICON_INFORMATION</span><span class="p">)</span> <span class="o">!=</span> <span class="n">wx</span><span class="o">.</span><span class="n">YES</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="s2">&quot;The save has been canceled.&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">IsModified</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="s2">&quot;No need to save.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
-    <span class="n">Editor</span><span class="o">.</span><span class="n">confirm_save</span> <span class="o">=</span> <span class="n">confirm_save</span>
-
-<div class="viewcode-block" id="confirm_close"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.confirm_close">[docs]</a>    <span class="k">def</span> <span class="nf">confirm_close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Confirm the close with the dialog.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">need_buffer_save_p</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span>
-                    <span class="s2">&quot;You are closing unsaved content.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-                    <span class="s2">&quot;Changes to the content will be discarded.</span><span class="se">\n</span><span class="s2">&quot;</span>
-                    <span class="s2">&quot;Continue closing?&quot;</span><span class="p">,</span>
-                    <span class="c1">## &quot;Close&quot;,</span>
-                    <span class="s2">&quot;Close </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">filename</span><span class="p">)),</span>
-                    <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">YES_NO</span><span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">ICON_INFORMATION</span><span class="p">)</span> <span class="o">!=</span> <span class="n">wx</span><span class="o">.</span><span class="n">YES</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="s2">&quot;The close has been canceled.&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
-    <span class="n">Editor</span><span class="o">.</span><span class="n">confirm_close</span> <span class="o">=</span> <span class="n">confirm_close</span>
-
-    <span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">confirm_load</span><span class="p">():</span>
-            <span class="k">return</span> <span class="kc">None</span>
         <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">filename</span>
         <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpos</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">f</span><span class="p">:</span>
@@ -174,7 +134,18 @@
     <span class="n">Editor</span><span class="o">.</span><span class="n">load</span> <span class="o">=</span> <span class="n">_load</span>
 
     <span class="k">def</span> <span class="nf">_save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">confirm_save</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;Confirm the save with the dialog.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">mtdelta</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span>
+                    <span class="s2">&quot;The file has been modified externally.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;The contents of the file will be overwritten.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;Continue saving?&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Save </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">filename</span><span class="p">)),</span>
+                    <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">YES_NO</span><span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">ICON_INFORMATION</span><span class="p">)</span> <span class="o">!=</span> <span class="n">wx</span><span class="o">.</span><span class="n">YES</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="s2">&quot;The save has been canceled.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">IsModified</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="s2">&quot;No need to save.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">filename</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">f</span><span class="p">:</span>
@@ -193,7 +164,7 @@
                 <span class="n">wildcard</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wildcards</span><span class="p">),</span>
                 <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">FD_SAVE</span><span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">FD_OVERWRITE_PROMPT</span><span class="p">)</span> <span class="k">as</span> <span class="n">dlg</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">dlg</span><span class="o">.</span><span class="n">ShowModal</span><span class="p">()</span> <span class="o">!=</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_OK</span><span class="p">:</span>
-                <span class="k">return</span>
+                <span class="k">return</span> <span class="kc">None</span>
             <span class="n">f</span> <span class="o">=</span> <span class="n">dlg</span><span class="o">.</span><span class="n">Path</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_file</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">f</span><span class="si">!r}</span><span class="s2"> successfully.&quot;</span><span class="p">)</span>
@@ -206,7 +177,7 @@
                 <span class="n">wildcard</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wildcards</span><span class="p">),</span>
                 <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">FD_OPEN</span><span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">FD_MULTIPLE</span><span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">FD_FILE_MUST_EXIST</span><span class="p">)</span> <span class="k">as</span> <span class="n">dlg</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">dlg</span><span class="o">.</span><span class="n">ShowModal</span><span class="p">()</span> <span class="o">!=</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_OK</span><span class="p">:</span>
-                <span class="k">return</span>
+                <span class="k">return</span> <span class="kc">None</span>
             <span class="n">paths</span> <span class="o">=</span> <span class="n">dlg</span><span class="o">.</span><span class="n">Paths</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
@@ -215,16 +186,31 @@
     <span class="n">Editor</span><span class="o">.</span><span class="n">open</span> <span class="o">=</span> <span class="n">_open</span>
 
 <div class="viewcode-block" id="kill_buffer"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.kill_buffer">[docs]</a>    <span class="k">def</span> <span class="nf">kill_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">confirm_close</span><span class="p">():</span>
-            <span class="k">return</span>
+        <span class="sd">&quot;&quot;&quot;Confirm the close with the dialog.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">need_buffer_save_p</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span>
+                    <span class="s2">&quot;You are closing unsaved content.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;Changes to the content will be discarded.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;Continue closing?&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Close </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">filename</span><span class="p">)),</span>
+                    <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">YES_NO</span><span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">ICON_INFORMATION</span><span class="p">)</span> <span class="o">!=</span> <span class="n">wx</span><span class="o">.</span><span class="n">YES</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="s2">&quot;The close has been canceled.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_current</span><span class="p">()</span></div>
     <span class="n">Editor</span><span class="o">.</span><span class="n">kill_buffer</span> <span class="o">=</span> <span class="n">kill_buffer</span>
 
 <div class="viewcode-block" id="kill_all_buffers"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.kill_all_buffers">[docs]</a>    <span class="k">def</span> <span class="nf">kill_all_buffers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">buf</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">need_buffer_save_p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_list</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">swap_buffer</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">confirm_close</span><span class="p">():</span>
-                <span class="k">return</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">need_buffer_save_p</span><span class="p">(</span><span class="n">buf</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span>
+                        <span class="s2">&quot;You are closing unsaved content.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Changes to the content will be discarded.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Continue closing?&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;Close </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">buf</span><span class="o">.</span><span class="n">filename</span><span class="p">)),</span>
+                        <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">YES_NO</span><span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">ICON_INFORMATION</span><span class="p">)</span> <span class="o">!=</span> <span class="n">wx</span><span class="o">.</span><span class="n">YES</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="s2">&quot;The close has been canceled.&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear_all</span><span class="p">()</span></div>
     <span class="n">Editor</span><span class="o">.</span><span class="n">kill_all_buffers</span> <span class="o">=</span> <span class="n">kill_all_buffers</span>
 
@@ -549,8 +535,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
     
 <div class="viewcode-block" id="MyFileDropLoader.OnDropFiles"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.MyFileDropLoader.OnDropFiles">[docs]</a>    <span class="k">def</span> <span class="nf">OnDropFiles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">filenames</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">confirm_load</span><span class="p">():</span>
-            <span class="k">return</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="n">f</span><span class="si">!r}</span><span class="s2"> successfully.&quot;</span><span class="p">)</span>
