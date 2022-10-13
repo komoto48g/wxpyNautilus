@@ -149,7 +149,7 @@ if 1:
                     style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
                 self.post_message("The close has been canceled.")
                 return None
-        self.pop_current()
+        self.remove_buffer()
     Editor.kill_buffer = kill_buffer
 
     def kill_all_buffers(self):
@@ -164,7 +164,7 @@ if 1:
                         style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
                     self.post_message("The close has been canceled.")
                     return None
-        self.clear_all()
+        self.remove_all_buffers()
     Editor.kill_all_buffers = kill_all_buffers
 
 if 1:
