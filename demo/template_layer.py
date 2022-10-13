@@ -16,8 +16,8 @@ class Plugin(Layer):
         self.ksize = LParam("ksize", (1,99,2), 13,
                             tip="kernel window size")
         
-        self.btn = Button(self, label="Run", icon='->',
-                          handler=lambda v: self.run(),)
+        self.btn = Button(self, label="Run",
+                          handler=lambda v: self.run(), icon='->')
         self.layout((
                 self.ksize,
                 self.btn,
@@ -40,6 +40,6 @@ class Plugin(Layer):
 if __name__ == "__main__":
     app = wx.App()
     frm = Frame(None)
-    frm.load_plug(Plugin, show=1, dock=3)
+    frm.load_plug(Plugin, show=1)
     frm.Show()
     app.MainLoop()

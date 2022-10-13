@@ -36,10 +36,11 @@ class Panel(wx.Panel):
                 orient=wx.VERTICAL
             )
         )
+        self.Sizer.Fit(self)
 
 if __name__ == "__main__":
     app = wx.App()
     frm = Frame(None)
-    frm.load_plug(Panel, show=1, dock=4)
+    frm.load_plug(Panel, show=1)
     frm.Show()
     app.MainLoop()
