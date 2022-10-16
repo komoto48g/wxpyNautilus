@@ -196,11 +196,6 @@ def init_editor_interface(self):
     Note:
         This method defines the *common* interface of Editor/Shell
     """
-    self.define_key('C-space', self.set_marker) # set mark and markline
-    self.define_key('C-S-space', self.set_line_marker) # set pointer to trace
-    self.define_key('C-x @', self.goto_marker)
-    self.define_key('C-x S-@', self.goto_line_marker)
-    self.define_key('C-x C-x', self.exchange_point_and_mark)
     self.define_key('C-x [', self.beginning_of_buffer)
     self.define_key('C-x ]', self.end_of_buffer)
 
