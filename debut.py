@@ -57,9 +57,6 @@ if 1:
             return False
         if buf is self.buffer:  # check if currently selected
             return self.IsModified()
-        else:
-            ## self.push_current() # need to update current buffer.text
-            return buf.text != buf.filetext
     Editor.need_buffer_save_p = need_buffer_save_p
 
     def _load(self):
@@ -149,11 +146,11 @@ if 1:
                     style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
                 self.post_message("The close has been canceled.")
                 return None
-        self.remove_buffer()
+        wx.CallAfter(self.remove_buffer)
     Editor.kill_buffer = kill_buffer
 
     def kill_all_buffers(self):
-        for buf in filter(self.need_buffer_save_p, self.buffer_list):
+        for buf in filter(self.need_buffer_save_p, self.all_buffers()):
             self.swap_buffer(buf)
             if self.need_buffer_save_p(buf):
                 if wx.MessageBox(
@@ -164,7 +161,7 @@ if 1:
                         style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
                     self.post_message("The close has been canceled.")
                     return None
-        self.remove_all_buffers()
+        wx.CallAfter(self.remove_all_buffers)
     Editor.kill_all_buffers = kill_all_buffers
 
 if 1:
@@ -196,14 +193,6 @@ def init_editor_interface(self):
     Note:
         This method defines the *common* interface of Editor/Shell
     """
-    self.define_key('C-x [', self.beginning_of_buffer)
-    self.define_key('C-x ]', self.end_of_buffer)
-
-    self.define_key('C-;', self.comment_out_line)
-    self.define_key('C-:', self.uncomment_line)
-    self.define_key('C-S-;', self.comment_out_line)
-    self.define_key('C-S-:', self.uncomment_line)
-
     @self.define_key('f9')
     def toggle_wrap_mode():
         mode = ['no-wrap', 'word-wrap', 'char-wrap', 'whitespace-wrap']
@@ -223,6 +212,8 @@ def init_editor_interface(self):
 def init_editor(self):
     """Customize the keymaps of the Editor.
     """
+    ## Buffer text control
+    
     @self.define_key('enter')
     def newline_and_indent():
         n = self.py_electric_indent()
@@ -256,6 +247,8 @@ def init_editor(self):
     def kill_region():
         self.anchor = self.mark
         self.Cut()
+
+    ## Editor system control
 
     self.define_key('C-x k',   self.kill_all_buffers)
     self.define_key('C-x C-k', self.kill_buffer)
@@ -431,8 +424,8 @@ def init_shellframe(self):
 
     self.define_key('C-x M-s', self.save_session)
 
-    self.define_key('C-x p', self.other_editor, p=-1) # cf. [Xbutton1]
-    self.define_key('C-x n', self.other_editor, p=+1) # cf. [Xbutton2]
+    self.define_key('C-x p', self.other_editor, p=-1)
+    self.define_key('C-x n', self.other_editor, p=+1)
 
     @self.define_key('C-d', clear=0)
     @self.define_key('C-S-d', clear=1)
