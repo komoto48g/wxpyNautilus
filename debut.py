@@ -418,14 +418,26 @@ def init_shellframe(self):
 
     if __name__ == "__main__":
         self.define_key('f12', self.rootshell.SetFocus) # overwrite close
+
     self.define_key('S-f12', self.clear_shell)
     self.define_key('C-f12', self.clone_shell)
     self.define_key('M-f12', self.close_shell)
 
     self.define_key('C-x M-s', self.save_session)
 
-    self.define_key('C-x p', self.other_editor, p=-1)
-    self.define_key('C-x n', self.other_editor, p=+1)
+    @self.define_key('Xbutton1', p=-1)
+    @self.define_key('Xbutton2', p=+1)
+    @self.define_key('C-x p', p=-1)
+    @self.define_key('C-x n', p=+1)
+    def other_editor(p=1):
+        "Move focus to other page (no loop)"
+        win = wx.Window.FindFocus()
+        nb = win.Parent
+        try:
+            if nb.PageCount > 1:
+                nb.Selection = (nb.Selection + p) % nb.PageCount
+        except AttributeError as e:
+            pass
 
     @self.define_key('C-d', clear=0)
     @self.define_key('C-S-d', clear=1)
