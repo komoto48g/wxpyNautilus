@@ -396,7 +396,7 @@ def init_shellframe(self):
             self.Config.load()
             reload(this)
             this.stylus(self)
-            del self.Config.red_arrow
+            del self.Config.buffer.red_arrow
             return
         except SyntaxError as e:
             filename = e.filename
@@ -409,10 +409,11 @@ def init_shellframe(self):
                 lineno = tb.tb_lineno
                 tb = tb.tb_next
             self.post_message(f"reload failed: {e} at {filename}:{lineno}")
-        if filename == self.Config.buffer.filename:
-            self.Config.red_arrow = lineno-1
-            self.Config.goto_line(lineno-1)
-            self.Config.recenter()
+        buf = self.Config.buffer
+        if filename == buf.filename:
+            buf.red_arrow = lineno-1
+            buf.goto_line(lineno-1)
+            buf.recenter()
     
     self.reload_this = reload_this
 
@@ -473,7 +474,7 @@ def stylus(self):
     self.Config.set_style(py_text_mode.STYLE)
     self.Scratch.set_style(py_interactive_mode.STYLE)
     
-    ## Don't clear Config buffer. => after stylus
+    ## Don't clear Config.buffer.
     self.Config.undefine_key('C-x k')
     self.Config.undefine_key('C-x C-k')
 
@@ -506,14 +507,13 @@ def main(self):
         self.Config.load_file(__file__)
         self.ghost.InsertPage(4, self.Config, 'Config', bitmap=Icon('proc'))
         
-        ## Set conf buffer traceable.
-        self.set_traceable(self.Config)
+    self.set_traceable(self.Config)
 
     @self.Config.define_key('M-j')
     def eval_buffer():
         """Evaluate this <conf> code and call new stylus"""
         locals = {}
-        self.Config.py_exec_region(locals, locals, filename="<conf>")
+        self.Config.buffer.py_exec_region(locals, locals, filename="<conf>")
         if "stylus" in locals:
             locals["stylus"](self)
 
