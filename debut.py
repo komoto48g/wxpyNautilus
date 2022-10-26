@@ -47,124 +47,6 @@ if 1:
 ## to be implemented in the future 
 ## --------------------------------
 if 1:
-    Editor.wildcards = [
-        "PY files (*.py)|*.py",
-        "ALL files (*.*)|*.*",
-    ]
-
-    def need_buffer_save_p(self, buf):
-        if buf.mtdelta is None: # no file
-            return False
-        if buf is self.buffer:  # check if currently selected
-            return self.IsModified()
-    Editor.need_buffer_save_p = need_buffer_save_p
-
-    def _load(self):
-        """Confirm the load with the dialog."""
-        if self.need_buffer_save_p(self.buffer):
-            if wx.MessageBox(
-                    "You are leaving unsaved content.\n\n"
-                    "Changes to the content will be discarded.\n"
-                    "Continue loading?",
-                    "Load {!r}".format(os.path.basename(self.buffer.filename)),
-                    style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
-                self.post_message("The load has been canceled.")
-                return None
-        f = self.buffer.filename
-        p = self.cpos
-        if not f:
-            self.post_message(f"No file to load.")
-            return None
-        if self.load_file(f, self.markline+1):
-            self.goto_char(p) # restore position
-            self.recenter()
-            self.post_message(f"Loaded {f!r} successfully.")
-            return True
-        return False
-    Editor.load = _load
-
-    def _save(self):
-        """Confirm the save with the dialog."""
-        if self.buffer.mtdelta:
-            if wx.MessageBox(
-                    "The file has been modified externally.\n\n"
-                    "The contents of the file will be overwritten.\n"
-                    "Continue saving?",
-                    "Save {!r}".format(os.path.basename(self.buffer.filename)),
-                    style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
-                self.post_message("The save has been canceled.")
-                return None
-        elif not self.IsModified():
-            self.post_message("No need to save.")
-            return None
-        f = self.buffer.filename
-        if not f:
-            return self.saveas()
-        if self.save_file(f):
-            self.post_message(f"Saved {f!r} successfully.")
-            return True
-        return False
-    Editor.save = _save
-
-    def _saveas(self):
-        name = re.sub("[\\/:*?\"<>|]", '',
-                      os.path.basename(self.buffer.filename or ''))
-        with wx.FileDialog(self, "Save buffer as",
-                defaultFile=name,
-                wildcard='|'.join(self.wildcards),
-                style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT) as dlg:
-            if dlg.ShowModal() != wx.ID_OK:
-                return None
-            f = dlg.Path
-        if self.save_file(f):
-            self.post_message(f"Saved {f!r} successfully.")
-            return True
-        return False
-    Editor.saveas = _saveas
-
-    def _open(self):
-        with wx.FileDialog(self, "Open buffer",
-                wildcard='|'.join(self.wildcards),
-                style=wx.FD_OPEN|wx.FD_MULTIPLE|wx.FD_FILE_MUST_EXIST) as dlg:
-            if dlg.ShowModal() != wx.ID_OK:
-                return None
-            paths = dlg.Paths
-        for f in paths:
-            if self.load_file(f):
-                self.post_message(f"Loaded {f!r} successfully.")
-        return True
-    Editor.open = _open
-
-    def kill_buffer(self):
-        """Confirm the close with the dialog."""
-        if self.need_buffer_save_p(self.buffer):
-            if wx.MessageBox(
-                    "You are closing unsaved content.\n\n"
-                    "Changes to the content will be discarded.\n"
-                    "Continue closing?",
-                    "Close {!r}".format(os.path.basename(self.buffer.filename)),
-                    style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
-                self.post_message("The close has been canceled.")
-                return None
-        wx.CallAfter(self.remove_buffer)
-    Editor.kill_buffer = kill_buffer
-
-    def kill_all_buffers(self):
-        for buf in filter(self.need_buffer_save_p, self.all_buffers()):
-            self.swap_buffer(buf)
-            if self.need_buffer_save_p(buf):
-                if wx.MessageBox(
-                        "You are closing unsaved content.\n\n"
-                        "Changes to the content will be discarded.\n"
-                        "Continue closing?",
-                        "Close {!r}".format(os.path.basename(buf.filename)),
-                        style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
-                    self.post_message("The close has been canceled.")
-                    return None
-        wx.CallAfter(self.remove_all_buffers)
-    Editor.kill_all_buffers = kill_all_buffers
-
-if 1:
     def gen_atoms_forward(self, start=0, end=-1):
         if end == -1:
             end = self.TextLength
@@ -254,6 +136,7 @@ def init_editor(self):
     self.define_key('C-x C-k', self.kill_buffer)
     self.define_key('C-x C-n', self.new_buffer)
     self.define_key('C-x C-l', self.load)
+    self.define_key('C-x s', self.save_all_buffers)
     self.define_key('C-x C-s', self.save)
     self.define_key('C-x S-s', self.saveas)
     self.define_key('C-x C-o', self.open)
