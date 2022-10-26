@@ -373,9 +373,9 @@ class MyFileDropLoader(wx.FileDropTarget):
     
     def OnDropFiles(self, x, y, filenames):
         for f in filenames:
-            if self.target.load_file(f):
+            if self.target.load_file(f, focus=True):
                 self.target.post_message(f"Loaded {f!r} successfully.")
-        self.target.SetFocus()
+        ## self.target.SetFocus()
         return True
 
 
