@@ -135,11 +135,11 @@ def init_editor(self):
     self.define_key('C-x k',   self.kill_all_buffers)
     self.define_key('C-x C-k', self.kill_buffer)
     self.define_key('C-x C-n', self.new_buffer)
-    self.define_key('C-x C-l', self.load)
-    self.define_key('C-x s', self.save_all_buffers)
-    self.define_key('C-x C-s', self.save)
-    self.define_key('C-x S-s', self.saveas)
-    self.define_key('C-x C-o', self.open)
+    self.define_key('C-x C-l', self.load_buffer)
+    self.define_key('C-x s',   self.save_all_buffers)
+    self.define_key('C-x C-s', self.save_buffer)
+    self.define_key('C-x S-s', self.save_as_buffer)
+    self.define_key('C-x C-o', self.open_buffer)
 
 
 def init_shell(self):
