@@ -26,11 +26,8 @@ from mwx.nutshell import Editor, Nautilus
 ## Configuration of Shell/Editor
 ## --------------------------------
 
-def init_editor_interface(self):
-    """Customize the keymaps of Editor/Shell.
-    
-    Note:
-        This method defines the *common* interface of Editor/Shell
+def init_common_keymaps(self):
+    """Customize the common keymaps.
     """
     @self.define_key('f9')
     def toggle_wrap_mode():
@@ -48,10 +45,11 @@ def init_editor_interface(self):
         self.ViewWhiteSpace = not self.ViewWhiteSpace
 
 
-def init_editor(self):
-    """Customize the keymaps of the Editor.
+def init_buffer(self):
+    """Customize the keymaps of the Buffer.
     """
     ## Buffer text control
+    init_common_keymaps(self)
     
     @self.define_key('enter')
     def newline_and_indent():
@@ -87,8 +85,10 @@ def init_editor(self):
         self.anchor = self.mark
         self.Cut()
 
-    ## Editor system control
 
+def init_editor(self):
+    """Customize the keymaps of the Editor.
+    """
     self.define_key('C-x k',   self.kill_all_buffers)
     self.define_key('C-x C-k', self.kill_buffer)
     self.define_key('C-x C-n', self.new_buffer)
@@ -102,6 +102,8 @@ def init_editor(self):
 def init_shell(self):
     """Customize the keymaps of the Shell.
     """
+    init_common_keymaps(self)
+    
     @self.define_key('S-enter') # cf. [C-RET] Shell.insertLineBreak
     def open_line():
         self.back_to_indentation()
@@ -296,13 +298,13 @@ def stylus(self):
     """
     init_shellframe(self)
 
-    for page in self.all_pages(Editor):
-        init_editor_interface(page)
-        init_editor(page)
+    for editor in self.all_pages(Editor):
+        init_editor(editor)
+        for buffer in editor.all_buffers():
+            init_buffer(buffer)
 
-    for page in self.all_pages(Nautilus):
-        init_editor_interface(page)
-        init_shell(page)
+    for shell in self.all_pages(Nautilus):
+        init_shell(shell)
 
     self.Config.set_style(py_text_mode.STYLE)
     self.Scratch.set_style(py_interactive_mode.STYLE)
@@ -355,8 +357,10 @@ def main(self):
     ## Set scratch window to accept drop-file.
     self.ghost.SetDropTarget(MyFileDropLoader(self.Scratch))
 
+    for editor in self.all_pages(Editor):
+        editor.handler.bind('buffer_new', init_buffer)
+
     self.handler.bind('add_shell', init_shell)
-    self.handler.bind('add_shell', init_editor_interface)
     self.post_message("Startup process has completed successfully.")
 
 
