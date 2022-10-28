@@ -22,49 +22,6 @@ from mwx.controls import Icon
 from mwx.nutshell import EditorInterface
 from mwx.nutshell import Editor, Nautilus
 
-if 1:
-    def do(f, *iterables, **kwargs):
-        """
-        Usage
-        -----
-        >>> 5 @range @(do, p, end=',')
-        ==> partial(do, p, end=',')(range(5))
-        ==> do.results = tuple(p(x, end=',') for x in range(5))
-        0,1,2,3,4,
-        >>> do.results
-        (None, None, None, None, None)
-        """
-        if not iterables:
-            return partial(do, f, **kwargs)
-        do.results = tuple(map(partial(f, **kwargs), *iterables))
-    
-    builtins.do = do
-    builtins.reduce = reduce
-    builtins.partial = partial
-
-## --------------------------------
-## Shell/Editor patch and extension
-## to be implemented in the future 
-## --------------------------------
-if 1:
-    def gen_atoms_forward(self, start=0, end=-1):
-        if end == -1:
-            end = self.TextLength
-        q = start
-        while q < end:
-            p, q, st = self.get_following_atom(q)
-            yield self.GetTextRange(p, q)
-    EditorInterface.gen_atoms_forward = gen_atoms_forward
-
-    def gen_atoms_backward(self, start=0, end=-1):
-        if end == -1:
-            end = self.TextLength
-        p = end
-        while p > start:
-            p, q, st = self.get_preceding_atom(p)
-            yield self.GetTextRange(p, q)
-    EditorInterface.gen_atoms_backward = gen_atoms_backward
-
 ## --------------------------------
 ## Configuration of Shell/Editor
 ## --------------------------------
@@ -194,13 +151,6 @@ def init_shell(self):
             self.parent.load(target, focus=False)
             self.post_message(f"\b {target}")
             break
-
-    self.handler.unbind('stc_updated')
-    @self.handler.bind('stc_updated') # handler.define
-    def on_stc_updated(v):
-        ## self.message(self.get_following_atom(self.cpos))
-        ## self.message(self.get_preceding_atom(self.cpos))
-        pass
 
 ## --------------------------------
 ## Setup the console of Nautilus
