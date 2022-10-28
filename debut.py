@@ -5,21 +5,12 @@
 __version__ = "1.0rc"
 __author__ = "Kazuya O'moto <komoto@jeol.co.jp>"
 
-from functools import partial, reduce, wraps
 from importlib import reload
-import traceback
-import builtins
-import inspect
-import dis
-## import operator as op
-import sys
 import os
-import re
 import wx
 from wx import stc
 import mwx
 from mwx.controls import Icon
-from mwx.nutshell import EditorInterface
 from mwx.nutshell import Editor, Nautilus
 
 ## --------------------------------
@@ -31,7 +22,11 @@ def init_common_keymaps(self):
     """
     @self.define_key('f9')
     def toggle_wrap_mode():
-        mode = ['no-wrap', 'word-wrap', 'char-wrap', 'whitespace-wrap']
+        mode = ['no-wrap',
+                'word-wrap',
+                'char-wrap',
+                'whitespace-wrap'
+                ]
         self.WrapMode = (self.WrapMode + 1) % 4
         self.post_message("\b {!r}".format(mode[self.WrapMode]))
 
@@ -43,6 +38,12 @@ def init_common_keymaps(self):
     def toggle_eol_view():
         self.ViewEOL = not self.ViewEOL
         self.ViewWhiteSpace = not self.ViewWhiteSpace
+
+    self.define_key('C-x [', self.beginning_of_buffer)
+    self.define_key('C-x ]', self.end_of_buffer)
+    self.define_key('C-x @', self.goto_mark)
+    self.define_key('C-c C-c', self.goto_matched_paren)
+    self.define_key('C-x C-x', self.exchange_point_and_mark)
 
 
 def init_buffer(self):
@@ -57,23 +58,18 @@ def init_buffer(self):
         self.AddText(os.linesep + ' ' * n)
 
     @self.define_key('C-enter')
-    def newline_and_indent():
+    def newline_and_indent_eol():
         n = self.py_electric_indent()
         self.goto_char(self.eol)
         self.AddText(os.linesep + ' ' * n)
 
+    @self.define_key('C-S-enter')
     @self.define_key('S-enter')
-    def open_line_and_indent_relative():
+    def open_line_and_indent():
         n = self.py_current_indent()
         self.goto_char(self.bol)
         self.InsertText(self.bol, ' ' * n + os.linesep)
         self.goto_char(self.cpos + n) # relative indentation position
-
-    ## @self.define_key('S-enter')
-    ## def open_line_and_indent_relative():
-    ##     self.goto_char(self.bol)
-    ##     self.InsertText(self.bol, os.linesep) # open-line
-    ##     self.py_indent_line() # indent (Note: Undo is recorded twice)
 
     @self.define_key('M-w')
     def copy_region():
@@ -124,7 +120,7 @@ def init_shell(self):
     def load_target():
         text = self.SelectedText or self.expr_at_caret
         if not text:
-            self.post_message(f"No target")
+            self.post_message("No target")
             return
         try:
             obj = self.eval(text)
@@ -272,7 +268,7 @@ def init_shellframe(self):
         try:
             if nb.PageCount > 1:
                 nb.Selection = (nb.Selection + p) % nb.PageCount
-        except AttributeError as e:
+        except AttributeError:
             pass
 
     @self.define_key('C-d', clear=0)
@@ -306,8 +302,8 @@ def stylus(self):
     for shell in self.all_pages(Nautilus):
         init_shell(shell)
 
-    self.Config.set_style(py_text_mode.STYLE)
-    self.Scratch.set_style(py_interactive_mode.STYLE)
+    self.Config.set_attributes(Style=py_text_mode.STYLE)
+    self.Scratch.set_attributes(Style=py_interactive_mode.STYLE)
     
     ## Don't clear Config.buffer.
     self.Config.undefine_key('C-x k')
@@ -327,7 +323,6 @@ class MyFileDropLoader(wx.FileDropTarget):
         for f in filenames:
             if self.target.load_file(f, focus=True):
                 self.target.post_message(f"Loaded {f!r} successfully.")
-        ## self.target.SetFocus()
         return True
 
 

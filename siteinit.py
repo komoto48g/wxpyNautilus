@@ -67,4 +67,3 @@ def init_mainframe(self):
 
     import debut
     debut.main(self.shellframe)
-    ## self.shellframe.Config.load_file('siteinit.py')
