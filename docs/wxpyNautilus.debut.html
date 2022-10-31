@@ -56,52 +56,15 @@
 <span id="wxpynautilus-debut-module"></span><h1>wxpyNautilus.debut module<a class="headerlink" href="#module-wxpyNautilus.debut" title="Permalink to this heading"></a></h1>
 <p>deb utilus ver 1.0rc</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="wxpyNautilus.debut.do">
-<span class="sig-prename descclassname"><span class="pre">wxpyNautilus.debut.</span></span><span class="sig-name descname"><span class="pre">do</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">iterables</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/debut.html#do"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.debut.do" title="Permalink to this definition"></a></dt>
-<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="mi">5</span> <span class="nd">@range</span> <span class="o">@</span><span class="p">(</span><span class="n">do</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-<span class="go">==&gt; partial(do, p, end=&#39;,&#39;)(range(5))</span>
-<span class="go">==&gt; do.results = tuple(p(x, end=&#39;,&#39;) for x in range(5))</span>
-<span class="go">0,1,2,3,4,</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">do</span><span class="o">.</span><span class="n">results</span>
-<span class="go">(None, None, None, None, None)</span>
-</pre></div>
-</div>
+<dt class="sig sig-object py" id="wxpyNautilus.debut.init_common_keymaps">
+<span class="sig-prename descclassname"><span class="pre">wxpyNautilus.debut.</span></span><span class="sig-name descname"><span class="pre">init_common_keymaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/debut.html#init_common_keymaps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.debut.init_common_keymaps" title="Permalink to this definition"></a></dt>
+<dd><p>Customize the common keymaps.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="wxpyNautilus.debut.need_buffer_save_p">
-<span class="sig-prename descclassname"><span class="pre">wxpyNautilus.debut.</span></span><span class="sig-name descname"><span class="pre">need_buffer_save_p</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/debut.html#need_buffer_save_p"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.debut.need_buffer_save_p" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="wxpyNautilus.debut.kill_buffer">
-<span class="sig-prename descclassname"><span class="pre">wxpyNautilus.debut.</span></span><span class="sig-name descname"><span class="pre">kill_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/debut.html#kill_buffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.debut.kill_buffer" title="Permalink to this definition"></a></dt>
-<dd><p>Confirm the close with the dialog.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="wxpyNautilus.debut.kill_all_buffers">
-<span class="sig-prename descclassname"><span class="pre">wxpyNautilus.debut.</span></span><span class="sig-name descname"><span class="pre">kill_all_buffers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/debut.html#kill_all_buffers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.debut.kill_all_buffers" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="wxpyNautilus.debut.gen_atoms_forward">
-<span class="sig-prename descclassname"><span class="pre">wxpyNautilus.debut.</span></span><span class="sig-name descname"><span class="pre">gen_atoms_forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/debut.html#gen_atoms_forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.debut.gen_atoms_forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="wxpyNautilus.debut.gen_atoms_backward">
-<span class="sig-prename descclassname"><span class="pre">wxpyNautilus.debut.</span></span><span class="sig-name descname"><span class="pre">gen_atoms_backward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/debut.html#gen_atoms_backward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.debut.gen_atoms_backward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="wxpyNautilus.debut.init_editor_interface">
-<span class="sig-prename descclassname"><span class="pre">wxpyNautilus.debut.</span></span><span class="sig-name descname"><span class="pre">init_editor_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/debut.html#init_editor_interface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.debut.init_editor_interface" title="Permalink to this definition"></a></dt>
-<dd><p>Customize the keymaps of Editor/Shell.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This method defines the <em>common</em> interface of Editor/Shell</p>
-</div>
+<dt class="sig sig-object py" id="wxpyNautilus.debut.init_buffer">
+<span class="sig-prename descclassname"><span class="pre">wxpyNautilus.debut.</span></span><span class="sig-name descname"><span class="pre">init_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/debut.html#init_buffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.debut.init_buffer" title="Permalink to this definition"></a></dt>
+<dd><p>Customize the keymaps of the Buffer.</p>
 </dd></dl>
 
 <dl class="py function">
