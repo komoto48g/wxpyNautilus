@@ -5,197 +5,28 @@
 __version__ = "1.0rc"
 __author__ = "Kazuya O'moto <komoto@jeol.co.jp>"
 
-from functools import partial, reduce, wraps
 from importlib import reload
-import traceback
-import builtins
-import inspect
-import dis
-## import operator as op
-import sys
 import os
-import re
 import wx
 from wx import stc
 import mwx
 from mwx.controls import Icon
-from mwx.nutshell import EditorInterface
 from mwx.nutshell import Editor, Nautilus
-
-if 1:
-    def do(f, *iterables, **kwargs):
-        """
-        Usage
-        -----
-        >>> 5 @range @(do, p, end=',')
-        ==> partial(do, p, end=',')(range(5))
-        ==> do.results = tuple(p(x, end=',') for x in range(5))
-        0,1,2,3,4,
-        >>> do.results
-        (None, None, None, None, None)
-        """
-        if not iterables:
-            return partial(do, f, **kwargs)
-        do.results = tuple(map(partial(f, **kwargs), *iterables))
-    
-    builtins.do = do
-    builtins.reduce = reduce
-    builtins.partial = partial
-
-## --------------------------------
-## Shell/Editor patch and extension
-## to be implemented in the future 
-## --------------------------------
-if 1:
-    Editor.wildcards = [
-        "PY files (*.py)|*.py",
-        "ALL files (*.*)|*.*",
-    ]
-
-    def need_buffer_save_p(self, buf):
-        if buf.mtdelta is None: # no file
-            return False
-        if buf is self.buffer:  # check if currently selected
-            return self.IsModified()
-    Editor.need_buffer_save_p = need_buffer_save_p
-
-    def _load(self):
-        """Confirm the load with the dialog."""
-        if self.need_buffer_save_p(self.buffer):
-            if wx.MessageBox(
-                    "You are leaving unsaved content.\n\n"
-                    "Changes to the content will be discarded.\n"
-                    "Continue loading?",
-                    "Load {!r}".format(os.path.basename(self.buffer.filename)),
-                    style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
-                self.post_message("The load has been canceled.")
-                return None
-        f = self.buffer.filename
-        p = self.cpos
-        if not f:
-            self.post_message(f"No file to load.")
-            return None
-        if self.load_file(f, self.markline+1):
-            self.goto_char(p) # restore position
-            self.recenter()
-            self.post_message(f"Loaded {f!r} successfully.")
-            return True
-        return False
-    Editor.load = _load
-
-    def _save(self):
-        """Confirm the save with the dialog."""
-        if self.buffer.mtdelta:
-            if wx.MessageBox(
-                    "The file has been modified externally.\n\n"
-                    "The contents of the file will be overwritten.\n"
-                    "Continue saving?",
-                    "Save {!r}".format(os.path.basename(self.buffer.filename)),
-                    style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
-                self.post_message("The save has been canceled.")
-                return None
-        elif not self.IsModified():
-            self.post_message("No need to save.")
-            return None
-        f = self.buffer.filename
-        if not f:
-            return self.saveas()
-        if self.save_file(f):
-            self.post_message(f"Saved {f!r} successfully.")
-            return True
-        return False
-    Editor.save = _save
-
-    def _saveas(self):
-        name = re.sub("[\\/:*?\"<>|]", '',
-                      os.path.basename(self.buffer.filename or ''))
-        with wx.FileDialog(self, "Save buffer as",
-                defaultFile=name,
-                wildcard='|'.join(self.wildcards),
-                style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT) as dlg:
-            if dlg.ShowModal() != wx.ID_OK:
-                return None
-            f = dlg.Path
-        if self.save_file(f):
-            self.post_message(f"Saved {f!r} successfully.")
-            return True
-        return False
-    Editor.saveas = _saveas
-
-    def _open(self):
-        with wx.FileDialog(self, "Open buffer",
-                wildcard='|'.join(self.wildcards),
-                style=wx.FD_OPEN|wx.FD_MULTIPLE|wx.FD_FILE_MUST_EXIST) as dlg:
-            if dlg.ShowModal() != wx.ID_OK:
-                return None
-            paths = dlg.Paths
-        for f in paths:
-            if self.load_file(f):
-                self.post_message(f"Loaded {f!r} successfully.")
-        return True
-    Editor.open = _open
-
-    def kill_buffer(self):
-        """Confirm the close with the dialog."""
-        if self.need_buffer_save_p(self.buffer):
-            if wx.MessageBox(
-                    "You are closing unsaved content.\n\n"
-                    "Changes to the content will be discarded.\n"
-                    "Continue closing?",
-                    "Close {!r}".format(os.path.basename(self.buffer.filename)),
-                    style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
-                self.post_message("The close has been canceled.")
-                return None
-        wx.CallAfter(self.remove_buffer)
-    Editor.kill_buffer = kill_buffer
-
-    def kill_all_buffers(self):
-        for buf in filter(self.need_buffer_save_p, self.all_buffers()):
-            self.swap_buffer(buf)
-            if self.need_buffer_save_p(buf):
-                if wx.MessageBox(
-                        "You are closing unsaved content.\n\n"
-                        "Changes to the content will be discarded.\n"
-                        "Continue closing?",
-                        "Close {!r}".format(os.path.basename(buf.filename)),
-                        style=wx.YES_NO|wx.ICON_INFORMATION) != wx.YES:
-                    self.post_message("The close has been canceled.")
-                    return None
-        wx.CallAfter(self.remove_all_buffers)
-    Editor.kill_all_buffers = kill_all_buffers
-
-if 1:
-    def gen_atoms_forward(self, start=0, end=-1):
-        if end == -1:
-            end = self.TextLength
-        q = start
-        while q < end:
-            p, q, st = self.get_following_atom(q)
-            yield self.GetTextRange(p, q)
-    EditorInterface.gen_atoms_forward = gen_atoms_forward
-
-    def gen_atoms_backward(self, start=0, end=-1):
-        if end == -1:
-            end = self.TextLength
-        p = end
-        while p > start:
-            p, q, st = self.get_preceding_atom(p)
-            yield self.GetTextRange(p, q)
-    EditorInterface.gen_atoms_backward = gen_atoms_backward
 
 ## --------------------------------
 ## Configuration of Shell/Editor
 ## --------------------------------
 
-def init_editor_interface(self):
-    """Customize the keymaps of Editor/Shell.
-    
-    Note:
-        This method defines the *common* interface of Editor/Shell
+def init_common_keymaps(self):
+    """Customize the common keymaps.
     """
     @self.define_key('f9')
     def toggle_wrap_mode():
-        mode = ['no-wrap', 'word-wrap', 'char-wrap', 'whitespace-wrap']
+        mode = ['no-wrap',
+                'word-wrap',
+                'char-wrap',
+                'whitespace-wrap'
+                ]
         self.WrapMode = (self.WrapMode + 1) % 4
         self.post_message("\b {!r}".format(mode[self.WrapMode]))
 
@@ -208,11 +39,18 @@ def init_editor_interface(self):
         self.ViewEOL = not self.ViewEOL
         self.ViewWhiteSpace = not self.ViewWhiteSpace
 
+    self.define_key('C-x [', self.beginning_of_buffer)
+    self.define_key('C-x ]', self.end_of_buffer)
+    self.define_key('C-x @', self.goto_mark)
+    self.define_key('C-c C-c', self.goto_matched_paren)
+    self.define_key('C-x C-x', self.exchange_point_and_mark)
 
-def init_editor(self):
-    """Customize the keymaps of the Editor.
+
+def init_buffer(self):
+    """Customize the keymaps of the Buffer.
     """
     ## Buffer text control
+    init_common_keymaps(self)
     
     @self.define_key('enter')
     def newline_and_indent():
@@ -220,23 +58,18 @@ def init_editor(self):
         self.AddText(os.linesep + ' ' * n)
 
     @self.define_key('C-enter')
-    def newline_and_indent():
+    def newline_and_indent_eol():
         n = self.py_electric_indent()
         self.goto_char(self.eol)
         self.AddText(os.linesep + ' ' * n)
 
+    @self.define_key('C-S-enter')
     @self.define_key('S-enter')
-    def open_line_and_indent_relative():
+    def open_line_and_indent():
         n = self.py_current_indent()
         self.goto_char(self.bol)
         self.InsertText(self.bol, ' ' * n + os.linesep)
         self.goto_char(self.cpos + n) # relative indentation position
-
-    ## @self.define_key('S-enter')
-    ## def open_line_and_indent_relative():
-    ##     self.goto_char(self.bol)
-    ##     self.InsertText(self.bol, os.linesep) # open-line
-    ##     self.py_indent_line() # indent (Note: Undo is recorded twice)
 
     @self.define_key('M-w')
     def copy_region():
@@ -248,20 +81,25 @@ def init_editor(self):
         self.anchor = self.mark
         self.Cut()
 
-    ## Editor system control
 
+def init_editor(self):
+    """Customize the keymaps of the Editor.
+    """
     self.define_key('C-x k',   self.kill_all_buffers)
     self.define_key('C-x C-k', self.kill_buffer)
     self.define_key('C-x C-n', self.new_buffer)
-    self.define_key('C-x C-l', self.load)
-    self.define_key('C-x C-s', self.save)
-    self.define_key('C-x S-s', self.saveas)
-    self.define_key('C-x C-o', self.open)
+    self.define_key('C-x C-l', self.load_buffer)
+    self.define_key('C-x s',   self.save_all_buffers)
+    self.define_key('C-x C-s', self.save_buffer)
+    self.define_key('C-x S-s', self.save_as_buffer)
+    self.define_key('C-x C-o', self.open_buffer)
 
 
 def init_shell(self):
     """Customize the keymaps of the Shell.
     """
+    init_common_keymaps(self)
+    
     @self.define_key('S-enter') # cf. [C-RET] Shell.insertLineBreak
     def open_line():
         self.back_to_indentation()
@@ -282,7 +120,7 @@ def init_shell(self):
     def load_target():
         text = self.SelectedText or self.expr_at_caret
         if not text:
-            self.post_message(f"No target")
+            self.post_message("No target")
             return
         try:
             obj = self.eval(text)
@@ -311,13 +149,6 @@ def init_shell(self):
             self.parent.load(target, focus=False)
             self.post_message(f"\b {target}")
             break
-
-    self.handler.unbind('stc_updated')
-    @self.handler.bind('stc_updated') # handler.define
-    def on_stc_updated(v):
-        ## self.message(self.get_following_atom(self.cpos))
-        ## self.message(self.get_preceding_atom(self.cpos))
-        pass
 
 ## --------------------------------
 ## Setup the console of Nautilus
@@ -396,7 +227,7 @@ def init_shellframe(self):
             self.Config.load()
             reload(this)
             this.stylus(self)
-            del self.Config.red_arrow
+            del self.Config.buffer.red_arrow
             return
         except SyntaxError as e:
             filename = e.filename
@@ -409,10 +240,11 @@ def init_shellframe(self):
                 lineno = tb.tb_lineno
                 tb = tb.tb_next
             self.post_message(f"reload failed: {e} at {filename}:{lineno}")
-        if filename == self.Config.buffer.filename:
-            self.Config.red_arrow = lineno-1
-            self.Config.goto_line(lineno-1)
-            self.Config.recenter()
+        buf = self.Config.buffer
+        if filename == buf.filename:
+            buf.red_arrow = lineno-1
+            buf.goto_line(lineno-1)
+            buf.recenter()
     
     self.reload_this = reload_this
 
@@ -436,7 +268,7 @@ def init_shellframe(self):
         try:
             if nb.PageCount > 1:
                 nb.Selection = (nb.Selection + p) % nb.PageCount
-        except AttributeError as e:
+        except AttributeError:
             pass
 
     @self.define_key('C-d', clear=0)
@@ -462,18 +294,18 @@ def stylus(self):
     """
     init_shellframe(self)
 
-    for page in self.all_pages(Editor):
-        init_editor_interface(page)
-        init_editor(page)
+    for editor in self.all_pages(Editor):
+        init_editor(editor)
+        for buffer in editor.all_buffers():
+            init_buffer(buffer)
 
-    for page in self.all_pages(Nautilus):
-        init_editor_interface(page)
-        init_shell(page)
+    for shell in self.all_pages(Nautilus):
+        init_shell(shell)
 
-    self.Config.set_style(py_text_mode.STYLE)
-    self.Scratch.set_style(py_interactive_mode.STYLE)
+    self.Config.set_attributes(Style=py_text_mode.STYLE)
+    self.Scratch.set_attributes(Style=py_interactive_mode.STYLE)
     
-    ## Don't clear Config buffer. => after stylus
+    ## Don't clear Config.buffer.
     self.Config.undefine_key('C-x k')
     self.Config.undefine_key('C-x C-k')
 
@@ -489,9 +321,8 @@ class MyFileDropLoader(wx.FileDropTarget):
     
     def OnDropFiles(self, x, y, filenames):
         for f in filenames:
-            if self.target.load_file(f):
+            if self.target.load_file(f, focus=True):
                 self.target.post_message(f"Loaded {f!r} successfully.")
-        self.target.SetFocus()
         return True
 
 
@@ -506,14 +337,13 @@ def main(self):
         self.Config.load_file(__file__)
         self.ghost.InsertPage(4, self.Config, 'Config', bitmap=Icon('proc'))
         
-        ## Set conf buffer traceable.
-        self.set_traceable(self.Config)
+    self.set_traceable(self.Config)
 
     @self.Config.define_key('M-j')
     def eval_buffer():
         """Evaluate this <conf> code and call new stylus"""
         locals = {}
-        self.Config.py_exec_region(locals, locals, filename="<conf>")
+        self.Config.buffer.py_exec_region(locals, locals, filename="<conf>")
         if "stylus" in locals:
             locals["stylus"](self)
 
@@ -522,8 +352,10 @@ def main(self):
     ## Set scratch window to accept drop-file.
     self.ghost.SetDropTarget(MyFileDropLoader(self.Scratch))
 
+    for editor in self.all_pages(Editor):
+        editor.handler.bind('buffer_new', init_buffer)
+
     self.handler.bind('add_shell', init_shell)
-    self.handler.bind('add_shell', init_editor_interface)
     self.post_message("Startup process has completed successfully.")
 
 
