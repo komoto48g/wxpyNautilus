@@ -224,7 +224,7 @@ def init_shellframe(self):
     def reload_this():
         """Reload this module and initialized components"""
         try:
-            self.Config.load()
+            self.Config.load_buffer()
             reload(this)
             this.stylus(self)
             del self.Config.buffer.red_arrow
