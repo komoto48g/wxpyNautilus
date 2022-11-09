@@ -150,6 +150,18 @@ def init_shell(self):
             self.post_message(f"\b {target}")
             break
 
+    @self.define_key('S-f12')
+    def clear_shell():
+        self.clear()
+
+    @self.define_key('C-f12')
+    def clone_shell():
+        self.clone(self.target)
+
+    @self.define_key('M-f12')
+    def close_shell():
+        self.kill()
+
 ## --------------------------------
 ## Setup the console of Nautilus
 ## --------------------------------
@@ -250,10 +262,6 @@ def init_shellframe(self):
 
     if __name__ == "__main__":
         self.define_key('f12', self.rootshell.SetFocus) # overwrite close
-
-    self.define_key('S-f12', self.clear_shell)
-    self.define_key('C-f12', self.clone_shell)
-    self.define_key('M-f12', self.close_shell)
 
     self.define_key('C-x M-s', self.save_session)
 
@@ -380,5 +388,7 @@ if __name__ == "__main__":
         dive(frame)
         dive(frame.Scratch)
         dive(frame.rootshell)
+        frame.handler.debug=4
+        frame.Scratch.handler.debug=4
     main(frame)
     app.MainLoop()
