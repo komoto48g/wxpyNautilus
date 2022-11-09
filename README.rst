@@ -26,12 +26,14 @@ To accomplish this, the framework consists of two main classes:
 Getting Started
 ---------------
 
+Check out `github-pages <https://komoto48g.github.io/wxpyNautilus/>`_ for more information.
+
 Prerequisites
 +++++++++++++
 
 This software works with **Python 3.6 and later versions**.
 
-1. Download the zip file from `GitHub repository <https://github.com/komoto48g/wxpyNautilus>`_
+1. Download the zip file from `wxpyNautilus (GitHub repository) <https://github.com/komoto48g/wxpyNautilus>`_
    and extract it to a suitable directory.
 
 2. Install mwxlib from `PyPI <https://pypi.org/project/mwxlib/>`_.

@@ -195,7 +195,19 @@
             <span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">groups</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">focus</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\b</span><span class="s2"> </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">break</span></div>
+            <span class="k">break</span>
+
+    <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;S-f12&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">clear_shell</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-f12&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">clone_shell</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
+
+    <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;M-f12&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">close_shell</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span></div>
 
 <span class="c1">## --------------------------------</span>
 <span class="c1">## Setup the console of Nautilus</span>
@@ -271,7 +283,7 @@
     <span class="k">def</span> <span class="nf">reload_this</span><span class="p">():</span>
         <span class="sd">&quot;&quot;&quot;Reload this module and initialized components&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">Config</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Config</span><span class="o">.</span><span class="n">load_buffer</span><span class="p">()</span>
             <span class="n">reload</span><span class="p">(</span><span class="n">this</span><span class="p">)</span>
             <span class="n">this</span><span class="o">.</span><span class="n">stylus</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">Config</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">red_arrow</span>
@@ -297,10 +309,6 @@
 
     <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;f12&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rootshell</span><span class="o">.</span><span class="n">SetFocus</span><span class="p">)</span> <span class="c1"># overwrite close</span>
-
-    <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;S-f12&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear_shell</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-f12&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">clone_shell</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;M-f12&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">close_shell</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x M-s&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_session</span><span class="p">)</span>
 
@@ -427,6 +435,7 @@
         <span class="n">dive</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
         <span class="n">dive</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">Scratch</span><span class="p">)</span>
         <span class="n">dive</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">rootshell</span><span class="p">)</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">debug</span><span class="o">=</span><span class="mi">4</span>
     <span class="n">main</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">MainLoop</span><span class="p">()</span>
 </pre></div>
