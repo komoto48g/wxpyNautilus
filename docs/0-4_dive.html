@@ -64,8 +64,12 @@ You can open, close, and save the script file in the buffer.</p>
 The code “&lt;scratch&gt;” now can be referenced from the debugger of the shell.</p></li>
 <li><p>Then, you can debug the code using <a class="reference internal" href="0-3_debugger.html#command-hook"><span class="std std-ref">command-hook</span></a> and <a class="reference internal" href="0-3_debugger.html#trace-hook"><span class="std std-ref">trace-hook</span></a> as well as the <strong>Log</strong> window.</p></li>
 </ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since ver 0.74, the codename “&lt;scratch&gt;” has been deprecated and changed to “&lt;’filename’&gt;”.</p>
+</div>
 <video width="786" controls src="./_static/0-2b_scratch-command-hook.mp4">
-</video><p>Key-bindings of Scratch:</p>
+</video><p>Key bindings of Scratch:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="o">-</span><span class="n">x</span> <span class="n">C</span><span class="o">-</span><span class="n">o</span>     <span class="p">:</span> <span class="nb">open</span>
 <span class="n">C</span><span class="o">-</span><span class="n">x</span> <span class="n">C</span><span class="o">-</span><span class="n">s</span>     <span class="p">:</span> <span class="n">save</span>
 <span class="n">C</span><span class="o">-</span><span class="n">x</span> <span class="n">S</span><span class="o">-</span><span class="n">s</span>     <span class="p">:</span> <span class="n">saveas</span>
@@ -141,16 +145,16 @@ Pullback is like a mathematically defined synonym of substitution.
 <section id="p-print-pp-pprint-filling">
 <h3><span class="section-number">4.3.1. </span>p(print) / pp(pprint) / filling<a class="headerlink" href="#p-print-pp-pprint-filling" title="Permalink to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">handler</span> <span class="nd">@p</span>
-<span class="go"># Display shell key-bindings.</span>
+<span class="go"># Display shell key bindings.</span>
 </pre></div>
 </div>
 <img alt="_images/0-4a_&#64;p.png" src="_images/0-4a_&#64;p.png" />
 <p>The special object <strong>handler</strong> is like DNA, defining how the object interact in a process.
 In fact, it is a simple dictionary of Finite State Machine (FSM) that maps states to transitions and actions.</p>
 <p>In this case, [‘C-x’] state has the key-event [’&#64; pressed’], thus two-stroke typing [C-x &#64;] invokes <code class="docutils literal notranslate"><span class="pre">goto_marker</span></code> which moves the caret to the marker (o) position.</p>
-<p>You can also use fancy view of the key-bindings using <code class="docutils literal notranslate"><span class="pre">PyFilling</span></code> window.</p>
+<p>You can also use fancy view of the key bindings using <code class="docutils literal notranslate"><span class="pre">PyFilling</span></code> window.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">handler</span> <span class="nd">@filling</span>
-<span class="go"># Show shell key-bindings in ``PyFilling`` window.</span>
+<span class="go"># Show shell key bindings in ``PyFilling`` window.</span>
 </pre></div>
 </div>
 <img alt="_images/0-4a_&#64;filling.png" src="_images/0-4a_&#64;filling.png" />
