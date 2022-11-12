@@ -156,11 +156,11 @@ def init_shell(self):
 
     @self.define_key('C-f12')
     def clone_shell():
-        self.clone(self.target)
+        self.parent.clone_shell(self.target)
 
     @self.define_key('M-f12')
     def close_shell():
-        self.kill()
+        self.parent.delete_shell(self) # => window_destroy
 
 ## --------------------------------
 ## Setup the console of Nautilus
@@ -363,7 +363,7 @@ def main(self):
     for editor in self.all_pages(Editor):
         editor.handler.bind('buffer_new', init_buffer)
 
-    self.handler.bind('add_shell', init_shell)
+    self.handler.bind('shell_new', init_shell)
     self.post_message("Startup process has completed successfully.")
 
 
