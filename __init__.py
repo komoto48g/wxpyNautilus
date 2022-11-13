@@ -3,7 +3,7 @@
 """Nautilus package
 """
 from mwx.graphman import Layer
-from .wxpyNautilus import MainFrame as Frame
+from .wxNautilus import MainFrame as Frame
 
 
 def deb(target=None, loop=True, **kwargs):
