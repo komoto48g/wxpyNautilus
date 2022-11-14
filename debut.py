@@ -388,6 +388,6 @@ if __name__ == "__main__":
         dive(frame)
         dive(frame.Scratch)
         dive(frame.rootshell)
-        frame.shell.handler.debug=4
+        ## frame.shell.handler.debug=4
     main(frame)
     app.MainLoop()
