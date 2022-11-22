@@ -379,9 +379,9 @@ if __name__ == "__main__":
     frame.define_key('f12', frame.rootshell.SetFocus) # Don't close.
     if 1:
         ## If you want debugger skip a specific module,
-        ## add the module:str to debugger.skip:list here.
-        frame.debugger.skip.remove(mwx.FSM.__module__) # for debug mwx.utilus
-        pass
+        ## add the module:str to debugger.skip:set here.
+        frame.debugger.skip -= {mwx.FSM.__module__} # for debug mwx.utilus
+        mwx.FSM.debugger = debug  # set default debugger
     frame.Show()
     if 1:
         dive(frame)
