@@ -16,6 +16,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -53,7 +54,7 @@
             
   <section id="mainframe">
 <h1><span class="section-number">5. </span>Mainframe<a class="headerlink" href="#mainframe" title="Permalink to this heading"></a></h1>
-<p>Move to wxpyNautilus directory and run “wxpyNautilus.py”:</p>
+<p>Move to wxpyNautilus directory and run “wxNautilus.py”:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ py -3 wxpyNautilus.py
 </pre></div>
 </div>
@@ -61,7 +62,7 @@
 <section id="basic-operation">
 <h2><span class="section-number">5.1. </span>Basic operation<a class="headerlink" href="#basic-operation" title="Permalink to this heading"></a></h2>
 <p>You can load plugins, image, and media files with DnD.
-This shows the demonstration of plugin “./demo/template.py”.</p>
+This shows the demonstration of plugin <a class="reference external" href="https://github.com/komoto48g/wxpyNautilus/blob/main/demo/template.py">“demo/template.py”</a></p>
 <video controls width=786 src="./_static/0-5a_wxn.mp4">
 </video><p>The graphic window is made with matplotlib and some keys associated with the matplotlib interface are defined as follows:</p>
 <p>Global bindings:</p>
@@ -129,7 +130,7 @@ Please change <code class="docutils literal notranslate"><span class="pre">self.
 <h2><span class="section-number">5.2. </span>Basic access to plugins<a class="headerlink" href="#basic-access-to-plugins" title="Permalink to this heading"></a></h2>
 <p>Right-click on the plugin’s panel and select the menu <code class="docutils literal notranslate"><span class="pre">Dive</span> <span class="pre">into</span> <span class="pre">...</span></code> to open the plugin’s shell.</p>
 <img alt="_images/0-5b_graph.png" src="_images/0-5b_graph.png" />
-<p>From the shell, you can access objects like this:</p>
+<p>From the shell, you can access objects:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span>
 <span class="go"># A plugins object.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
@@ -149,7 +150,7 @@ Please change <code class="docutils literal notranslate"><span class="pre">self.
 <h2><span class="section-number">5.3. </span>Usage of the shell<a class="headerlink" href="#usage-of-the-shell" title="Permalink to this heading"></a></h2>
 <p>You can use the shell to test image processing on loaded images.</p>
 <video controls width=786 src="./_static/demo-denoising.mp4">
-</video><p>Isn’t she lovely? Well, uh, I meant the little one.</p>
+</video><p>Isn’t she lovely? (I meant the little one. ^^)</p>
 </section>
 </section>
 
@@ -279,7 +280,7 @@ Please change <code class="docutils literal notranslate"><span class="pre">self.
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Kazuya O&#39;moto.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
   </body>
 </html>
