@@ -16,6 +16,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -148,7 +149,7 @@ Pullback is like a mathematically defined synonym of substitution.
 <span class="go"># Display shell key bindings.</span>
 </pre></div>
 </div>
-<img alt="_images/0-4a_&#64;p.png" src="_images/0-4a_&#64;p.png" />
+<img alt="_images/0-4a_%40p.png" src="_images/0-4a_%40p.png" />
 <p>The special object <strong>handler</strong> is like DNA, defining how the object interact in a process.
 In fact, it is a simple dictionary of Finite State Machine (FSM) that maps states to transitions and actions.</p>
 <p>In this case, [‘C-x’] state has the key-event [’&#64; pressed’], thus two-stroke typing [C-x &#64;] invokes <code class="docutils literal notranslate"><span class="pre">goto_marker</span></code> which moves the caret to the marker (o) position.</p>
@@ -157,7 +158,7 @@ In fact, it is a simple dictionary of Finite State Machine (FSM) that maps state
 <span class="go"># Show shell key bindings in ``PyFilling`` window.</span>
 </pre></div>
 </div>
-<img alt="_images/0-4a_&#64;filling.png" src="_images/0-4a_&#64;filling.png" />
+<img alt="_images/0-4a_%40filling.png" src="_images/0-4a_%40filling.png" />
 </section>
 <section id="where-load-mro">
 <h3><span class="section-number">4.3.2. </span>where / load / mro<a class="headerlink" href="#where-load-mro" title="Permalink to this heading"></a></h3>
@@ -166,13 +167,13 @@ In fact, it is a simple dictionary of Finite State Machine (FSM) that maps state
 <span class="go"># Displays the source code filename:lineno.</span>
 </pre></div>
 </div>
-<img alt="_images/0-4a_&#64;where.png" src="_images/0-4a_&#64;where.png" />
+<img alt="_images/0-4a_%40where.png" src="_images/0-4a_%40where.png" />
 <p>Default <strong>Log</strong> window can be used to open the file.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">shell</span> <span class="nd">@load</span>
 <span class="go"># Loads the source code in **Log** window.</span>
 </pre></div>
 </div>
-<img alt="_images/0-4a_&#64;load.png" src="_images/0-4a_&#64;load.png" />
+<img alt="_images/0-4a_%40load.png" src="_images/0-4a_%40load.png" />
 <p>If you like to open the file with your editor, define a function <code class="docutils literal notranslate"><span class="pre">edit('filename:lineno')</span></code> somewhere such as ‘PYTHONSTARTUP’ script file. Then, you can open the file like this:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">shell</span> <span class="nd">@where</span> <span class="nd">@edit</span>
 </pre></div>
@@ -183,7 +184,7 @@ You can grep those files if exist, using [f10]: grep-forward, [S-f10]: grep-back
 <span class="go"># Displays mro list and filename:lineno or the module name.</span>
 </pre></div>
 </div>
-<img alt="_images/0-4a_&#64;mro.png" src="_images/0-4a_&#64;mro.png" />
+<img alt="_images/0-4a_%40mro.png" src="_images/0-4a_%40mro.png" />
 </section>
 <section id="dive">
 <h3><span class="section-number">4.3.3. </span>dive<a class="headerlink" href="#dive" title="Permalink to this heading"></a></h3>
@@ -193,7 +194,7 @@ You can grep those files if exist, using [f10]: grep-forward, [S-f10]: grep-back
 <span class="go"># In this case, that target is the ``rootshell&lt;Nautilus&gt;`` itself.</span>
 </pre></div>
 </div>
-<img alt="_images/0-4a_&#64;dive.png" src="_images/0-4a_&#64;dive.png" />
+<img alt="_images/0-4a_%40dive.png" src="_images/0-4a_%40dive.png" />
 </section>
 </section>
 </section>
@@ -324,7 +325,7 @@ You can grep those files if exist, using [f10]: grep-forward, [S-f10]: grep-back
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Kazuya O&#39;moto.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
   </body>
 </html>

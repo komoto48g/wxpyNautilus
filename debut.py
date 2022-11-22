@@ -17,7 +17,7 @@ from mwx.nutshell import Editor, Nautilus
 ## Configuration of Shell/Editor
 ## --------------------------------
 
-def init_common_keymaps(self):
+def init_stc_interface(self):
     """Customize the common keymaps.
     """
     @self.define_key('f9')
@@ -50,7 +50,7 @@ def init_buffer(self):
     """Customize the keymaps of the Buffer.
     """
     ## Buffer text control
-    init_common_keymaps(self)
+    init_stc_interface(self)
     
     @self.define_key('enter')
     def newline_and_indent():
@@ -92,13 +92,13 @@ def init_editor(self):
     self.define_key('C-x s',   self.save_all_buffers)
     self.define_key('C-x C-s', self.save_buffer)
     self.define_key('C-x S-s', self.save_as_buffer)
-    self.define_key('C-x C-o', self.open_buffer)
+    self.define_key('C-x C-f', self.open_buffer) # cf. find-file
 
 
 def init_shell(self):
     """Customize the keymaps of the Shell.
     """
-    init_common_keymaps(self)
+    init_stc_interface(self)
     
     @self.define_key('S-enter') # cf. [C-RET] Shell.insertLineBreak
     def open_line():
@@ -257,11 +257,6 @@ def init_shellframe(self):
             buf.red_arrow = lineno-1
             buf.goto_line(lineno-1)
             buf.recenter()
-    
-    self.reload_this = reload_this
-
-    if __name__ == "__main__":
-        self.define_key('f12', self.rootshell.SetFocus) # overwrite close
 
     self.define_key('C-x M-s', self.save_session)
 
@@ -273,6 +268,9 @@ def init_shellframe(self):
         "Move focus to other page (no loop)"
         win = wx.Window.FindFocus()
         nb = win.Parent
+        ## Find topmost notebook: console, ghost, watcher
+        while isinstance(nb.Parent, type(self.console)):
+            nb = nb.Parent
         try:
             if nb.PageCount > 1:
                 nb.Selection = (nb.Selection + p) % nb.PageCount
@@ -313,7 +311,7 @@ def stylus(self):
     self.Config.set_attributes(Style=py_text_mode.STYLE)
     self.Scratch.set_attributes(Style=py_interactive_mode.STYLE)
     
-    ## Don't clear Config.buffer.
+    ## Don't clear buffer.
     self.Config.undefine_key('C-x k')
     self.Config.undefine_key('C-x C-k')
 
@@ -378,11 +376,12 @@ if __name__ == "__main__":
     
     app = wx.App()
     frame = mwx.deb(loop=0, introText=__doc__ + quote_unqoute,)
+    frame.define_key('f12', frame.rootshell.SetFocus) # Don't close.
     if 1:
         ## If you want debugger skip a specific module,
-        ## add the module:str to debugger.skip:list here.
-        frame.debugger.skip.remove(mwx.FSM.__module__) # for debug mwx.utilus
-        pass
+        ## add the module:str to debugger.skip:set here.
+        frame.debugger.skip -= {mwx.FSM.__module__} # for debug mwx.utilus
+        mwx.FSM.debugger = debug  # set default debugger
     frame.Show()
     if 1:
         dive(frame)
