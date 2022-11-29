@@ -14,6 +14,7 @@ see https://www.flaticon.com/free-icons/submarine
 """
 import getopt
 import sys
+import os
 import wx
 import wx.adv
 from wx.lib.embeddedimage import PyEmbeddedImage
@@ -42,6 +43,17 @@ class MainFrame(Frame):
         super().__init__(*args, **kwargs)
         
         self.SetIcon(submarine.GetIcon())
+        try:
+            sys.path[0:0] =['',             # 1. local
+                os.path.dirname(__file__),  # 2. system
+            ]
+            si = __import__('siteinit') # try import si:local first
+        except ImportError:
+            print("- No siteinit file.")
+            pass
+        else:
+            print("Executing {!r}".format(si.__file__))
+            si.init_mainframe(self)
 
 
 submarine = PyEmbeddedImage(
@@ -76,23 +88,11 @@ if __name__ == "__main__":
     
     app = wx.App()
     frm = MainFrame(None)
-    
-    try:
-        sys.path.insert(0, '')
-        si = __import__('siteinit') # try import si:local first
-    except ImportError:
-        print("- No siteinit file.")
-        pass
-    else:
-        print("Executing {!r}".format(si.__file__))
-        si.init_mainframe(frm)
-    
     if session:
         try:
             print("Starting session {!r}".format(session))
             frm.load_session(session, flush=False)
         except FileNotFoundError:
             print("- No such file {!r}".format(session))
-    
     frm.Show()
     app.MainLoop()
