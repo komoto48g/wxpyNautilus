@@ -94,6 +94,8 @@ def init_editor(self):
     self.define_key('C-x S-s', self.save_as_buffer)
     self.define_key('C-x C-f', self.open_buffer) # cf. find-file
 
+    self.define_key('f5', self.load_buffer)
+
 
 def init_shell(self):
     """Customize the keymaps of the Shell.
