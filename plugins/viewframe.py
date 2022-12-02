@@ -7,7 +7,8 @@ Author: Kazuya O'moto <komoto@jeol.co.jp>
 from pprint import pformat
 import wx
 from wx import aui
-from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin, TextEditMixin
+from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
+## from wx.lib.mixins.listctrl import TextEditMixin
 ## import numpy as np
 from mwx.controls import Icon
 from mwx.graphman import Layer
@@ -29,12 +30,13 @@ else:
         def __init__(self, *args, **kwargs):
             wx.ListCtrl.__init__(self, *args, **kwargs)
             
-            ## To avoid $BUG wx 4.1.1 (but default Tooltip will disappear)
+            ## To avoid BUG wx 4.1.1
+            ## Note: With this fix, the default Tooltip will disappear.
             self.ToolTip = ''
             self.EnableCheckBoxes()
 
 
-class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, TextEditMixin, CtrlInterface):
+class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
     """ CheckList of Graph buffers
     
     list item order = buffer order
@@ -42,7 +44,11 @@ class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, TextEditMixin, CtrlInterf
     """
     @property
     def selected_items(self):
-        return [j for j in range(self.ItemCount) if self.IsSelected(j)]
+        return filter(self.IsSelected, range(self.ItemCount))
+    
+    @property
+    def checked_items(self):
+        return filter(self.IsItemChecked, range(self.ItemCount))
     
     @property
     def focused_item(self):
@@ -52,28 +58,30 @@ class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, TextEditMixin, CtrlInterf
     def all_items(self):
         rows = range(self.ItemCount)
         cols = range(self.ColumnCount)
-        return [[self.GetItemText(j, k) for k in cols] for j in rows]
+        ## return [[self.GetItemText(j, k) for k in cols] for j in rows]
+        for j in rows:
+            yield [self.GetItemText(j, k) for k in cols]
     
+    _alist = ( # assoc-list of column names
+        ("id", 42),
+        ("name", 160),
+        ("shape", 90),
+        ("dtype", 60),
+        ("Mb",   40),
+        ("unit", 60),
+        ("annotation", 240),
+    )
     def __init__(self, parent, target, **kwargs):
         CheckListCtrl.__init__(self, parent, size=(400,130),
                                style=wx.LC_REPORT|wx.LC_HRULES, **kwargs)
         ListCtrlAutoWidthMixin.__init__(self)
-        TextEditMixin.__init__(self)
+        ## TextEditMixin.__init__(self)
         CtrlInterface.__init__(self)
         
         self.parent = parent
         self.Target = target
         
-        self.alist = ( # assoc-list of column names
-            ("id", 42),
-            ("name", 160),
-            ("shape", 90),
-            ("dtype", 60),
-            ("Mb",   40),
-            ("unit", 60),
-            ("annotation", 240),
-        )
-        for k, (name, w) in enumerate(self.alist):
+        for k, (name, w) in enumerate(self._alist):
             self.InsertColumn(k, name, width=w)
         
         for j, frame in enumerate(self.Target.all_frames):
@@ -152,26 +160,28 @@ class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, TextEditMixin, CtrlInterf
         del self.Target[self.selected_items]
     
     def OnSortItems(self, evt): #<wx._controls.ListEvent>
-        col = evt.GetColumn()
+        col = evt.Column
         if col == 0: # reverse the first column
             self.__dir = False
         self.__dir = not self.__dir # toggle 0:ascend/1:descend
         
-        def _eval(x):
-            try:
-                return eval(x.replace('*', '')) # localunit* とか
-            except Exception:
-                return x
-        
         frames = self.Target.all_frames
         if frames:
+            def _eval(x):
+                try:
+                    return eval(x[col].replace('*', '')) # localunit* とか
+                except Exception:
+                    return x[col]
             frame = self.Target.frame
-            la = sorted(self.all_items, key=lambda v: _eval(v[col]), reverse=self.__dir)
-            frames[:] = [frames[int(c[0])] for c in la] # sort by new Id of items
+            items = sorted(self.all_items, reverse=self.__dir, key=_eval)
+            frames[:] = [frames[int(c[0])] for c in items] # sort by new Id of items
             
-            for j, c in enumerate(la):
-                self.Select(j, False)        # 1, deselect all items,
-                for k, v in enumerate(c[1:]): # 2, except for id(0), update text:str
+            lc = list(self.checked_items)
+            
+            for j, c in enumerate(items):
+                self.Select(j, False)
+                self.CheckItem(j, int(c[0]) in lc)
+                for k, v in enumerate(c[1:]): # update data except for id(0)
                     self.SetItem(j, k+1, v)
             self.Target.select(frame) # invokes [frame_shown] to select the item
     
@@ -183,8 +193,9 @@ class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, TextEditMixin, CtrlInterf
         self.parent.parent.import_index(target=self.Target)
     
     def OnSaveItems(self, evt):
-        self.parent.parent.export_index(
-            frames=[self.Target.all_frames[j] for j in self.selected_items] or None)
+        frames = self.Target.all_frames
+        selected_frames = [frames[j] for j in self.selected_items]
+        self.parent.parent.export_index(frames=selected_frames)
     
     ## --------------------------------
     ## Actions of frame-handler
