@@ -134,22 +134,27 @@ def init_shell(self):
             else:
                 self.post_message(f"\b {text!r} was nowhere to be found.")
 
-    @self.define_key('f4', pattern=r"^\s+File \"(.+?)\", line ([0-9]+)")
-    @self.define_key('f10', pattern=r">\s+([^<*?>]+?):([0-9]+)")
+    error = r"(?i)\s+File \"(.+?)\", line ([0-9]+)"
+    frame = r"(?i)\s+file \'(.+?)\', line ([0-9]+)"
+    where = r".*>\s+([^*?\"|\r\n]+?):([0-9]+)"
+    grep = '|'.join((frame, where))
+
+    @self.define_key('f4', pattern=error)
+    @self.define_key('f10', pattern=grep)
     def grep_forward(pattern):
         for err in self.grep_forward(pattern):
-            target = ':'.join(err.groups())
-            self.parent.load(target, focus=False)
-            self.post_message(f"\b {target}")
+            target = ':'.join(filter(None, err.groups()))
+            if self.parent.load(target, focus=False):
+                self.post_message(f"\b {target}")
             break
 
-    @self.define_key('S-f4', pattern=r"^\s+File \"(.+?)\", line ([0-9]+)")
-    @self.define_key('S-f10', pattern=r">\s+([^<*?>]+?):([0-9]+)")
+    @self.define_key('S-f4', pattern=error)
+    @self.define_key('S-f10', pattern=grep)
     def grep_barckward(pattern):
         for err in self.grep_barckward(pattern):
-            target = ':'.join(err.groups())
-            self.parent.load(target, focus=False)
-            self.post_message(f"\b {target}")
+            target = ':'.join(filter(None, err.groups()))
+            if self.parent.load(target, focus=False):
+                self.post_message(f"\b {target}")
             break
 
     @self.define_key('S-f12')
