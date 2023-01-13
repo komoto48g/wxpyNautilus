@@ -137,7 +137,8 @@ def init_shell(self):
     error = r"(?i)\s+File \"(.+?)\", line ([0-9]+)"
     frame = r"(?i)\s+file \'(.+?)\', line ([0-9]+)"
     where = r".*>\s+([^*?\"|\r\n]+?):([0-9]+)"
-    grep = '|'.join((frame, where))
+    bp    = r"at \s+([^*?\"|\r\n]+?):([0-9]+)"
+    grep = '|'.join((frame, where, bp))
 
     @self.define_key('f4', pattern=error)
     @self.define_key('f10', pattern=grep)
@@ -387,8 +388,12 @@ if __name__ == "__main__":
     if 1:
         ## If you want debugger skip a specific module,
         ## add the module:str to debugger.skip:set here.
-        frame.debugger.skip -= {mwx.FSM.__module__} # for debug mwx.utilus
-        mwx.FSM.debugger = debug  # set default debugger
+        ## frame.debugger.skip -= {
+        ##     mwx.FSM.__module__, # for debug mwx.utilus
+        ##     ## frame.debugger.__class__.__module__,
+        ## }
+        ## mwx.FSM.debugger = debug  # set default debugger
+        pass
     frame.Show()
     if 1:
         dive(frame)
