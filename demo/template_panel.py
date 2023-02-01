@@ -4,10 +4,11 @@ import wx
 import mwx
 from mwx.graphman import Frame
 
-def _pack(*args, orient=wx.HORIZONTAL):
+def _pack(items, orient=wx.HORIZONTAL):
     sizer = wx.BoxSizer(orient)
-    sizer.AddMany(args)
+    sizer.AddMany(items)
     return sizer
+
 
 @Frame.register
 class Panel(wx.Panel):
@@ -27,12 +28,13 @@ class Panel(wx.Panel):
             wx.MessageBox(evt.EventObject.Label)
         
         self.SetSizer(
-            _pack(
+            _pack([
                 (btn, 1, wx.EXPAND | wx.ALL, 2),
-                _pack(
-                    b1,
-                    b2,
-                ),
+                _pack([
+                        b1,
+                        b2,
+                    ]),
+                ],
                 orient=wx.VERTICAL
             )
         )
