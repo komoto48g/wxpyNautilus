@@ -10,8 +10,16 @@ import os
 import wx
 from wx import stc
 import mwx
+from mwx.utilus import FSM
 from mwx.controls import Icon
 from mwx.nutshell import Editor, Nautilus
+
+
+def _define(self, event, action=None, state=None, state2=None):
+    self.unbind(event, None, state)
+    return self.bind(event, action, state, state2)
+FSM.define = _define
+
 
 ## --------------------------------
 ## Configuration of Shell/Editor
@@ -134,8 +142,8 @@ def init_shell(self):
             else:
                 self.post_message(f"\b {text!r} was nowhere to be found.")
 
-    error = r"(?i)\s+File \"(.+?)\", line ([0-9]+)"
-    frame = r"(?i)\s+file \'(.+?)\', line ([0-9]+)"
+    error = r"(?i)^\s+File \"(.+?)\", line ([0-9]+)"
+    frame = r"(?i)^\s+file \'(.+?)\', line ([0-9]+)"
     where = r".*>\s+([^*?\"|\r\n]+?):([0-9]+)"
     bp    = r"at \s+([^*?\"|\r\n]+?):([0-9]+)"
     grep = '|'.join((frame, where, bp))
@@ -235,37 +243,6 @@ class py_interactive_mode:
 def init_shellframe(self):
     """Customize the keymaps of the ShellFrame.
     """
-    try:
-        import debut as this
-    except ImportError:
-        from . import debut as this
-    
-    @self.define_key('f5')
-    def reload_this():
-        """Reload this module and initialized components"""
-        try:
-            self.Config.load_buffer()
-            reload(this)
-            this.stylus(self)
-            del self.Config.buffer.red_arrow
-            return
-        except SyntaxError as e:
-            filename = e.filename
-            lineno = e.lineno
-            self.post_message(f"reload failed: {e} at {filename}:{lineno}")
-        except Exception as e:
-            tb = e.__traceback__
-            while tb:
-                filename = tb.tb_frame.f_code.co_filename
-                lineno = tb.tb_lineno
-                tb = tb.tb_next
-            self.post_message(f"reload failed: {e} at {filename}:{lineno}")
-        buf = self.Config.buffer
-        if filename == buf.filename:
-            buf.red_arrow = lineno-1
-            buf.goto_line(lineno-1)
-            buf.recenter()
-
     self.define_key('C-x M-s', self.save_session)
 
     @self.define_key('Xbutton1', p=-1)
@@ -359,7 +336,7 @@ def main(self):
         locals = {}
         self.Config.buffer.py_exec_region(locals, locals, filename="<conf>")
         if "stylus" in locals:
-            locals["stylus"](self)
+            locals["main"](self)
 
     stylus(self)
 
@@ -367,9 +344,9 @@ def main(self):
     self.ghost.SetDropTarget(MyFileDropLoader(self.Scratch))
 
     for editor in self.all_pages(Editor):
-        editor.handler.bind('buffer_new', init_buffer)
+        editor.handler.define('buffer_new', init_buffer)
 
-    self.handler.bind('shell_new', init_shell)
+    self.handler.define('shell_new', init_shell)
     self.post_message("Startup process has completed successfully.")
 
 
@@ -387,11 +364,10 @@ if __name__ == "__main__":
     frame.define_key('f12', frame.rootshell.SetFocus) # Don't close.
     if 1:
         ## If you want debugger skip a specific module,
-        ## add the module:str to debugger.skip:set here.
-        ## frame.debugger.skip -= {
-        ##     mwx.FSM.__module__, # for debug mwx.utilus
-        ##     ## frame.debugger.__class__.__module__,
-        ## }
+        ## add the module:str to debugger.skip:set.
+        frame.debugger.skip -= {
+            mwx.FSM.__module__, # for debug mwx.utilus
+        }
         ## mwx.FSM.debugger = debug  # set default debugger
         pass
     frame.Show()
@@ -399,6 +375,5 @@ if __name__ == "__main__":
         dive(frame)
         dive(frame.Scratch)
         dive(frame.rootshell)
-        ## frame.shell.handler.debug=4
     main(frame)
     app.MainLoop()
