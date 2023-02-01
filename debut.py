@@ -134,8 +134,8 @@ def init_shell(self):
             else:
                 self.post_message(f"\b {text!r} was nowhere to be found.")
 
-    error = r"(?i)\s+File \"(.+?)\", line ([0-9]+)"
-    frame = r"(?i)\s+file \'(.+?)\', line ([0-9]+)"
+    error = r"(?i)^\s+File \"(.+?)\", line ([0-9]+)"
+    frame = r"(?i)^\s+file \'(.+?)\', line ([0-9]+)"
     where = r".*>\s+([^*?\"|\r\n]+?):([0-9]+)"
     bp    = r"at \s+([^*?\"|\r\n]+?):([0-9]+)"
     grep = '|'.join((frame, where, bp))
