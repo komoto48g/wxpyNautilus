@@ -15,11 +15,10 @@ Makefile
 exclude_files
 
 # Resources
+docfiles*/
 test*/
 icons*/
-docfiles*/
-
-*.WinMerge
+!requirements.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,5 +1,10 @@
 #! python3
 # -*- coding: utf-8 -*-
+"""Template of Layer
+
+Version: 1.0
+Author: Kazuya O'moto <komoto@jeol.co.jp>
+"""
 import numpy as np
 import cv2
 import wx
