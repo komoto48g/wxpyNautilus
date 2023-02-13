@@ -176,7 +176,7 @@ def init_shell(self):
 
     @self.define_key('M-f12')
     def close_shell():
-        self.parent.delete_shell(self) # => window_destroy
+        self.parent.delete_shell(self)
 
 ## --------------------------------
 ## Setup the console of Nautilus
@@ -327,17 +327,21 @@ def main(self):
         self.Config = Editor(self, name="Config")
         self.Config.load_file(__file__)
         self.ghost.InsertPage(4, self.Config, 'Config', bitmap=Icon('proc'))
-        
+
+    ## Bind pointer to enable trace.
     self.set_traceable(self.Config)
 
     @self.Config.define_key('M-j')
     def eval_buffer():
         """Evaluate this <conf> code and call new stylus"""
         locals = {}
-        self.Config.buffer.py_exec_region(locals, locals, filename="<conf>")
-        if "stylus" in locals:
+        self.Config.buffer.py_exec_region(
+            locals, locals, self.Config.buffer.filename
+        )
+        if "main" in locals:
             locals["main"](self)
 
+    ## Stylize all windows
     stylus(self)
 
     ## Set scratch window to accept drop-file.
