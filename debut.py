@@ -13,12 +13,24 @@ import mwx
 from mwx.utilus import FSM
 from mwx.controls import Icon
 from mwx.nutshell import Editor, Nautilus
+from mwx.py.filling import FillingTree
 
 
 def _define(self, event, action=None, state=None, state2=None):
     self.unbind(event, None, state)
     return self.bind(event, action, state, state2)
 FSM.define = _define
+
+
+def atomic(self, obj, key):
+    if key == 'DropTarget': # Windows bug fix.
+        return False
+    try:
+        v = getattr(obj, key)
+        return not hasattr(v, '__name__') and not key.startswith('__')
+    except Exception:
+        pass
+FillingTree.filter = atomic
 
 
 ## --------------------------------
