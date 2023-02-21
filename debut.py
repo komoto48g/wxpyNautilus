@@ -277,15 +277,17 @@ def init_shellframe(self):
     @self.define_key('C-d', clear=0)
     @self.define_key('C-S-d', clear=1)
     def duplicate_line(clear=True):
-        """Duplicate an expression at the caret-line"""
-        ed = self.current_editor or self.current_shell
-        text = ed.SelectedText or ed.expr_at_caret or ed.topic_at_caret
+        """Duplicate an expression at the caret-line."""
+        buf = wx.Window.FindFocus()
+        if not isinstance(buf, stc.StyledTextCtrl):
+            return
+        text = buf.SelectedText or buf.expr_at_caret or buf.topic_at_caret
         if text:
             shell = self.current_shell
-            ed.mark = ed.cpos
+            buf.mark = buf.cpos
             if clear:
                 shell.clearCommand() # move to the prompt end
-            shell.write(text, -1) # write at the end of command-line of the shell
+            shell.write(text, -1) # write at the end of command-line
             shell.SetFocus()
 
 
@@ -297,13 +299,13 @@ def stylus(self):
     """
     init_shellframe(self)
 
-    for editor in self.all_pages(Editor):
-        init_editor(editor)
-        for buffer in editor.all_buffers():
+    for page in self.all_pages(Editor):
+        init_editor(page)
+        for buffer in page.all_buffers():
             init_buffer(buffer)
 
-    for shell in self.all_pages(Nautilus):
-        init_shell(shell)
+    for page in self.all_pages(Nautilus):
+        init_shell(page)
 
     self.Config.set_attributes(Style=py_text_mode.STYLE)
     self.Scratch.set_attributes(Style=py_interactive_mode.STYLE)
