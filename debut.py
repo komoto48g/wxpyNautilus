@@ -8,6 +8,7 @@ __author__ = "Kazuya O'moto <komoto@jeol.co.jp>"
 from importlib import reload
 import os
 import wx
+from wx import aui
 from wx import stc
 import mwx
 from mwx.utilus import FSM
@@ -262,11 +263,9 @@ def init_shellframe(self):
     @self.define_key('C-x p', p=-1)
     @self.define_key('C-x n', p=+1)
     def other_editor(p=1):
-        "Move focus to other page (no loop)"
-        win = wx.Window.FindFocus()
-        nb = win.Parent
-        ## Find topmost notebook: console, ghost, watcher
-        while isinstance(nb.Parent, type(self.console)):
+        """Move focus to other topmost notebook page."""
+        nb = wx.Window.FindFocus()
+        while isinstance(nb.Parent, aui.AuiNotebook):
             nb = nb.Parent
         try:
             if nb.PageCount > 1:
