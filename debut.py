@@ -13,7 +13,7 @@ from wx import stc
 import mwx
 from mwx.utilus import FSM
 from mwx.controls import Icon
-from mwx.nutshell import Editor, Nautilus
+from mwx.nutshell import EditorBook
 from mwx.py.filling import FillingTree
 
 
@@ -35,7 +35,7 @@ FillingTree.filter = atomic
 
 
 ## --------------------------------
-## Configuration of Shell/Editor
+## Configuration of Shell / Editor 
 ## --------------------------------
 
 def init_stc_interface(self):
@@ -298,12 +298,12 @@ def stylus(self):
     """
     init_shellframe(self)
 
-    for page in self.all_pages(Editor):
+    for page in self.all_pages(EditorBook):
         init_editor(page)
         for buffer in page.all_buffers():
             init_buffer(buffer)
 
-    for page in self.all_pages(Nautilus):
+    for page in self.all_pages(type(self.rootshell)):
         init_shell(page)
 
     self.Config.set_attributes(Style=py_text_mode.STYLE)
@@ -337,7 +337,7 @@ def main(self):
         This function is executed once at startup.
     """
     if not hasattr(self, "Config"):
-        self.Config = Editor(self, name="Config")
+        self.Config = EditorBook(self, name="Config")
         self.Config.load_file(__file__)
         self.ghost.InsertPage(4, self.Config, 'Config', bitmap=Icon('proc'))
 
@@ -360,7 +360,7 @@ def main(self):
     ## Set scratch window to accept drop-file.
     self.ghost.SetDropTarget(MyFileDropLoader(self.Scratch))
 
-    for editor in self.all_pages(Editor):
+    for editor in self.all_pages(EditorBook):
         editor.handler.define('buffer_new', init_buffer)
 
     self.handler.define('shell_new', init_shell)
