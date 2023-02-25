@@ -387,9 +387,10 @@ quote_unqoute = """
 if __name__ == "__main__":
     import numpy as np
     np.set_printoptions(linewidth=256) # default 75
-    
+
     app = wx.App()
     frame = mwx.deb(loop=0, introText=__doc__ + quote_unqoute)
+    main(frame)
     frame.define_key('f12', frame.rootshell.SetFocus) # Don't close.
     if 1:
         ## If you want debugger skip a specific module,
@@ -397,9 +398,7 @@ if __name__ == "__main__":
         frame.debugger.skip -= {
             mwx.FSM.__module__, # for debugging FSM
         }
-    main(frame)
-    frame.Show()
-    if 1:
+        ## Dive into some objects to inspect.
         dive(frame)
         dive(frame.Scratch)
         dive(frame.rootshell)
