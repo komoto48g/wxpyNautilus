@@ -1,3 +1,5 @@
+*.debrc
+*.index
 *.jssn
 *.ssn
 *.db

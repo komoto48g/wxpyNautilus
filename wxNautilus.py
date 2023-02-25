@@ -75,24 +75,20 @@ submarine = PyEmbeddedImage(
 
 if __name__ == "__main__":
     session = None
-    try:
-        opts, args = getopt.gnu_getopt(sys.argv[1:], "s:")
-        for k, v in opts:
-            if k == "-s":
-                if not v.endswith(".jssn"):
-                    v += '.jssn'
-                session = v
-    except Exception as e:
-        print("- Exception occurs in getopt;", e)
-        sys.exit(1)
+    opts, args = getopt.gnu_getopt(sys.argv[1:], "s:")
+    for k, v in opts:
+        if k == "-s":
+            if not v.endswith(".jssn"):
+                v += ".jssn"
+            session = v
     
     app = wx.App()
     frm = MainFrame(None)
     if session:
         try:
-            print("Starting session {!r}".format(session))
+            print(f"Starting session {session!r}")
             frm.load_session(session, flush=False)
         except FileNotFoundError:
-            print("- No such file {!r}".format(session))
+            print(f"- No such file {session!r}")
     frm.Show()
     app.MainLoop()

@@ -6,6 +6,8 @@ __version__ = "1.0rc"
 __author__ = "Kazuya O'moto <komoto@jeol.co.jp>"
 
 import builtins
+import getopt
+import sys
 import os
 import wx
 from wx import aui
@@ -384,12 +386,21 @@ quote_unqoute = """
     --- Jules Verne (1828--1905)
     """
 
+
 if __name__ == "__main__":
-    import numpy as np
-    np.set_printoptions(linewidth=256) # default 75
+    session = None
+    opts, args = getopt.gnu_getopt(sys.argv[1:], "s:")
+    for k, v in opts:
+        if k == "-s":
+            if not v.endswith(".debrc"):
+                v += ".debrc"
+            session = v
+    if session:
+        print(f"Starting session {session!r}")
 
     app = wx.App()
-    frame = mwx.deb(loop=0, introText=__doc__ + quote_unqoute)
+    frame = mwx.deb(loop=0, debrc=session,
+                    introText=__doc__ + quote_unqoute)
     main(frame)
     frame.define_key('f12', frame.rootshell.SetFocus) # Don't close.
     if 1:
