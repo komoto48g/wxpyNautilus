@@ -5,7 +5,7 @@
 __version__ = "1.0rc"
 __author__ = "Kazuya O'moto <komoto@jeol.co.jp>"
 
-from importlib import reload
+import builtins
 import os
 import wx
 from wx import aui
@@ -17,12 +17,22 @@ from mwx.nutshell import EditorBook
 from mwx.py.filling import FillingTree
 
 
+def subclasses(cls):
+    try:
+        return cls.__subclasses__()
+    except AttributeError:
+        return type(cls).__subclasses__()
+builtins.subclasses = subclasses
+
+
+## mwx.__version__ < '0.77.9'
 def _define(self, event, action=None, state=None, state2=None):
     self.unbind(event, None, state)
     return self.bind(event, action, state, state2)
 FSM.define = _define
 
 
+## mwx.__version__ < '0.77.7'
 def atomic(self, obj, key):
     if key == 'DropTarget': # Windows bug fix.
         return False
@@ -383,14 +393,12 @@ if __name__ == "__main__":
         ## If you want debugger skip a specific module,
         ## add the module:str to debugger.skip:set.
         frame.debugger.skip -= {
-            mwx.FSM.__module__, # for debug mwx.utilus
+            mwx.FSM.__module__, # for debugging FSM
         }
-        ## mwx.FSM.debugger = debug  # set default debugger
-        pass
+    main(frame)
     frame.Show()
     if 1:
         dive(frame)
         dive(frame.Scratch)
         dive(frame.rootshell)
-    main(frame)
     app.MainLoop()
