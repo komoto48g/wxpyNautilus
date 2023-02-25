@@ -21,7 +21,9 @@ def subclasses(cls):
     try:
         return cls.__subclasses__()
     except AttributeError:
-        return type(cls).__subclasses__()
+        ## return type(cls).__subclasses__()
+        ## Use obj@type@subclasses
+        pass
 builtins.subclasses = subclasses
 
 
@@ -387,7 +389,7 @@ if __name__ == "__main__":
     np.set_printoptions(linewidth=256) # default 75
     
     app = wx.App()
-    frame = mwx.deb(loop=0, introText=__doc__ + quote_unqoute,)
+    frame = mwx.deb(loop=0, introText=__doc__ + quote_unqoute)
     frame.define_key('f12', frame.rootshell.SetFocus) # Don't close.
     if 1:
         ## If you want debugger skip a specific module,
