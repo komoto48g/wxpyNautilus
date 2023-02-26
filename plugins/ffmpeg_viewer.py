@@ -256,6 +256,5 @@ if __name__ == "__main__":
     app = wx.App()
     frm = Frame(None)
     frm.load_plug(__file__, show=1, dock=0)
-    frm.shellframe.monitor.add_module(wx.media)
     frm.Show()
     app.MainLoop()
