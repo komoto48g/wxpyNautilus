@@ -353,6 +353,7 @@ def main(self):
     if not hasattr(self, "Config"):
         self.Config = EditorBook(self, name="Config")
         self.Config.load_file(__file__)
+        self.Config.default_buffer._load_file(self.SESSION_FILE)
         self.ghost.InsertPage(4, self.Config, 'Config', bitmap=Icon('proc'))
 
     ## Bind pointer to enable trace.
@@ -361,7 +362,7 @@ def main(self):
     @self.Config.define_key('M-j')
     def eval_buffer():
         """Evaluate this <conf> code and call new stylus"""
-        locals = {}
+        locals = {'self': self}
         self.Config.buffer.py_exec_region(
             locals, locals, self.Config.buffer.filename
         )
@@ -374,10 +375,11 @@ def main(self):
     ## Set scratch window to accept drop-file.
     self.ghost.SetDropTarget(MyFileDropLoader(self.Scratch))
 
+    ## Define *new* event handlers.
     for editor in self.all_pages(EditorBook):
         editor.handler.define('buffer_new', init_buffer)
-
     self.handler.define('shell_new', init_shell)
+
     self.post_message("Startup process has completed successfully.")
 
 
