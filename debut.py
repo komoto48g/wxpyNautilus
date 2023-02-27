@@ -18,6 +18,11 @@ from mwx.controls import Icon
 from mwx.nutshell import EditorBook
 from mwx.py.filling import FillingTree
 
+try:
+    from etc import bookshelf
+except ImportError:
+    from .etc import bookshelf
+
 
 def subclasses(cls):
     try:
@@ -381,6 +386,13 @@ def main(self):
     self.handler.define('shell_new', init_shell)
 
     self.post_message("Startup process has completed successfully.")
+
+    ## Bookshelf extension
+    if not hasattr(self, "Bookshelf"):
+        self.Bookshelf = bookshelf.EditorTreeCtrl(self,
+                            style=wx.TR_DEFAULT_STYLE|wx.TR_HIDE_ROOT)
+        self.Bookshelf.watch(self.ghost)
+        self.watcher.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
 
 
 quote_unqoute = """
