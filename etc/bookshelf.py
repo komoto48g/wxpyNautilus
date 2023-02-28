@@ -1,21 +1,29 @@
-import contextlib
-import os
 import wx
-import mwx
-from mwx.controls import Icon, TreeListCtrl
-from wxpyNautilus import Layer, Frame
+from mwx.utilus import TreeList
+from mwx.framework import CtrlInterface
+from mwx.graphman import Layer
 
 
 class ItemData:
+    """Item data for TreeListCtrl
+    """
     def __init__(self, root, buffer):
         self.root = root
         self.buffer = buffer
         self._itemId = None #: reference <TreeItemId>
 
 
-class EditorTreeCtrl(TreeListCtrl):
+class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
+    """TreeList control
+    
+    Construct treectrl in the order of tree:list.
+    """
     def __init__(self, parent, *args, **kwargs):
-        TreeListCtrl.__init__(self, parent, *args, **kwargs)
+        wx.TreeCtrl.__init__(self, parent, *args, **kwargs)
+        CtrlInterface.__init__(self)
+        TreeList.__init__(self)
+        
+        self.Font = wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
         
         self.parent = parent
         self.target = None
@@ -58,11 +66,52 @@ class EditorTreeCtrl(TreeListCtrl):
             self.unwatch()
         evt.Skip()
     
+    ## --------------------------------
+    ## TreeList/Ctrl wrapper interface 
+    ## --------------------------------
+    
+    def reset(self, clear=True):
+        """Build tree control.
+        All items will be rebuilt after clear if specified.
+        """
+        try:
+            self.Freeze()
+            if clear:
+                self.DeleteAllItems()
+                self.AddRoot(self.Name)
+            for branch in self:
+                self._set_item(self.RootItem, *branch)
+        finally:
+            self.Thaw()
+    
+    def _get_item(self, root, key):
+        """Returns the first item [root/key] found.
+        Note: Items with the same name are not supported.
+        """
+        item, cookie = self.GetFirstChild(root)
+        while item:
+            if key == self.GetItemText(item):
+                return item
+            item, cookie = self.GetNextChild(root, cookie)
+    
+    def _set_item(self, root, key, *values):
+        """Set the item [root/key] with values recursively.
+        """
+        item = self._get_item(root, key) or self.AppendItem(root, key)
+        branches = next((x for x in values if isinstance(x, (tuple, list))), [])
+        rest = [x for x in values if x not in branches]
+        if rest:
+            ## Take the first element assuming it's client data.
+            ## Set the item client data. (override as needed)
+            self.SetItemData(item, *rest)
+        for branch in branches:
+            self._set_item(item, *branch)
+    
     def SetItemData(self, item, data, *rest):
         """Sets the item client data. (override)"""
         try:
             data._itemId = item
-            TreeListCtrl.SetItemData(self, item, data)
+            wx.TreeCtrl.SetItemData(self, item, data)
         except AttributeError:
             pass
     
@@ -141,6 +190,8 @@ class Plugin(Layer):
 
 
 if __name__ == "__main__":
+    from wxpyNautilus import Frame
+
     app = wx.App()
     frm = Frame(None)
     frm.load_plug(Plugin, show=1, dock=5)
