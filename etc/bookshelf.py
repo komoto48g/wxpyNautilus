@@ -122,15 +122,15 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
     def watch(self, target):
         self.target = target
         if self.target:
-            for editor in self.target.all_pages():
+            for editor in self.target.all_pages:
                 editor.handler.append(self.context)
                 self[editor.Name] = [(buf.name, ItemData(self, buf))
-                                        for buf in editor.all_buffers()]
+                                        for buf in editor.all_buffers]
             self.reset()
     
     def unwatch(self):
         if self.target:
-            for editor in self.target.all_pages():
+            for editor in self.target.all_pages:
                 editor.handler.remove(self.context)
             self.clear()
         self.target = None

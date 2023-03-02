@@ -15,7 +15,7 @@ from wx import stc
 import mwx
 from mwx.utilus import FSM
 from mwx.controls import Icon
-from mwx.nutshell import EditorBook
+from mwx.nutshell import Nautilus, EditorBook
 from mwx.py.filling import FillingTree
 
 try:
@@ -317,12 +317,12 @@ def stylus(self):
     """
     init_shellframe(self)
 
-    for page in self.all_pages(EditorBook):
+    for page in self.get_pages(EditorBook):
         init_editor(page)
-        for buffer in page.all_buffers():
+        for buffer in page.all_buffers:
             init_buffer(buffer)
 
-    for page in self.all_pages(type(self.rootshell)):
+    for page in self.get_pages(Nautilus):
         init_shell(page)
 
     self.Config.set_attributes(Style=py_text_mode.STYLE)
@@ -385,7 +385,7 @@ def main(self):
     self.ghost.SetDropTarget(MyFileDropLoader(self.Scratch))
 
     ## Define *new* event handlers.
-    for editor in self.all_pages(EditorBook):
+    for editor in self.get_pages(EditorBook):
         editor.handler.define('buffer_new', init_buffer)
     self.handler.define('shell_new', init_shell)
 
