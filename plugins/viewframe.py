@@ -35,10 +35,11 @@ else:
 
 
 class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
-    """ CheckList of Graph buffers
+    """CheckList of Graph buffers.
     
-    list item order = buffer order
-    (リストアイテムとバッファの並び順 0..n は常に一致します)
+    Note:
+        list item order = buffer order.
+        (リストアイテムとバッファの並び順 0..n は常に一致します)
     """
     @property
     def selected_items(self):
@@ -260,10 +261,23 @@ class Plugin(Layer):
         
         self.nb.Bind(wx.EVT_CHILD_FOCUS, on_focus_set)
         
+        def copy(all=True):
+            page = self.nb.CurrentPage
+            frame = page.Target.all_frames[page.focused_item]
+            if all:
+                text = pformat(frame.attributes, sort_dicts=0)
+            else:
+                text = "{}\n{}".format(frame.name, frame.annotation)
+            Clipboard.write(text)
+        
         self.menu[0:0] = [
             (101, "&Edit annotation", "Edit annotation", Icon('edit'),
                 lambda v: self.ask()),
             (),
+            ("Copy attributes", Icon('copy'), (
+                (102, "ALL data", Icon('copy'), lambda v: copy()),
+                (103, "row data", Icon('edit'), lambda v: copy(0)),
+            )),
         ]
     
     def attach(self, target, caption):
