@@ -28,8 +28,6 @@ def subclasses(cls):
     try:
         return cls.__subclasses__()
     except AttributeError:
-        ## return type(cls).__subclasses__()
-        ## Use obj@type@subclasses
         pass
 builtins.subclasses = subclasses
 
@@ -381,11 +379,9 @@ def main(self):
     ## Stylize all windows
     stylus(self)
 
-    ## Set scratch window to accept drop-file.
-    self.ghost.SetDropTarget(MyFileDropLoader(self.Scratch))
-
     ## Define *new* event handlers.
     for editor in self.get_pages(EditorBook):
+        editor.SetDropTarget(MyFileDropLoader(editor))
         editor.handler.define('buffer_new', init_buffer)
     self.handler.define('shell_new', init_shell)
 
@@ -394,7 +390,8 @@ def main(self):
     ## Bookshelf extension
     if not hasattr(self, "Bookshelf"):
         self.Bookshelf = bookshelf.EditorTreeCtrl(self,
-                            style=wx.TR_DEFAULT_STYLE|wx.TR_HIDE_ROOT)
+                            style=wx.TR_DEFAULT_STYLE|wx.TR_HIDE_ROOT,
+                            name = "Bookshelf")
         self.Bookshelf.watch(self.ghost)
         self.watcher.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
 
