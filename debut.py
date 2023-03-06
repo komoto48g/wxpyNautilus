@@ -134,6 +134,14 @@ def init_editor(self):
 
     self.define_key('f5', self.load_buffer)
 
+    @self.define_key('C-x up', dir=wx.UP)
+    @self.define_key('C-x down', dir=wx.DOWN)
+    @self.define_key('C-x left', dir=wx.LEFT)
+    @self.define_key('C-x right', dir=wx.RIGHT)
+    def split(dir):
+        j = self.all_buffers.index(self.CurrentPage)
+        self.Split(j, dir)
+
 
 def init_shell(self):
     """Customize the keymaps of the Shell.
@@ -207,6 +215,10 @@ def init_shell(self):
     @self.define_key('M-f12')
     def close_shell():
         self.parent.delete_shell(self)
+
+    @self.define_key('C-f4')
+    def HL():
+        highlight(self.eval(self.cmdline))
 
 ## --------------------------------
 ## Setup the console of Nautilus
