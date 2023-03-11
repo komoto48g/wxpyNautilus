@@ -31,7 +31,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         self.context = {
             None : {
                    'buffer_new' : [ None, self.on_buffer_new ],
-                  'buffer_caps' : [ None, self.set_caption ],
+                  'buffer_caps' : [ None, self.on_buffer_caption ],
                  'buffer_saved' : [ None, ],
                 'buffer_loaded' : [ None, ],
                'buffer_removed' : [ None, self.on_buffer_removed ],
@@ -120,6 +120,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
     ## --------------------------------
     
     def watch(self, target):
+        self.unwatch()
         self.target = target
         if self.target:
             for editor in self.target.all_pages:
@@ -133,6 +134,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
             for editor in self.target.all_pages:
                 editor.handler.remove(self.context)
             self.clear()
+            self.reset()
         self.target = None
     
     def on_buffer_new(self, buf):
@@ -149,7 +151,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         if data:
             wx.CallAfter(self.SelectItem, data._itemId)
     
-    def set_caption(self, buf, caption):
+    def on_buffer_caption(self, buf, caption):
         data = self[f"{buf.parent.Name}/{buf.name}"]
         if data:
             self.SetItemText(data._itemId, caption)
