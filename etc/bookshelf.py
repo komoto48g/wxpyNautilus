@@ -1,6 +1,7 @@
 import wx
 from mwx.utilus import TreeList
 from mwx.framework import CtrlInterface
+from mwx.nutshell import EditorBook
 from mwx.graphman import Layer
 
 
@@ -121,15 +122,15 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         self.unwatch()
         self.target = target
         if self.target:
-            for editor in self.target.all_pages:
+            for editor in self.target.get_pages(EditorBook):
                 editor.handler.append(self.context)
-                self[editor.Name] = [(buf.name, ItemData(self, buf))
+                self[editor.Name] = [[buf.name, ItemData(self, buf)]
                                         for buf in editor.all_buffers]
             self.reset()
     
     def unwatch(self):
         if self.target:
-            for editor in self.target.all_pages:
+            for editor in self.target.get_pages(EditorBook):
                 editor.handler.remove(self.context)
             self.clear()
             self.reset()
