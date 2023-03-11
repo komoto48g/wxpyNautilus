@@ -48,10 +48,8 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         def enter(v):
             data = self.GetItemData(self.Selection)
             if data:
-                buf = data.buffer
-                editor = buf.parent
-                editor.swap_buffer(buf)
-                editor.parent.popup_window(editor, focus=1)
+                self.show_buffer(data.buffer, focus=1)
+                return
             v.Skip()
         
         @self.handler.bind('*button* pressed')
@@ -156,15 +154,19 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         if data:
             self.SetItemText(data._itemId, caption)
     
+    def show_buffer(self, buf, focus=False):
+        editor = buf.parent
+        editor.parent.popup_window(editor)
+        buf.SetFocus()
+        if not focus:
+            self.SetFocus() # restore focus
+    
     def OnLeftDclick(self, evt):
         item, flags = self.HitTest(evt.Position)
         if item:
             data = self.GetItemData(item)
             if data:
-                buf = data.buffer
-                editor = buf.parent
-                editor.swap_buffer(buf)
-                editor.parent.popup_window(editor, focus=0)
+                self.show_buffer(data.buffer, focus=0)
                 return
         evt.Skip()
 
