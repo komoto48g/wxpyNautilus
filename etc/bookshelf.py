@@ -39,6 +39,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
               'buffer_selected' : [ None, self.on_buffer_selected ],
              'buffer_activated' : [ None, self.on_buffer_selected ],
            'buffer_inactivated' : [ None, ],
+          'buffer_filename_set' : [ None, self.on_buffer_file_renamed ],
             },
         }
         
@@ -154,6 +155,16 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         data = self[f"{buf.parent.Name}/{buf.name}"]
         if data:
             self.SetItemText(data._itemId, caption)
+    
+    def on_buffer_file_renamed(self, buf, *args):
+        for key, data in self.items(): # <-- old key
+            if data.buffer is buf:
+                self.SetItemText(data._itemId, buf.name)
+                for item in self[buf.parent.Name]:
+                    if item[1] is data:
+                        item[0] = buf.name # --> new key
+                        break
+                break
     
     def show_buffer(self, buf, focus=False):
         editor = buf.parent
