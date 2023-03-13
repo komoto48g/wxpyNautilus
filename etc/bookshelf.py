@@ -43,16 +43,15 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
             },
         }
         
-        self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDclick)
+        self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         
+        @self.handler.bind('tab pressed')
         @self.handler.bind('enter pressed')
         def enter(v):
             data = self.GetItemData(self.Selection)
             if data:
-                self.show_buffer(data.buffer, focus=1)
-                return
-            v.Skip()
+                data.buffer.SetFocus()
         
         @self.handler.bind('*button* pressed')
         @self.handler.bind('*button* released')
@@ -149,7 +148,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
     def on_buffer_selected(self, buf):
         data = self[f"{buf.parent.Name}/{buf.name}"]
         if data:
-            wx.CallAfter(self.SelectItem, data._itemId)
+            self.SelectItem(data._itemId)
     
     def on_buffer_caption(self, buf, caption):
         data = self[f"{buf.parent.Name}/{buf.name}"]
@@ -166,20 +165,12 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
                         break
                 break
     
-    def show_buffer(self, buf, focus=False):
-        editor = buf.parent
-        editor.parent.popup_window(editor)
-        buf.SetFocus()
-        if not focus:
-            self.SetFocus() # restore focus
-    
-    def OnLeftDclick(self, evt):
-        item, flags = self.HitTest(evt.Position)
-        if item:
-            data = self.GetItemData(item)
+    def OnSelChanged(self, evt):
+        if self and self.HasFocus():
+            data = self.GetItemData(evt.Item)
             if data:
-                self.show_buffer(data.buffer, focus=0)
-                return
+                data.buffer.SetFocus()
+            self.SetFocus()
         evt.Skip()
 
 
