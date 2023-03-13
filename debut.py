@@ -218,7 +218,9 @@ def init_shell(self):
 
     @self.define_key('C-f4')
     def HL():
-        highlight(self.eval(self.cmdline))
+        obj = self.cmdline
+        if obj:
+            highlight(self.eval(obj))
 
 ## --------------------------------
 ## Setup the console of Nautilus
@@ -285,7 +287,8 @@ class py_interactive_mode:
 def init_shellframe(self):
     """Customize the keymaps of the ShellFrame.
     """
-    self.define_key('C-x M-s', self.save_session)
+    self.define_key('C-x C-S-o', self.load_session)
+    self.define_key('C-x C-S-s', self.save_session_as)
 
     @self.define_key('Xbutton1', p=-1)
     @self.define_key('Xbutton2', p=+1)
