@@ -1,6 +1,7 @@
 import wx
 from mwx.utilus import TreeList
 from mwx.framework import CtrlInterface
+from mwx.nutshell import EditorBook
 from mwx.graphman import Layer
 
 
@@ -38,21 +39,19 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
               'buffer_selected' : [ None, self.on_buffer_selected ],
              'buffer_activated' : [ None, self.on_buffer_selected ],
            'buffer_inactivated' : [ None, ],
+          'buffer_filename_set' : [ None, self.on_buffer_file_renamed ],
             },
         }
         
-        self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDclick)
+        self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         
+        @self.handler.bind('tab pressed')
         @self.handler.bind('enter pressed')
         def enter(v):
             data = self.GetItemData(self.Selection)
             if data:
-                buf = data.buffer
-                editor = buf.parent
-                editor.swap_buffer(buf)
-                editor.parent.popup_window(editor, focus=1)
-            v.Skip()
+                data.buffer.SetFocus()
         
         @self.handler.bind('*button* pressed')
         @self.handler.bind('*button* released')
@@ -75,14 +74,17 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         All items will be rebuilt after clear if specified.
         """
         try:
-            self.Freeze()
+            self.parent.Freeze()
+            wnd = wx.Window.FindFocus() # original focus
             if clear:
                 self.DeleteAllItems()
                 self.AddRoot(self.Name)
             for branch in self:
                 self._set_item(self.RootItem, *branch)
         finally:
-            self.Thaw()
+            if wnd:
+                wnd.SetFocus() # restore focus
+            self.parent.Thaw()
     
     def _get_item(self, root, key):
         """Returns the first item [root/key] found.
@@ -123,15 +125,15 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         self.unwatch()
         self.target = target
         if self.target:
-            for editor in self.target.all_pages:
+            for editor in self.target.get_pages(EditorBook):
                 editor.handler.append(self.context)
-                self[editor.Name] = [(buf.name, ItemData(self, buf))
+                self[editor.Name] = [[buf.name, ItemData(self, buf)]
                                         for buf in editor.all_buffers]
             self.reset()
     
     def unwatch(self):
         if self.target:
-            for editor in self.target.all_pages:
+            for editor in self.target.get_pages(EditorBook):
                 editor.handler.remove(self.context)
             self.clear()
             self.reset()
@@ -144,28 +146,33 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
     def on_buffer_removed(self, buf):
         del self[f"{buf.parent.Name}/{buf.name}"]
         self.reset()
-        buf.parent.SetFocus() # restore focus
     
     def on_buffer_selected(self, buf):
         data = self[f"{buf.parent.Name}/{buf.name}"]
         if data:
-            wx.CallAfter(self.SelectItem, data._itemId)
+            self.SelectItem(data._itemId)
     
     def on_buffer_caption(self, buf, caption):
         data = self[f"{buf.parent.Name}/{buf.name}"]
         if data:
             self.SetItemText(data._itemId, caption)
     
-    def OnLeftDclick(self, evt):
-        item, flags = self.HitTest(evt.Position)
-        if item:
-            data = self.GetItemData(item)
+    def on_buffer_file_renamed(self, buf, *args):
+        for key, data in self.items(): # <-- old key
+            if data.buffer is buf:
+                self.SetItemText(data._itemId, buf.name)
+                for item in self[buf.parent.Name]:
+                    if item[1] is data:
+                        item[0] = buf.name # --> new key
+                        break
+                break
+    
+    def OnSelChanged(self, evt):
+        if self and self.HasFocus():
+            data = self.GetItemData(evt.Item)
             if data:
-                buf = data.buffer
-                editor = buf.parent
-                editor.swap_buffer(buf)
-                editor.parent.popup_window(editor, focus=0)
-                return
+                data.buffer.SetFocus()
+            self.SetFocus()
         evt.Skip()
 
 
