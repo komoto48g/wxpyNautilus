@@ -74,14 +74,17 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         All items will be rebuilt after clear if specified.
         """
         try:
-            self.Freeze()
+            self.parent.Freeze()
+            wnd = wx.Window.FindFocus() # original focus
             if clear:
                 self.DeleteAllItems()
                 self.AddRoot(self.Name)
             for branch in self:
                 self._set_item(self.RootItem, *branch)
         finally:
-            self.Thaw()
+            if wnd:
+                wnd.SetFocus() # restore focus
+            self.parent.Thaw()
     
     def _get_item(self, root, key):
         """Returns the first item [root/key] found.
@@ -143,7 +146,6 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
     def on_buffer_removed(self, buf):
         del self[f"{buf.parent.Name}/{buf.name}"]
         self.reset()
-        buf.parent.SetFocus() # restore focus
     
     def on_buffer_selected(self, buf):
         data = self[f"{buf.parent.Name}/{buf.name}"]
