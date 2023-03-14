@@ -32,23 +32,17 @@ def subclasses(cls):
 builtins.subclasses = subclasses
 
 
-## mwx.__version__ < '0.77.9'
-def _define(self, event, action=None, state=None, state2=None):
-    self.unbind(event, None, state)
-    return self.bind(event, action, state, state2)
-FSM.define = _define
-
-
-## mwx.__version__ < '0.77.7'
-def atomic(self, obj, key):
-    if key == 'DropTarget': # Windows bug fix.
-        return False
-    try:
-        v = getattr(obj, key)
-        return not hasattr(v, '__name__') and not key.startswith('__')
-    except Exception:
-        pass
-FillingTree.filter = atomic
+class monkey_patch:
+    ## mwx.__version__ < '0.77.7'
+    def atomic(self, obj, key):
+        if key == 'DropTarget': # Windows bug fix.
+            return False
+        try:
+            v = getattr(obj, key)
+            return not hasattr(v, '__name__') and not key.startswith('__')
+        except Exception:
+            pass
+    FillingTree.filter = atomic
 
 
 ## --------------------------------
@@ -408,7 +402,7 @@ def main(self):
                             style=wx.TR_DEFAULT_STYLE|wx.TR_HIDE_ROOT,
                             name = "Bookshelf")
         self.Bookshelf.watch(self.ghost)
-        self.watcher.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
+        self.ghost.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
 
 
 quote_unqoute = """
@@ -441,6 +435,4 @@ if __name__ == "__main__":
         }
         ## Dive into some objects to inspect.
         dive(frame)
-        dive(frame.Scratch)
-        dive(frame.rootshell)
     app.MainLoop()
