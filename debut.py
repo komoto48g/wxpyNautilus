@@ -213,8 +213,10 @@ def init_shell(self):
     @self.define_key('C-f4')
     def HL():
         obj = self.cmdline
-        if obj:
+        try:
             highlight(self.eval(obj))
+        except Exception:
+            pass
 
 ## --------------------------------
 ## Setup the console of Nautilus
