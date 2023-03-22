@@ -18,6 +18,7 @@ import os
 import wx
 import wx.adv
 from wx.lib.embeddedimage import PyEmbeddedImage
+
 from mwx.graphman import Frame
 
 

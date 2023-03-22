@@ -1,4 +1,5 @@
 import wx
+
 from mwx.utilus import TreeList
 from mwx.framework import CtrlInterface
 from mwx.nutshell import EditorBook

@@ -9,9 +9,11 @@ import builtins
 import getopt
 import sys
 import os
+import re
 import wx
 from wx import aui
 from wx import stc
+
 import mwx
 from mwx.utilus import FSM
 from mwx.controls import Icon
@@ -350,16 +352,45 @@ def stylus(self):
 ## Main program
 ## --------------------------------
 
-class MyFileDropLoader(wx.FileDropTarget):
-    def __init__(self, target):
-        wx.FileDropTarget.__init__(self)
-        self.target = target
+class MyDataLoader(wx.DropTarget):
+    """DnD target loader.
     
-    def OnDropFiles(self, x, y, filenames):
-        for f in filenames:
-            if self.target.load_file(f):
-                self.target.post_message(f"Loaded {f!r} successfully.")
-        return True
+    Supports URL text and file data formats.
+    """
+    def __init__(self, target: EditorBook):
+        wx.DropTarget.__init__(self)
+        
+        self.target = target
+        self.textdo = wx.TextDataObject()
+        self.filedo = wx.FileDataObject()
+        self.DataObject = wx.DataObjectComposite()
+        self.DataObject.Add(self.textdo)
+        self.DataObject.Add(self.filedo, True)
+    
+    def OnData(self, x, y, result):
+        self.GetData()
+        if self.textdo.TextLength > 1:
+            text = self.textdo.Text
+            if re.match(r"https?://[\w/:%#\$&\?()~.=+-]+", text):
+                res = self.target.load_url(text)
+                if res:
+                    result = wx.DragCopy
+                elif res is None:
+                    self.target.post_message("Load canceled.")
+                    result = wx.DragCancel
+                else:
+                    self.target.post_message("URL not found.")
+                    result = wx.DragNone
+            else:
+                self.target.post_message("Dropped text is not a URL.")
+                result = wx.DragNone
+            self.textdo.Text = ''
+        else:
+            for f in self.filedo.Filenames:
+                if self.target.load_file(f):
+                    self.target.post_message(f"Loaded {f!r} successfully.")
+            self.filedo.SetData(wx.DF_FILENAME, None)
+        return result
 
 
 def main(self):
@@ -396,7 +427,7 @@ def main(self):
 
     ## Define *new* event handlers.
     for editor in self.get_pages(EditorBook):
-        editor.SetDropTarget(MyFileDropLoader(editor))
+        editor.SetDropTarget(MyDataLoader(editor))
         editor.handler.define('buffer_new', init_buffer)
     self.handler.define('shell_new', init_shell)
 
@@ -409,6 +440,8 @@ def main(self):
                             name = "Bookshelf")
         self.Bookshelf.watch(self.ghost)
         self.ghost.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
+
+        self.Bookshelf.SetDropTarget(MyDataLoader(self.Scratch))
 
     ## self.post_message("Startup process has completed successfully.")
 
