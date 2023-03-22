@@ -53,6 +53,14 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
             if data:
                 data.buffer.SetFocus()
         
+        @self.handler.bind('delete pressed')
+        def delete(v):
+            data = self.GetItemData(self.Selection)
+            if data:
+                buf = data.buffer
+                buf.parent.remove_buffer(buf) # -> focus moves
+                self.SetFocus()
+        
         @self.handler.bind('*button* pressed')
         @self.handler.bind('*button* released')
         def dispatch(v):
