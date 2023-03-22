@@ -136,6 +136,10 @@ def init_editor(self):
         j = self.all_buffers.index(self.CurrentPage)
         self.Split(j, dir)
 
+    @self.define_key('C-x 0')
+    def unsplit(v):
+        self.move_tab(self.CurrentPage, self.all_tabs[0])
+
 
 def init_shell(self):
     """Customize the keymaps of the Shell.
@@ -396,7 +400,7 @@ def main(self):
         editor.handler.define('buffer_new', init_buffer)
     self.handler.define('shell_new', init_shell)
 
-    self.post_message("Startup process has completed successfully.")
+    ## self.post_message("Startup process has completed successfully.")
 
     ## Bookshelf extension
     if not hasattr(self, "Bookshelf"):
