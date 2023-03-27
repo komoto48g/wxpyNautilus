@@ -29,7 +29,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         self.parent = parent
         self.target = None
         
-        self.context = {
+        self.context = { # DNA<EditorTreeCtrl>
             None : {
                    'buffer_new' : [ None, self.on_buffer_new ],
                   'buffer_caps' : [ None, self.on_buffer_caption ],
