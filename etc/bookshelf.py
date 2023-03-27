@@ -29,7 +29,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         self.parent = parent
         self.target = None
         
-        self.context = {
+        self.context = { # DNA<EditorTreeCtrl>
             None : {
                    'buffer_new' : [ None, self.on_buffer_new ],
                   'buffer_caps' : [ None, self.on_buffer_caption ],
@@ -52,6 +52,14 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
             data = self.GetItemData(self.Selection)
             if data:
                 data.buffer.SetFocus()
+        
+        @self.handler.bind('delete pressed')
+        def delete(v):
+            data = self.GetItemData(self.Selection)
+            if data:
+                buf = data.buffer
+                buf.parent.remove_buffer(buf) # -> focus moves
+                self.SetFocus()
         
         @self.handler.bind('*button* pressed')
         @self.handler.bind('*button* released')

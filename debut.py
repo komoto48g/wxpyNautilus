@@ -368,6 +368,7 @@ def main(self):
     Note:
         This function is executed once at startup.
     """
+    ## Config loader extension
     if not hasattr(self, "Config"):
         self.Config = EditorBook(self, name="Config")
         self.Config.load_file(__file__)
@@ -378,8 +379,7 @@ def main(self):
             buffer._save_file(self.SESSION_FILE)
         self.ghost.AddPage(self.Config, 'Config', bitmap=Icon('proc'))
 
-    ## Bind pointer to enable trace.
-    self.set_traceable(self.Config)
+    self.set_traceable(self.Config) # Bind pointer to enable trace.
 
     @self.Config.define_key('M-j')
     def eval_buffer():
@@ -400,15 +400,17 @@ def main(self):
         editor.handler.define('buffer_new', init_buffer)
     self.handler.define('shell_new', init_shell)
 
-    ## self.post_message("Startup process has completed successfully.")
-
-    ## Bookshelf extension
+    ## Bookshelf treeview extension
+    ## Note: Bookshelf context must be applied to the editor
+    ##       after the *new* event handlers above was defined.
     if not hasattr(self, "Bookshelf"):
         self.Bookshelf = bookshelf.EditorTreeCtrl(self,
                             style=wx.TR_DEFAULT_STYLE|wx.TR_HIDE_ROOT,
                             name = "Bookshelf")
         self.Bookshelf.watch(self.ghost)
         self.ghost.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
+
+    ## self.post_message("Startup process has completed successfully.")
 
 
 quote_unqoute = """
