@@ -9,8 +9,8 @@ from mwx.graphman import Layer
 class ItemData:
     """Item data for TreeListCtrl
     """
-    def __init__(self, root, buffer):
-        self.root = root
+    def __init__(self, tree, buffer):
+        self.tree = tree
         self.buffer = buffer
         self._itemId = None #: reference <TreeItemId>
 
@@ -44,6 +44,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
             },
         }
         
+        self.Bind(wx.EVT_TREE_ITEM_GETTOOLTIP, self.OnItemTooltip)
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         
@@ -182,6 +183,12 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
             if data:
                 data.buffer.SetFocus()
             self.SetFocus()
+        evt.Skip()
+    
+    def OnItemTooltip(self, evt):
+        data = self.GetItemData(evt.Item)
+        if data:
+            evt.SetToolTip(data.buffer.filename)
         evt.Skip()
 
 
