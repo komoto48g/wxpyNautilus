@@ -432,16 +432,17 @@ def main(self):
     self.handler.define('shell_new', init_shell)
 
     ## Bookshelf treeview extension
-    ## Note: Bookshelf context must be applied to the editor
-    ##       after the *new* event handlers above was defined.
     if not hasattr(self, "Bookshelf"):
         self.Bookshelf = bookshelf.EditorTreeCtrl(self,
                             style=wx.TR_DEFAULT_STYLE|wx.TR_HIDE_ROOT,
                             name = "Bookshelf")
-        self.Bookshelf.watch(self.ghost)
         self.ghost.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
-
-        self.Bookshelf.SetDropTarget(MyDataLoader(self.Scratch))
+    
+    ## Note: Bookshelf context must be coded in the editor/shell
+    ##       after the *new* event handlers is defined above,
+    ##       and also after this module is reloaded.
+    self.Bookshelf.watch(self.ghost)
+    self.Bookshelf.SetDropTarget(MyDataLoader(self.Scratch))
 
     ## self.post_message("Startup process has completed successfully.")
 
