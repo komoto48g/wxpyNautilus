@@ -286,9 +286,13 @@ class py_interactive_mode:
     }
 
 
-def init_shellframe(self):
-    """Customize the keymaps of the ShellFrame.
+def stylus(self):
+    """Stylize Nautilus window.
+    
+    Note:
+        This function is executed every time you reload.
     """
+    ## Customize the keymaps of the ShellFrame.
     self.define_key('C-x C-S-o', self.load_session)
     self.define_key('C-x C-S-s', self.save_session_as)
 
@@ -322,15 +326,6 @@ def init_shellframe(self):
                 shell.clearCommand() # move to the prompt end
             shell.write(text, -1) # write at the end of command-line
             shell.SetFocus()
-
-
-def stylus(self):
-    """Stylize Nautilus window.
-    
-    Note:
-        This function is executed every time you reload.
-    """
-    init_shellframe(self)
 
     for page in self.get_pages(EditorBook):
         init_editor(page)
