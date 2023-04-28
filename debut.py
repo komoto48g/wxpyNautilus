@@ -369,6 +369,7 @@ class MyDataLoader(wx.DropTarget):
             if re.match(r"https?://[\w/:%#\$&\?()~.=+-]+", text):
                 res = self.target.load_url(text)
                 if res:
+                    self.target.buffer.SetFocus()
                     result = wx.DragCopy
                 elif res is None:
                     self.target.post_message("Load canceled.")
@@ -383,6 +384,7 @@ class MyDataLoader(wx.DropTarget):
         else:
             for f in self.filedo.Filenames:
                 if self.target.load_file(f):
+                    self.target.buffer.SetFocus()
                     self.target.post_message(f"Loaded {f!r} successfully.")
             self.filedo.SetData(wx.DF_FILENAME, None)
         return result
