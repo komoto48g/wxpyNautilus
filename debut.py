@@ -41,7 +41,7 @@ class monkey_patch:
             return False
         try:
             v = getattr(obj, key)
-            return not hasattr(v, '__name__') and not key.startswith('__')
+            return not hasattr(v, '__name__')
         except Exception:
             pass
     FillingTree.filter = atomic
@@ -125,7 +125,7 @@ def init_editor(self):
     self.define_key('C-x C-l', self.load_buffer)
     self.define_key('C-x s',   self.save_all_buffers)
     self.define_key('C-x C-s', self.save_buffer)
-    self.define_key('C-x S-s', self.save_as_buffer)
+    self.define_key('C-x S-s', self.save_buffer_as)
     self.define_key('C-x C-f', self.open_buffer) # cf. find-file
 
     self.define_key('f5', self.load_buffer)
@@ -327,18 +327,20 @@ def stylus(self):
             shell.write(text, -1) # write at the end of command-line
             shell.SetFocus()
 
+    ## Customize keymaps.
     for page in self.get_pages(EditorBook):
         init_editor(page)
-        for buffer in page.all_buffers:
-            init_buffer(buffer)
+        for buf in page.all_buffers:
+            init_buffer(buf)
 
     for page in self.get_pages(Nautilus):
         init_shell(page)
 
+    ## Stylize all child windows.
     self.Config.set_attributes(Style=py_text_mode.STYLE)
     self.Scratch.set_attributes(Style=py_interactive_mode.STYLE)
-    
-    ## Don't clear buffer.
+
+    ## Don't kill config buffers.
     self.Config.undefine_key('C-x k')
     self.Config.undefine_key('C-x C-k')
 
@@ -369,6 +371,7 @@ class MyDataLoader(wx.DropTarget):
             if re.match(r"https?://[\w/:%#\$&\?()~.=+-]+", text):
                 res = self.target.load_url(text)
                 if res:
+                    self.target.buffer.SetFocus()
                     result = wx.DragCopy
                 elif res is None:
                     self.target.post_message("Load canceled.")
@@ -383,6 +386,7 @@ class MyDataLoader(wx.DropTarget):
         else:
             for f in self.filedo.Filenames:
                 if self.target.load_file(f):
+                    self.target.buffer.SetFocus()
                     self.target.post_message(f"Loaded {f!r} successfully.")
             self.filedo.SetData(wx.DF_FILENAME, None)
         return result
@@ -398,14 +402,13 @@ def main(self):
     if not hasattr(self, "Config"):
         self.Config = EditorBook(self, name="Config")
         self.Config.load_file(__file__)
-        buffer = self.Config.default_buffer
         try:
-            buffer._load_file(self.SESSION_FILE)
+            self.Config.default_buffer._load_file(self.SESSION_FILE)
         except FileNotFoundError:
-            buffer._save_file(self.SESSION_FILE)
+            self.Config.default_buffer._save_file(self.SESSION_FILE)
         self.ghost.AddPage(self.Config, 'Config', bitmap=Icon('proc'))
 
-    self.set_traceable(self.Config) # Bind pointer to enable trace.
+    self.set_hookable(self.Config) # Bind pointer to enable trace.
 
     @self.Config.define_key('M-j')
     def eval_buffer():
@@ -417,7 +420,7 @@ def main(self):
         if "main" in locals:
             locals["main"](self)
 
-    ## Stylize all windows
+    ## Stylize ShellFrame window
     stylus(self)
 
     ## Define *new* event handlers.
@@ -432,7 +435,7 @@ def main(self):
                             style=wx.TR_DEFAULT_STYLE|wx.TR_HIDE_ROOT,
                             name = "Bookshelf")
         self.ghost.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
-    
+
     ## Note: Bookshelf context must be coded in the editor/shell
     ##       after the *new* event handlers is defined above,
     ##       and also after this module is reloaded.
@@ -463,13 +466,13 @@ if __name__ == "__main__":
     frame = mwx.deb(loop=0, debrc=session,
                     introText=__doc__ + quote_unqoute)
     main(frame)
-    frame.define_key('f12', frame.rootshell.SetFocus) # Don't close.
+    frame.undefine_key('f12') # Don't close.
     if 1:
         ## If you want debugger skip a specific module,
         ## add the module:str to debugger.skip:set.
         frame.debugger.skip -= {
             mwx.FSM.__module__, # for debugging FSM
         }
-        ## Dive into some objects to inspect.
+        ## Dive into objects to inspect.
         dive(frame)
     app.MainLoop()
