@@ -6,7 +6,7 @@ import numpy as np
 import os
 import wx
 import wx.media
-import mwx
+
 from mwx.graphman import Layer, Frame
 from mwx.controls import Icon, Button, TextCtrl
 
@@ -239,10 +239,11 @@ class Plugin(Layer):
         if not self._path:
             return
         fin = self._path
-        fout = "{}_clip.mp4".format(os.path.splitext(fin)[0])
+        fout = "{}_clip".format(os.path.splitext(fin)[0])
         with wx.FileDialog(self, "Save as",
                 defaultFile=os.path.basename(fout),
-                wildcard="Media file (*.mp4)|*.mp4",
+                wildcard="Media file (*.mp4)|*.mp4|"
+                         "Animiation (*.gif)|*.gif",
                 style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT) as dlg:
             if dlg.ShowModal() != wx.ID_OK:
                 return
