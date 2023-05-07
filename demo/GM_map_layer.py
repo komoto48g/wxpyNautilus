@@ -6,6 +6,7 @@ http://www.atomosyd.net/spip.php?article98
 """
 import wx
 import numpy as np
+
 from mwx.graphman import Layer
 from mwx.controls import Button, LParam
 from matplotlib import pyplot as plt

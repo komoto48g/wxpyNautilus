@@ -37,7 +37,6 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
                  'buffer_saved' : [ None, ],
                 'buffer_loaded' : [ None, ],
                'buffer_removed' : [ None, self.on_buffer_removed ],
-              'buffer_selected' : [ None, self.on_buffer_selected ],
              'buffer_activated' : [ None, self.on_buffer_selected ],
            'buffer_inactivated' : [ None, ],
           'buffer_filename_set' : [ None, self.on_buffer_file_renamed ],

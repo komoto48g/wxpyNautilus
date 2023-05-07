@@ -8,6 +8,7 @@ from pprint import pformat
 import wx
 from wx import aui
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
+
 from mwx.controls import Icon
 from mwx.graphman import Layer
 from mwx.framework import CtrlInterface
