@@ -328,12 +328,12 @@ def stylus(self):
             shell.SetFocus()
 
     ## Customize keymaps.
-    for page in self.get_pages(EditorBook):
+    for page in self.get_all_pages(EditorBook):
         init_editor(page)
         for buf in page.all_buffers:
             init_buffer(buf)
 
-    for page in self.get_pages(Nautilus):
+    for page in self.get_all_pages(Nautilus):
         init_shell(page)
 
     ## Stylize all child windows.
@@ -424,7 +424,7 @@ def main(self):
     stylus(self)
 
     ## Define *new* event handlers.
-    for editor in self.get_pages(EditorBook):
+    for editor in self.get_all_pages(EditorBook):
         editor.SetDropTarget(MyDataLoader(editor))
         editor.handler.define('buffer_new', init_buffer)
     self.handler.define('shell_new', init_shell)
@@ -433,7 +433,7 @@ def main(self):
     if not hasattr(self, "Bookshelf"):
         self.Bookshelf = bookshelf.EditorTreeCtrl(self,
                             style=wx.TR_DEFAULT_STYLE|wx.TR_HIDE_ROOT,
-                            name = "Bookshelf")
+                            name="Bookshelf")
         self.ghost.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
 
     ## Note: Bookshelf context must be coded in the editor/shell
