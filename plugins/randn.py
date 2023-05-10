@@ -3,6 +3,7 @@
 import numpy as np
 import cv2
 import wx
+
 from mwx.controls import Button, LParam
 from mwx.graphman import Layer, Frame
 

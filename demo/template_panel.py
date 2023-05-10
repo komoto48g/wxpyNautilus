@@ -6,6 +6,7 @@ Version: 1.0
 Author: Kazuya O'moto <komoto@jeol.co.jp>
 """
 import wx
+
 from mwx.graphman import Frame
 
 def _pack(items, orient=wx.HORIZONTAL):

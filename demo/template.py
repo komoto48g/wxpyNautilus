@@ -8,6 +8,7 @@ Author: Kazuya O'moto <komoto@jeol.co.jp>
 import numpy as np
 import cv2
 import wx
+
 from mwx.controls import LParam
 from mwx.graphman import Layer, Frame
 
