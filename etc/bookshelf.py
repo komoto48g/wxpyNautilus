@@ -1,3 +1,4 @@
+import re
 import wx
 
 from mwx.utilus import TreeList
@@ -33,13 +34,13 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         self.context = { # DNA<EditorTreeCtrl>
             None : {
                    'buffer_new' : [ None, self.on_buffer_new ],
-                  'buffer_caps' : [ None, self.on_buffer_caption ],
                  'buffer_saved' : [ None, ],
                 'buffer_loaded' : [ None, ],
                'buffer_removed' : [ None, self.on_buffer_removed ],
              'buffer_activated' : [ None, self.on_buffer_selected ],
            'buffer_inactivated' : [ None, ],
           'buffer_filename_set' : [ None, self.on_buffer_file_renamed ],
+        'buffer_caption_prefix' : [ None, self.on_buffer_caption ],
             },
         }
         
@@ -101,7 +102,9 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         """
         item, cookie = self.GetFirstChild(root)
         while item:
-            if key == self.GetItemText(item):
+            caption = self.GetItemText(item)
+            caption = re.sub(r"^\W+\s+(.*)", r"\1", caption)
+            if key == caption:
                 return item
             item, cookie = self.GetNextChild(root, cookie)
     
@@ -150,7 +153,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
     
     def on_buffer_new(self, buf):
         self[f"{buf.parent.Name}/{buf.name}"] = ItemData(self, buf)
-        self.reset(clear=False)
+        self.reset(clear=0)
     
     def on_buffer_removed(self, buf):
         del self[f"{buf.parent.Name}/{buf.name}"]
