@@ -128,7 +128,13 @@ def init_editor(self):
     self.define_key('C-x S-s', self.save_buffer_as)
     self.define_key('C-x C-f', self.open_buffer) # cf. find-file
 
-    self.define_key('f5', self.load_buffer)
+    @self.define_key('f5')
+    def reload_buffer():
+        self.load_buffer()
+        if self.buffer.code:
+            shell = self.parent.current_shell
+            self.buffer.py_exec_region(shell.globals, shell.locals)
+            self.post_message(f"Reloaded {self.buffer.name!r} successfully.")
 
     @self.define_key('C-x up', dir=wx.UP)
     @self.define_key('C-x down', dir=wx.DOWN)
