@@ -29,7 +29,7 @@ class Plugin(Layer):
         self.message("Processing randn...")
         k = self.ksize.value
         src = np.random.randn(N, N).astype(np.float32)
-        dst = cv2.GaussianBlur(src, (k,k), 0)
+        dst = cv2.GaussianBlur(src, (k, k), 0)
         
         self.message("\b Loading...")
         self.graph.load(dst, name="*gauss*")
