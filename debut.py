@@ -34,10 +34,11 @@ def subclasses(cls):
 builtins.subclasses = subclasses
 
 
-class monkey_patch:
-    ## mwx.__version__ < '0.77.7'
+## This monkey patch forces the filling-tree to display only atoms.
+try:
+    _FillingTree_filter_org = FillingTree.filter
     def atomic(self, obj, key):
-        if key == 'DropTarget': # Windows bug fix.
+        if not _FillingTree_filter_org(self, obj, key):
             return False
         try:
             v = getattr(obj, key)
@@ -45,6 +46,8 @@ class monkey_patch:
         except Exception:
             pass
     FillingTree.filter = atomic
+except AttributeError:
+    pass
 
 
 ## --------------------------------
