@@ -84,7 +84,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         All items will be rebuilt after clear if specified.
         """
         try:
-            self.parent.Freeze()
+            self.Freeze()
             wnd = wx.Window.FindFocus() # original focus
             if clear:
                 self.DeleteAllItems()
@@ -94,7 +94,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         finally:
             if wnd:
                 wnd.SetFocus() # restore focus
-            self.parent.Thaw()
+            self.Thaw()
     
     def _get_item(self, root, key):
         """Returns the first item [root/key] found.
