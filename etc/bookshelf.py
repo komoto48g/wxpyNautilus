@@ -36,7 +36,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
                    'buffer_new' : [ None, self.on_buffer_new ],
                  'buffer_saved' : [ None, ],
                 'buffer_loaded' : [ None, ],
-               'buffer_removed' : [ None, self.on_buffer_removed ],
+               'buffer_deleted' : [ None, self.on_buffer_deleted ],
              'buffer_activated' : [ None, self.on_buffer_selected ],
            'buffer_inactivated' : [ None, ],
          'buffer_caption_reset' : [ None, self.on_buffer_caption ],
@@ -60,7 +60,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
             data = self.GetItemData(self.Selection)
             if data:
                 buf = data.buffer
-                buf.parent.remove_buffer(buf) # -> focus moves
+                buf.parent.delete_buffer(buf) # -> focus moves
                 self.SetFocus()
         
         @self.handler.bind('*button* pressed')
@@ -155,7 +155,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         self[f"{buf.parent.Name}/{buf.name}"] = ItemData(self, buf)
         self.reset(clear=0)
     
-    def on_buffer_removed(self, buf):
+    def on_buffer_deleted(self, buf):
         del self[f"{buf.parent.Name}/{buf.name}"]
         self.reset()
     
