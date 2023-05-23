@@ -378,7 +378,7 @@ class MyDataLoader(wx.DropTarget):
         if self.textdo.TextLength > 1:
             text = self.textdo.Text
             if re.match(r"https?://[\w/:%#\$&\?()~.=+-]+", text):
-                res = self.target.load_url(text)
+                res = self.target.load_url(text.strip())
                 if res:
                     self.target.buffer.SetFocus()
                     result = wx.DragCopy
