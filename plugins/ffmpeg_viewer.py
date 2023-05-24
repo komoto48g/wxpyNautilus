@@ -99,26 +99,29 @@ class Plugin(Layer):
                            handler=self.set_offset,
                            updater=self.get_offet,
                            )
-        self.crop = TextCtrl(self, icon="cut", size=(130,-1),
+        self.crop = TextCtrl(self, icon="cut", size=(130,-1), tip='crop',
                            updater=self.set_crop
                            )
-        self.ex = Button(self, label="Export", icon='save')
+        self.snp = Button(self, label='Snapshot', icon='clock')
+        self.exp = Button(self, label="Export", icon='save')
         self.rw = Button(self, icon='|<-')
         self.fw = Button(self, icon='->|')
         
-        self.ex.Bind(wx.EVT_BUTTON, lambda v: self.export())
+        self.snp.Bind(wx.EVT_BUTTON, lambda v: self.snapshot())
+        self.exp.Bind(wx.EVT_BUTTON, lambda v: self.export())
         self.rw.Bind(wx.EVT_BUTTON, lambda v: self.seekdelta(-100))
         self.fw.Bind(wx.EVT_BUTTON, lambda v: self.seekdelta(+100))
         
         self.layout((self.mc,), expand=2)
-        self.layout((self.ss, self.to, self.rw, self.fw, self.crop, self.ex),
-                    expand=0, row=6)
+        self.layout((self.ss, self.to, self.rw, self.fw,
+                     self.snp, self.crop, self.exp),
+                    expand=0, row=7)
         
         self.menu[0:5] = [
-            (1, "&Load file", Icon('folder_open'),
+            (1, "&Load file", Icon('open'),
                 lambda v: self.load_media()),
                 
-            (2, "&Snapshot", Icon('cam'),
+            (2, "&Snapshot", Icon('clock'),
                 lambda v: self.snapshot(),
                 lambda v: v.Enable(self._path is not None)),
             (),
