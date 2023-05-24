@@ -1,7 +1,6 @@
 #! python3
 # -*- coding: utf-8 -*-
 from subprocess import Popen, PIPE
-from datetime import timedelta
 import numpy as np
 import os
 import wx
@@ -86,41 +85,43 @@ class Plugin(Layer):
         )
         self.mc.ShowPlayerControls()
         self.mc.Bind(wx.media.EVT_MEDIA_LOADED, self.OnMediaLoaded)
-        ## self.mc.Bind(wx.media.EVT_MEDIA_PLAY, self.OnMediaPlay)
-        ## self.mc.Bind(wx.media.EVT_MEDIA_PAUSE, self.OnMediaPause)
+        self.mc.Bind(wx.media.EVT_MEDIA_PAUSE, self.OnMediaPause)
         
         self.mc.SetDropTarget(MyFileDropLoader(self))
         
         self._path = None
         
         self.ss = TextCtrl(self, label="ss:", size=(80,-1),
-                           handler=self.on_get_offset,
-                           updater=self.on_set_offset,
+                           handler=self.set_offset,
+                           updater=self.get_offet,
                            )
         self.to = TextCtrl(self, label="to:", size=(80,-1),
-                           handler=self.on_get_offset,
-                           updater=self.on_set_offset,
+                           handler=self.set_offset,
+                           updater=self.get_offet,
                            )
-        self.crop = TextCtrl(self, icon="cut", size=(130,-1),
-                           updater=self.on_set_crop
+        self.crop = TextCtrl(self, icon="cut", size=(130,-1), tip='crop',
+                           updater=self.set_crop
                            )
-        self.ex = Button(self, label="Export", icon='save')
+        self.snp = Button(self, label='Snapshot', icon='clock')
+        self.exp = Button(self, label="Export", icon='save')
         self.rw = Button(self, icon='|<-')
         self.fw = Button(self, icon='->|')
         
-        self.ex.Bind(wx.EVT_BUTTON, lambda v: self.export())
+        self.snp.Bind(wx.EVT_BUTTON, lambda v: self.snapshot())
+        self.exp.Bind(wx.EVT_BUTTON, lambda v: self.export())
         self.rw.Bind(wx.EVT_BUTTON, lambda v: self.seekdelta(-100))
         self.fw.Bind(wx.EVT_BUTTON, lambda v: self.seekdelta(+100))
         
         self.layout((self.mc,), expand=2)
-        self.layout((self.ss, self.to, self.rw, self.fw, self.crop, self.ex),
-                    expand=0, row=6)
+        self.layout((self.ss, self.to, self.rw, self.fw,
+                     self.snp, self.crop, self.exp),
+                    expand=0, row=7)
         
         self.menu[0:5] = [
-            (1, "&Load file", Icon('folder_open'),
+            (1, "&Load file", Icon('open'),
                 lambda v: self.load_media()),
                 
-            (2, "&Snapshot", Icon('cam'),
+            (2, "&Snapshot", Icon('clock'),
                 lambda v: self.snapshot(),
                 lambda v: v.Enable(self._path is not None)),
             (),
@@ -149,19 +150,18 @@ class Plugin(Layer):
         self.Show()
         evt.Skip()
     
-    ## def OnMediaPause(self, evt):
-    ##     self.on_set_offset(self.to)
-    ##     evt.Skip()
+    def OnMediaPause(self, evt):
+        self.get_offet(self.to)
+        evt.Skip()
     
     def load_media(self, path=None):
         if path is None:
             with wx.FileDialog(self, "Choose a media file",
                 style=wx.FD_OPEN|wx.FD_CHANGE_DIR|wx.FD_FILE_MUST_EXIST) as dlg:
                 if dlg.ShowModal() != wx.ID_OK:
-                    return
+                    return None
                 path = dlg.Path
         self.mc.Load(path) # -> True (always)
-        self._path = path
         self.info = read_info(path)
         if self.info:
             v = next(x for x in self.info['streams'] if x['codec_type'] == 'video')
@@ -169,39 +169,33 @@ class Plugin(Layer):
             self.video_fps = eval(v['avg_frame_rate'])  # Average framerate
             self.video_dur = eval(v['duration']) * 1e3  # duration [ms]
             self.video_size = v['width'], v['height']   # pixel size
-            self.message("Loaded {!r} successfully.".format(path))
+            self.message(f"Loaded {path!r} successfully.")
+            self._path = path
             return True
         else:
-            ## wx.MessageBox("Failed to load the media file.\n\n{!r}".format(path),
-            ##               style=wx.ICON_WARNING)
-            self.message("Failed to load the media file {!r}.".format(path))
+            self.message(f"Failed to load file {path!r}.")
             self._path = None
             return False
     
-    def on_get_offset(self, tc):
-        try:
-            t = int(tc.Value)
-            ## tc.Value = str(timedelta(seconds=t))
-            tc.Value = str(t)
-            self.seek(t * 1000)
-        except ValueError:
-            pass
+    DELTA = 1000 # correction ▲理由は不明 (WMP10 backend only?)
     
-    def on_set_offset(self, tc):
+    def set_offset(self, tc):
+        if not self._path:
+            return
+        t = float(tc.Value)
+        self.mc.Seek(self.DELTA + int(t * 1000))
+    
+    def get_offet(self, tc):
         if not self._path:
             return
         t = round(self.mc.Tell() /1000, 3)
-        pos = str(t)
-        ## pos = str(timedelta(seconds=t))
-        ## if '.' in pos:
-        ##     pos = pos.rstrip('0') # 小数点下三桁を落とす
-        tc.Value = pos
+        tc.Value = str(t)
     
-    def on_set_crop(self, tc):
+    def set_crop(self, tc):
         if not self._path:
             return
-        ## refer frame roi to get crop area (W:H:left:top).
-        crop = None
+        ## Refer frame roi to get crop area (W:H:left:top).
+        crop = ''
         frame = self.graph.frame
         if frame:
             nx, ny = frame.xytopixel(frame.region)
@@ -213,18 +207,12 @@ class Plugin(Layer):
             crop = "{}:{}:0:0".format(*self.video_size)
         tc.Value = crop
     
-    DELTA = 1000 #: seek correction 1000+ ▲理由は不明 (WMP10 backend only?)
-    
-    def seek(self, pos):
-        if not self._path:
-            return
-        return self.mc.Seek(self.DELTA + pos)
-    
     def seekdelta(self, offset):
         if not self._path:
             return
         self.mc.Seek(self.DELTA + offset, mode=wx.FromCurrent)
-        wx.CallAfter(wx.CallLater, 50, self.on_set_offset, self.to)
+        ## wx.CallAfter(wx.CallLater, 50, self.get_offet, self.to)
+        self.get_offet(self.to)
     
     def snapshot(self):
         if not self._path:
