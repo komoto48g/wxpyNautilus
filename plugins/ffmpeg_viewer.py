@@ -1,7 +1,6 @@
 #! python3
 # -*- coding: utf-8 -*-
 from subprocess import Popen, PIPE
-from datetime import timedelta
 import numpy as np
 import os
 import wx
@@ -178,24 +177,19 @@ class Plugin(Layer):
             self._path = None
             return False
     
+    DELTA = 1000 # correction ▲理由は不明 (WMP10 backend only?)
+    
     def on_get_offset(self, tc):
-        try:
-            t = int(tc.Value)
-            ## tc.Value = str(timedelta(seconds=t))
-            tc.Value = str(t)
-            self.seek(t * 1000)
-        except ValueError:
-            pass
+        if not self._path:
+            return
+        t = float(tc.Value)
+        self.mc.Seek(self.DELTA + int(t * 1000))
     
     def on_set_offset(self, tc):
         if not self._path:
             return
         t = round(self.mc.Tell() /1000, 3)
-        pos = str(t)
-        ## pos = str(timedelta(seconds=t))
-        ## if '.' in pos:
-        ##     pos = pos.rstrip('0') # 小数点下三桁を落とす
-        tc.Value = pos
+        tc.Value = str(t)
     
     def on_set_crop(self, tc):
         if not self._path:
@@ -212,13 +206,6 @@ class Plugin(Layer):
         if not crop:
             crop = "{}:{}:0:0".format(*self.video_size)
         tc.Value = crop
-    
-    DELTA = 1000 #: seek correction 1000+ ▲理由は不明 (WMP10 backend only?)
-    
-    def seek(self, pos):
-        if not self._path:
-            return
-        return self.mc.Seek(self.DELTA + pos)
     
     def seekdelta(self, offset):
         if not self._path:
