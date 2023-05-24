@@ -85,8 +85,7 @@ class Plugin(Layer):
         )
         self.mc.ShowPlayerControls()
         self.mc.Bind(wx.media.EVT_MEDIA_LOADED, self.OnMediaLoaded)
-        ## self.mc.Bind(wx.media.EVT_MEDIA_PLAY, self.OnMediaPlay)
-        ## self.mc.Bind(wx.media.EVT_MEDIA_PAUSE, self.OnMediaPause)
+        self.mc.Bind(wx.media.EVT_MEDIA_PAUSE, self.OnMediaPause)
         
         self.mc.SetDropTarget(MyFileDropLoader(self))
         
@@ -148,19 +147,18 @@ class Plugin(Layer):
         self.Show()
         evt.Skip()
     
-    ## def OnMediaPause(self, evt):
-    ##     self.on_set_offset(self.to)
-    ##     evt.Skip()
+    def OnMediaPause(self, evt):
+        self.get_offet(self.to)
+        evt.Skip()
     
     def load_media(self, path=None):
         if path is None:
             with wx.FileDialog(self, "Choose a media file",
                 style=wx.FD_OPEN|wx.FD_CHANGE_DIR|wx.FD_FILE_MUST_EXIST) as dlg:
                 if dlg.ShowModal() != wx.ID_OK:
-                    return
+                    return None
                 path = dlg.Path
         self.mc.Load(path) # -> True (always)
-        self._path = path
         self.info = read_info(path)
         if self.info:
             v = next(x for x in self.info['streams'] if x['codec_type'] == 'video')
@@ -168,12 +166,11 @@ class Plugin(Layer):
             self.video_fps = eval(v['avg_frame_rate'])  # Average framerate
             self.video_dur = eval(v['duration']) * 1e3  # duration [ms]
             self.video_size = v['width'], v['height']   # pixel size
-            self.message("Loaded {!r} successfully.".format(path))
+            self.message(f"Loaded {path!r} successfully.")
+            self._path = path
             return True
         else:
-            ## wx.MessageBox("Failed to load the media file.\n\n{!r}".format(path),
-            ##               style=wx.ICON_WARNING)
-            self.message("Failed to load the media file {!r}.".format(path))
+            self.message(f"Failed to load file {path!r}.")
             self._path = None
             return False
     
@@ -194,8 +191,8 @@ class Plugin(Layer):
     def set_crop(self, tc):
         if not self._path:
             return
-        ## refer frame roi to get crop area (W:H:left:top).
-        crop = None
+        ## Refer frame roi to get crop area (W:H:left:top).
+        crop = ''
         frame = self.graph.frame
         if frame:
             nx, ny = frame.xytopixel(frame.region)
@@ -211,7 +208,8 @@ class Plugin(Layer):
         if not self._path:
             return
         self.mc.Seek(self.DELTA + offset, mode=wx.FromCurrent)
-        wx.CallAfter(wx.CallLater, 50, self.get_offet, self.to)
+        ## wx.CallAfter(wx.CallLater, 50, self.get_offet, self.to)
+        self.get_offet(self.to)
     
     def snapshot(self):
         if not self._path:
