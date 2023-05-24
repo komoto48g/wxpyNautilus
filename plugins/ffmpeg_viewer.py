@@ -93,15 +93,15 @@ class Plugin(Layer):
         self._path = None
         
         self.ss = TextCtrl(self, label="ss:", size=(80,-1),
-                           handler=self.on_get_offset,
-                           updater=self.on_set_offset,
+                           handler=self.set_offset,
+                           updater=self.get_offet,
                            )
         self.to = TextCtrl(self, label="to:", size=(80,-1),
-                           handler=self.on_get_offset,
-                           updater=self.on_set_offset,
+                           handler=self.set_offset,
+                           updater=self.get_offet,
                            )
         self.crop = TextCtrl(self, icon="cut", size=(130,-1),
-                           updater=self.on_set_crop
+                           updater=self.set_crop
                            )
         self.ex = Button(self, label="Export", icon='save')
         self.rw = Button(self, icon='|<-')
@@ -179,19 +179,19 @@ class Plugin(Layer):
     
     DELTA = 1000 # correction ▲理由は不明 (WMP10 backend only?)
     
-    def on_get_offset(self, tc):
+    def set_offset(self, tc):
         if not self._path:
             return
         t = float(tc.Value)
         self.mc.Seek(self.DELTA + int(t * 1000))
     
-    def on_set_offset(self, tc):
+    def get_offet(self, tc):
         if not self._path:
             return
         t = round(self.mc.Tell() /1000, 3)
         tc.Value = str(t)
     
-    def on_set_crop(self, tc):
+    def set_crop(self, tc):
         if not self._path:
             return
         ## refer frame roi to get crop area (W:H:left:top).
@@ -211,7 +211,7 @@ class Plugin(Layer):
         if not self._path:
             return
         self.mc.Seek(self.DELTA + offset, mode=wx.FromCurrent)
-        wx.CallAfter(wx.CallLater, 50, self.on_set_offset, self.to)
+        wx.CallAfter(wx.CallLater, 50, self.get_offet, self.to)
     
     def snapshot(self):
         if not self._path:
