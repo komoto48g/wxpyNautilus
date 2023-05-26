@@ -167,34 +167,33 @@ class Plugin(Layer):
             v = next(x for x in self.info['streams'] if x['codec_type'] == 'video')
             ## self.video_fps = eval(v['r_frame_rate']) # Real base framerate
             self.video_fps = eval(v['avg_frame_rate'])  # Average framerate
-            self.video_dur = eval(v['duration']) * 1e3  # duration [ms]
+            self.video_dur = eval(v['duration'])        # duration [s]
             self.video_size = v['width'], v['height']   # pixel size
             self.message(f"Loaded {path!r} successfully.")
             self._path = path
             return True
         else:
             self.message(f"Failed to load file {path!r}.")
-            self._path = None
             return False
     
     DELTA = 1000 # correction ▲理由は不明 (WMP10 backend only?)
     
     def set_offset(self, tc):
-        if not self._path:
-            return
-        t = float(tc.Value)
-        self.mc.Seek(self.DELTA + int(t * 1000))
+        try:
+            t = float(tc.Value)
+            self.mc.Seek(self.DELTA + int(t * 1000))
+        except Exception as e:
+            print(e)
     
     def get_offet(self, tc):
-        if not self._path:
-            return
-        t = round(self.mc.Tell() /1000, 3)
-        tc.Value = str(t)
+        try:
+            t = self.mc.Tell() / 1000
+            tc.Value = str(round(t, 3))
+        except Exception as e:
+            print(e)
     
     def set_crop(self, tc):
-        if not self._path:
-            return
-        ## Refer frame roi to get crop area (W:H:left:top).
+        ## Refer frame roi to get crop area (W:H:Left:Top).
         crop = ''
         frame = self.graph.frame
         if frame:
@@ -203,16 +202,22 @@ class Plugin(Layer):
                 xo, yo = nx[0], ny[1]
                 xp, yp = nx[1], ny[0]
                 crop = "{}:{}:{}:{}".format(xp-xo, yp-yo, xo, yo)
-        if not crop:
+        if self._path and not crop:
             crop = "{}:{}:0:0".format(*self.video_size)
         tc.Value = crop
     
     def seekdelta(self, offset):
-        if not self._path:
-            return
-        self.mc.Seek(self.DELTA + offset, mode=wx.FromCurrent)
-        ## wx.CallAfter(wx.CallLater, 50, self.get_offet, self.to)
-        self.get_offet(self.to)
+        if wx.GetKeyState(wx.WXK_SHIFT):
+            offset /= 10
+        try:
+            tc = self.to
+            t = float(tc.Value) + offset/1000
+        except Exception as e:
+            print(e)
+        else:
+            if self._path and 0 <= t < self.video_dur:
+                tc.Value = str(round(t, 3))
+            self.set_offset(tc) # => seek
     
     def snapshot(self):
         if not self._path:
@@ -226,8 +231,7 @@ class Plugin(Layer):
     def export(self):
         if not self._path:
             return
-        fin = self._path
-        fout = "{}_clip".format(os.path.splitext(fin)[0])
+        fout = "{}_clip".format(os.path.splitext(self._path)[0])
         with wx.FileDialog(self, "Save as",
                 defaultFile=os.path.basename(fout),
                 wildcard="Media file (*.mp4)|*.mp4|"
@@ -236,7 +240,7 @@ class Plugin(Layer):
             if dlg.ShowModal() != wx.ID_OK:
                 return
             fout = dlg.Path
-        export_video(fin, fout,
+        export_video(self._path, fout,
                      self.crop.Value or "{}:{}:0:0".format(*self.video_size),
                      self.ss.Value, self.to.Value)
 
