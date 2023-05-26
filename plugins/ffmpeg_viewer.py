@@ -167,7 +167,7 @@ class Plugin(Layer):
             v = next(x for x in self.info['streams'] if x['codec_type'] == 'video')
             ## self.video_fps = eval(v['r_frame_rate']) # Real base framerate
             self.video_fps = eval(v['avg_frame_rate'])  # Average framerate
-            self.video_dur = eval(v['duration']) * 1e3  # duration [ms]
+            self.video_dur = eval(v['duration'])        # duration [s]
             self.video_size = v['width'], v['height']   # pixel size
             self.message(f"Loaded {path!r} successfully.")
             self._path = path
@@ -210,9 +210,13 @@ class Plugin(Layer):
     def seekdelta(self, offset):
         if not self._path:
             return
-        self.mc.Seek(self.DELTA + offset, mode=wx.FromCurrent)
-        ## wx.CallAfter(wx.CallLater, 50, self.get_offet, self.to)
-        self.get_offet(self.to)
+        if wx.GetKeyState(wx.WXK_SHIFT):
+            offset //= 10
+        tc = self.to
+        t = float(tc.Value) + offset/1000
+        if 0 <= t < self.video_dur:
+            tc.Value = str(round(t, 3))
+            self.set_offset(tc) # => seek
     
     def snapshot(self):
         if not self._path:
