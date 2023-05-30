@@ -73,7 +73,7 @@
     <span class="kn">from</span> <span class="nn">.etc</span> <span class="kn">import</span> <span class="n">bookshelf</span>
 
 
-<div class="viewcode-block" id="subclasses"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.subclasses">[docs]</a><span class="k">def</span> <span class="nf">subclasses</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="subclasses"><a class="viewcode-back" href="../../wxpyNautilus.html#wxpyNautilus.debut.subclasses">[docs]</a><span class="k">def</span> <span class="nf">subclasses</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
@@ -84,7 +84,7 @@
 <span class="c1">## This monkey patch forces the filling-tree to display only atoms.</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="n">_FillingTree_filter_org</span> <span class="o">=</span> <span class="n">FillingTree</span><span class="o">.</span><span class="n">filter</span>
-<div class="viewcode-block" id="atomic"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.atomic">[docs]</a>    <span class="k">def</span> <span class="nf">atomic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<div class="viewcode-block" id="atomic"><a class="viewcode-back" href="../../wxpyNautilus.html#wxpyNautilus.debut.atomic">[docs]</a>    <span class="k">def</span> <span class="nf">atomic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">_FillingTree_filter_org</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">try</span><span class="p">:</span>
@@ -101,7 +101,7 @@
 <span class="c1">## Configuration of Shell / Editor </span>
 <span class="c1">## --------------------------------</span>
 
-<div class="viewcode-block" id="init_stc_interface"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.init_stc_interface">[docs]</a><span class="k">def</span> <span class="nf">init_stc_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="init_stc_interface"><a class="viewcode-back" href="../../wxpyNautilus.html#wxpyNautilus.debut.init_stc_interface">[docs]</a><span class="k">def</span> <span class="nf">init_stc_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Customize the common keymaps.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;f9&#39;</span><span class="p">)</span>
@@ -130,7 +130,7 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x C-x&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange_point_and_mark</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="init_buffer"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.init_buffer">[docs]</a><span class="k">def</span> <span class="nf">init_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="init_buffer"><a class="viewcode-back" href="../../wxpyNautilus.html#wxpyNautilus.debut.init_buffer">[docs]</a><span class="k">def</span> <span class="nf">init_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Customize the keymaps of the Buffer.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">## Buffer text control</span>
@@ -166,7 +166,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">Cut</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="init_editor"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.init_editor">[docs]</a><span class="k">def</span> <span class="nf">init_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="init_editor"><a class="viewcode-back" href="../../wxpyNautilus.html#wxpyNautilus.debut.init_editor">[docs]</a><span class="k">def</span> <span class="nf">init_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Customize the keymaps of the Editor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x k&#39;</span><span class="p">,</span>   <span class="bp">self</span><span class="o">.</span><span class="n">kill_all_buffers</span><span class="p">)</span>
@@ -199,7 +199,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">move_tab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CurrentPage</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_tabs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="init_shell"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.init_shell">[docs]</a><span class="k">def</span> <span class="nf">init_shell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="init_shell"><a class="viewcode-back" href="../../wxpyNautilus.html#wxpyNautilus.debut.init_shell">[docs]</a><span class="k">def</span> <span class="nf">init_shell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Customize the keymaps of the Shell.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">init_stc_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -284,7 +284,7 @@
 <span class="c1">## Setup the console of Nautilus</span>
 <span class="c1">## --------------------------------</span>
 
-<div class="viewcode-block" id="py_text_mode"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.py_text_mode">[docs]</a><span class="k">class</span> <span class="nc">py_text_mode</span><span class="p">:</span>
+<div class="viewcode-block" id="py_text_mode"><a class="viewcode-back" href="../../wxpyNautilus.html#wxpyNautilus.debut.py_text_mode">[docs]</a><span class="k">class</span> <span class="nc">py_text_mode</span><span class="p">:</span>
     <span class="n">STYLE</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">stc</span><span class="o">.</span><span class="n">STC_STYLE_DEFAULT</span>     <span class="p">:</span> <span class="s2">&quot;fore:#7f7f7f,back:#fffff8,size:9,face:MS Gothic&quot;</span><span class="p">,</span>
         <span class="n">stc</span><span class="o">.</span><span class="n">STC_STYLE_LINENUMBER</span>  <span class="p">:</span> <span class="s2">&quot;fore:#000000,back:#fffff8,size:9&quot;</span><span class="p">,</span>
@@ -313,7 +313,7 @@
     <span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="py_interactive_mode"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.py_interactive_mode">[docs]</a><span class="k">class</span> <span class="nc">py_interactive_mode</span><span class="p">:</span>
+<div class="viewcode-block" id="py_interactive_mode"><a class="viewcode-back" href="../../wxpyNautilus.html#wxpyNautilus.debut.py_interactive_mode">[docs]</a><span class="k">class</span> <span class="nc">py_interactive_mode</span><span class="p">:</span>
     <span class="n">STYLE</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">stc</span><span class="o">.</span><span class="n">STC_STYLE_DEFAULT</span>     <span class="p">:</span> <span class="s2">&quot;fore:#7f7f7f,back:#202020,size:9,face:MS Gothic&quot;</span><span class="p">,</span>
         <span class="n">stc</span><span class="o">.</span><span class="n">STC_STYLE_LINENUMBER</span>  <span class="p">:</span> <span class="s2">&quot;fore:#000000,back:#f0f0f0,size:9&quot;</span><span class="p">,</span>
@@ -342,7 +342,7 @@
     <span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="stylus"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.stylus">[docs]</a><span class="k">def</span> <span class="nf">stylus</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="stylus"><a class="viewcode-back" href="../../wxpyNautilus.html#wxpyNautilus.debut.stylus">[docs]</a><span class="k">def</span> <span class="nf">stylus</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Stylize Nautilus window.</span>
 <span class="sd">    </span>
 <span class="sd">    Note:</span>
@@ -405,7 +405,7 @@
 <span class="c1">## Main program</span>
 <span class="c1">## --------------------------------</span>
 
-<div class="viewcode-block" id="MyDataLoader"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.MyDataLoader">[docs]</a><span class="k">class</span> <span class="nc">MyDataLoader</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">DropTarget</span><span class="p">):</span>
+<div class="viewcode-block" id="MyDataLoader"><a class="viewcode-back" href="../../wxpyNautilus.html#wxpyNautilus.debut.MyDataLoader">[docs]</a><span class="k">class</span> <span class="nc">MyDataLoader</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">DropTarget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;DnD target loader.</span>
 <span class="sd">    </span>
 <span class="sd">    Supports URL text and file data formats.</span>
@@ -420,12 +420,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">DataObject</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">textdo</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">DataObject</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filedo</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
     
-<div class="viewcode-block" id="MyDataLoader.OnData"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.MyDataLoader.OnData">[docs]</a>    <span class="k">def</span> <span class="nf">OnData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+<div class="viewcode-block" id="MyDataLoader.OnData"><a class="viewcode-back" href="../../wxpyNautilus.html#wxpyNautilus.debut.MyDataLoader.OnData">[docs]</a>    <span class="k">def</span> <span class="nf">OnData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">GetData</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">textdo</span><span class="o">.</span><span class="n">TextLength</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">textdo</span><span class="o">.</span><span class="n">Text</span>
             <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;https?://[\w/:%#\$&amp;\?()~.=+-]+&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">load_url</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">load_url</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
                 <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">SetFocus</span><span class="p">()</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">DragCopy</span>
@@ -448,7 +448,7 @@
         <span class="k">return</span> <span class="n">result</span></div></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../wxpyNautilus.debut.html#wxpyNautilus.debut.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../wxpyNautilus.html#wxpyNautilus.debut.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize Nautilus configuration.</span>
 <span class="sd">    </span>
 <span class="sd">    Note:</span>
@@ -601,6 +601,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../wxpyNautilus.html">wxpyNautilus package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../wxpyNautilus.html#subpackages">Subpackages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../wxpyNautilus.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../wxpyNautilus.html#module-wxpyNautilus.debut">wxpyNautilus.debut module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../wxpyNautilus.html#module-wxpyNautilus.siteinit">wxpyNautilus.siteinit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../wxpyNautilus.html#module-wxpyNautilus.wxNautilus">wxpyNautilus.wxNautilus module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../wxpyNautilus.html#module-wxpyNautilus">Module contents</a></li>
 </ul>
 </li>
