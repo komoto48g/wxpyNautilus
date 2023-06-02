@@ -13,6 +13,7 @@ from mwx.controls import Icon
 from mwx.graphman import Layer
 from mwx.framework import CtrlInterface
 
+
 if wx.VERSION < (4,1,0):
     from wx.lib.mixins.listctrl import CheckListCtrlMixin
     
@@ -89,7 +90,6 @@ class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
         
         self.handler.update({
             0 : {
-                            '*' : (0, lambda v: v.Skip()),
              'Lbutton dblclick' : (0, self.OnShowItems), # -> frame_shown
                 'enter pressed' : (0, self.OnShowItems), # -> frame_shown
                'delete pressed' : (0, self.OnRemoveItems), # -> frame_removed/shown
