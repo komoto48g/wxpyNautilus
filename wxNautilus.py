@@ -89,5 +89,10 @@ if __name__ == "__main__":
             frm.load_session(session, flush=False)
         except FileNotFoundError:
             print(f"- No such file {session!r}")
+    try:
+        import debut
+        debut.main(frm.shellframe)
+    except ImportError:
+        pass
     frm.Show()
     app.MainLoop()

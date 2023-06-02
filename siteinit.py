@@ -64,6 +64,3 @@ def init_mainframe(self):
         clip = self.selected_view.frame.get_clip_on()
         self.selected_view.frame.set_clip_on(not clip)
         self.selected_view.draw()
-
-    import debut
-    debut.main(self.shellframe)
