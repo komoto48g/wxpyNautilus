@@ -67,10 +67,6 @@ def init_stc_interface(self):
         self.WrapMode = (self.WrapMode + 1) % 4
         self.post_message("\b {!r}".format(mode[self.WrapMode]))
 
-    @self.define_key('C-f9')
-    def toggle_folder():
-        self.show_folder(not self.is_folder_shown())
-
     @self.define_key('S-f9')
     def toggle_eol_view():
         self.ViewEOL = not self.ViewEOL
