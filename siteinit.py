@@ -31,7 +31,7 @@ def init_mainframe(self):
     ## Plugins
     ## --------------------------------
     def load_plug(name):
-        cur = os.path.dirname(os.path.abspath(__file__))
+        cur = os.path.dirname(__file__)
         path = os.path.join(cur, name)
         self.load_plug(path)
 

@@ -32,26 +32,29 @@ class MainFrame(Frame):
         info.Name = self.Name
         info.Version = __version__
         info.Copyright = __copyright__ +' '+ __author__
+        info.License = __license__
         info.Description = __doc__
         info.Developers = []
         info.DocWriters = []
         info.Artists = []
         info.SetWebSite("https://github.com/komoto48g")
-        info.SetLicense(__license__)
         wx.adv.AboutBox(info)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
         self.SetIcon(submarine.GetIcon())
+        
+        home = os.path.dirname(__file__)
+        
+        sys.path.insert(0, os.path.join(home, 'plugins'))
+        sys.path.insert(0, '') # Add local . to import si:local first
         try:
-            sys.path.insert(0, '')      # Add local.
-            si = __import__('siteinit') # try import si:local first
+            si = __import__('siteinit')
         except ImportError:
             print("- No siteinit file.")
-            pass
         else:
-            print("Executing {!r}".format(si.__file__))
+            print(f"Executing {si.__file__!r}")
             si.init_mainframe(self)
 
 
