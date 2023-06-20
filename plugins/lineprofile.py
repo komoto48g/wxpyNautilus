@@ -14,7 +14,6 @@ class Plugin(Layer):
     menukey = "Plugins/Extensions/&Line profile\tCtrl+l"
     caption = "Line profile"
     dockable = False
-    unloadable = False
     
     def Init(self):
         self.plot = LineProfile(self, log=self.message, size=(300,200))
@@ -39,7 +38,6 @@ if __name__ == "__main__":
     app = wx.App()
     frm = Frame(None)
     frm.load_plug(__file__, show=1)
-    for path in glob.glob(r"C:/usr/home/workspace/images/*.bmp"):
-        frm.load_buffer(path)
+    frm.load_frame(glob.glob(r"C:/usr/home/workspace/images/*.bmp"))
     frm.Show()
     app.MainLoop()

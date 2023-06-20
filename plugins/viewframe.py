@@ -231,7 +231,6 @@ class Plugin(Layer):
     menukey = "Plugins/Extensions/&Buffer listbox\tCtrl+b"
     caption = "Property list"
     dockable = False
-    unloadable = False
     
     @property
     def all_pages(self):
@@ -264,12 +263,14 @@ class Plugin(Layer):
         
         def copy(all=True):
             page = self.nb.CurrentPage
-            frame = page.Target.all_frames[page.focused_item]
-            if all:
-                text = pformat(frame.attributes, sort_dicts=0)
-            else:
-                text = "{}\n{}".format(frame.name, frame.annotation)
-            Clipboard.write(text)
+            frames = page.Target.all_frames
+            if frames:
+                frame = frames[page.focused_item]
+                if all:
+                    text = pformat(frame.attributes, sort_dicts=0)
+                else:
+                    text = "{}\n{}".format(frame.name, frame.annotation)
+                Clipboard.write(text)
         
         self.menu[0:0] = [
             (101, "&Edit annotation", "Edit annotation", Icon('edit'),
@@ -314,9 +315,7 @@ if __name__ == "__main__":
     
     app = wx.App()
     frm = Frame(None)
-    frm.load_plug(__file__, show=1, dock=0)
-    for path in glob.glob(r"C:/usr/home/workspace/images/*.bmp"):
-        print("loading path =", path)
-        frm.load_buffer(path)
+    frm.load_plug(__file__, show=1)
+    frm.load_frame(glob.glob(r"C:/usr/home/workspace/images/*.bmp"))
     frm.Show()
     app.MainLoop()
