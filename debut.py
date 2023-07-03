@@ -74,7 +74,6 @@ def init_stc_interface(self):
 
     self.define_key('C-x [', self.beginning_of_buffer)
     self.define_key('C-x ]', self.end_of_buffer)
-    self.define_key('C-x @', self.goto_mark)
     self.define_key('C-c C-c', self.goto_matched_paren)
     self.define_key('C-x C-x', self.exchange_point_and_mark)
 
