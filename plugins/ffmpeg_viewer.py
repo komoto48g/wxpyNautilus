@@ -7,7 +7,7 @@ import wx
 import wx.media
 
 from mwx.graphman import Layer, Frame
-from mwx.controls import Icon, Button, TextCtrl
+from mwx.controls import LParam, Icon, Button, TextCtrl
 
 
 def read_info(path):
@@ -91,17 +91,17 @@ class Plugin(Layer):
         
         self._path = None
         
-        self.ss = TextCtrl(self, label="ss:", size=(80,-1),
-                           handler=self.set_offset,
-                           updater=self.get_offset,
-                           )
-        self.to = TextCtrl(self, label="to:", size=(80,-1),
-                           handler=self.set_offset,
-                           updater=self.get_offset,
-                           )
+        self.ss = LParam("ss:", # range/value will be set when loaded later.
+                        handler=self.set_offset,
+                        updater=self.get_offset,
+                        )
+        self.to = LParam("to:", # range/value will be set when loaded later.
+                        handler=self.set_offset,
+                        updater=self.get_offset,
+                        )
         self.crop = TextCtrl(self, icon="cut", size=(130,-1),
-                           updater=self.set_crop,
-                           )
+                        updater=self.set_crop,
+                        )
         self.snp = Button(self, label='Snapshot', icon='clock')
         self.exp = Button(self, label="Export", icon='save')
         self.rw = Button(self, icon='|<-')
@@ -115,7 +115,7 @@ class Plugin(Layer):
         self.layout((self.mc,), expand=2)
         self.layout((self.ss, self.to, self.rw, self.fw,
                      self.snp, self.crop, self.exp),
-                    expand=0, row=7)
+                    expand=0, row=7, style='button', lw=12, cw=0, tw=64)
         
         self.menu[0:5] = [
             (1, "&Load file", Icon('open'),
@@ -147,6 +147,8 @@ class Plugin(Layer):
         session['path'] = self._path
     
     def OnMediaLoaded(self, evt):
+        self.ss.range = (0, self.video_dur, 0.1)
+        self.to.range = (0, self.video_dur, 0.1)
         self.Show()
         evt.Skip()
     
@@ -181,7 +183,7 @@ class Plugin(Layer):
     def set_offset(self, tc):
         """Set offset value by referring to ss/to value."""
         try:
-            t = float(tc.Value)
+            t = tc.value
             self.mc.Seek(self.DELTA + int(t * 1000))
         except Exception:
             pass
@@ -190,7 +192,7 @@ class Plugin(Layer):
         """Get offset value and assigns it to ss/to value."""
         try:
             t = self.mc.Tell() / 1000
-            tc.Value = str(round(t, 3))
+            tc.value = round(t, 3)
         except Exception:
             pass
     
@@ -213,12 +215,12 @@ class Plugin(Layer):
         if wx.GetKeyState(wx.WXK_SHIFT):
             offset /= 10
         try:
-            t = float(self.to.Value) + offset/1000
+            t = self.to.value + offset/1000
         except Exception as e:
             print(e)
         else:
             if self._path and 0 <= t < self.video_dur:
-                self.to.Value = str(round(t, 3))
+                self.to.value = round(t, 3)
             self.set_offset(self.to) # => seek
     
     def snapshot(self):
@@ -248,7 +250,7 @@ class Plugin(Layer):
             fout = dlg.Path
         export_video(self._path, fout,
                      self.crop.Value or "{}:{}:0:0".format(*self.video_size),
-                     self.ss.Value, self.to.Value)
+                     self.ss.value, self.to.value)
 
 
 if __name__ == "__main__":
