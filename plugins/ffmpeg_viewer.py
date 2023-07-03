@@ -102,15 +102,12 @@ class Plugin(Layer):
         self.crop = TextCtrl(self, icon="cut", size=(130,-1),
                         updater=self.set_crop,
                         )
-        self.snp = Button(self, label='Snapshot', icon='clock')
-        self.exp = Button(self, label="Export", icon='save')
-        self.rw = Button(self, icon='|<-')
-        self.fw = Button(self, icon='->|')
         
-        self.snp.Bind(wx.EVT_BUTTON, lambda v: self.snapshot())
-        self.exp.Bind(wx.EVT_BUTTON, lambda v: self.export())
-        self.rw.Bind(wx.EVT_BUTTON, lambda v: self.seekdelta(-100))
-        self.fw.Bind(wx.EVT_BUTTON, lambda v: self.seekdelta(+100))
+        self.snp = Button(self, handler=self.snapshot, tip='Snapshot', icon='clock')
+        self.exp = Button(self, handler=self.export, tip="Export", icon='save')
+        
+        self.rw = Button(self, handler=lambda v: self.seekdelta(-100), icon='|<-')
+        self.fw = Button(self, handler=lambda v: self.seekdelta(+100), icon='->|')
         
         self.layout((self.mc,), expand=2)
         self.layout((self.ss, self.to, self.rw, self.fw,
@@ -147,8 +144,8 @@ class Plugin(Layer):
         session['path'] = self._path
     
     def OnMediaLoaded(self, evt):
-        self.ss.range = (0, self.video_dur, 0.1)
-        self.to.range = (0, self.video_dur, 0.1)
+        self.ss.range = (0, self.video_dur, 0.01)
+        self.to.range = (0, self.video_dur, 0.01)
         self.Show()
         evt.Skip()
     
@@ -183,16 +180,14 @@ class Plugin(Layer):
     def set_offset(self, tc):
         """Set offset value by referring to ss/to value."""
         try:
-            t = tc.value
-            self.mc.Seek(self.DELTA + int(t * 1000))
+            self.mc.Seek(self.DELTA + int(tc.value * 1000))
         except Exception:
             pass
     
     def get_offset(self, tc):
         """Get offset value and assigns it to ss/to value."""
         try:
-            t = self.mc.Tell() / 1000
-            tc.value = round(t, 3)
+            tc.value = round(self.mc.Tell()) / 1000
         except Exception:
             pass
     
