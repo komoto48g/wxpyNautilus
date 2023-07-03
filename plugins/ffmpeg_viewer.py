@@ -93,14 +93,14 @@ class Plugin(Layer):
         
         self.ss = TextCtrl(self, label="ss:", size=(80,-1),
                            handler=self.set_offset,
-                           updater=self.get_offet,
+                           updater=self.get_offset,
                            )
         self.to = TextCtrl(self, label="to:", size=(80,-1),
                            handler=self.set_offset,
-                           updater=self.get_offet,
+                           updater=self.get_offset,
                            )
-        self.crop = TextCtrl(self, icon="cut", size=(130,-1), tip='crop',
-                           updater=self.set_crop
+        self.crop = TextCtrl(self, icon="cut", size=(130,-1),
+                           updater=self.set_crop,
                            )
         self.snp = Button(self, label='Snapshot', icon='clock')
         self.exp = Button(self, label="Export", icon='save')
@@ -151,7 +151,7 @@ class Plugin(Layer):
         evt.Skip()
     
     def OnMediaPause(self, evt):
-        self.get_offet(self.to)
+        self.get_offset(self.to)
         evt.Skip()
     
     def load_media(self, path=None):
@@ -179,21 +179,23 @@ class Plugin(Layer):
     DELTA = 1000 # correction ▲理由は不明 (WMP10 backend only?)
     
     def set_offset(self, tc):
+        """Set offset value by referring to ss/to value."""
         try:
             t = float(tc.Value)
             self.mc.Seek(self.DELTA + int(t * 1000))
-        except Exception as e:
-            print(e)
+        except Exception:
+            pass
     
-    def get_offet(self, tc):
+    def get_offset(self, tc):
+        """Get offset value and assigns it to ss/to value."""
         try:
             t = self.mc.Tell() / 1000
             tc.Value = str(round(t, 3))
-        except Exception as e:
-            print(e)
+        except Exception:
+            pass
     
-    def set_crop(self, tc):
-        ## Refer frame roi to get crop area (W:H:Left:Top).
+    def set_crop(self):
+        """Set crop area (W:H:Left:Top) by referring to frame roi."""
         crop = ''
         frame = self.graph.frame
         if frame:
@@ -204,22 +206,25 @@ class Plugin(Layer):
                 crop = "{}:{}:{}:{}".format(xp-xo, yp-yo, xo, yo)
         if self._path and not crop:
             crop = "{}:{}:0:0".format(*self.video_size)
-        tc.Value = crop
+        self.crop.Value = crop
     
     def seekdelta(self, offset):
+        """Seek relative position [ms]."""
         if wx.GetKeyState(wx.WXK_SHIFT):
             offset /= 10
         try:
-            tc = self.to
-            t = float(tc.Value) + offset/1000
+            t = float(self.to.Value) + offset/1000
         except Exception as e:
             print(e)
         else:
             if self._path and 0 <= t < self.video_dur:
-                tc.Value = str(round(t, 3))
-            self.set_offset(tc) # => seek
+                self.to.Value = str(round(t, 3))
+            self.set_offset(self.to) # => seek
     
     def snapshot(self):
+        """Create a snapshot of the current frame.
+        Load the snapshot image into the graph window.
+        """
         if not self._path:
             return
         t = self.mc.Tell()
@@ -229,6 +234,7 @@ class Plugin(Layer):
         self.graph.load(buf, name)
     
     def export(self):
+        """Export the cropped / clipped data to a media file."""
         if not self._path:
             return
         fout = "{}_clip".format(os.path.splitext(self._path)[0])
