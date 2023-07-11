@@ -121,7 +121,7 @@ class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
             }
         }
         self.Target.handler.append(self.context)
-    
+        
         def copy(all=True):
             frames = self.Target.all_frames
             if frames:
@@ -229,8 +229,7 @@ class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
             with wx.TextEntryDialog(self, prompt,
                 caption='Input Dialog', value=frame.annotation) as dlg:
                 if dlg.ShowModal() == wx.ID_OK:
-                    for j in self.selected_items:
-                        frames[j].annotation = dlg.Value
+                    frame.annotation = dlg.Value
     
     ## --------------------------------
     ## Actions of frame-handler
@@ -296,7 +295,7 @@ class Plugin(Layer):
             v.Skip()
         
         self.nb.Bind(wx.EVT_CHILD_FOCUS, on_focus_set)
-        
+    
     def attach(self, target, caption):
         if target not in [lc.Target for lc in self.all_pages]:
             lc = CheckList(self, target)
@@ -306,7 +305,7 @@ class Plugin(Layer):
         for k, lc in enumerate(self.all_pages):
             if target is lc.Target:
                 self.nb.DeletePage(k)
-    
+
 
 if __name__ == "__main__":
     import glob
