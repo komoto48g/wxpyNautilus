@@ -133,16 +133,6 @@ class Plugin(Layer):
         finally:
             return Layer.Destroy(self)
     
-    def load_session(self, session):
-        Layer.load_session(self, session)
-        f = session.get('path')
-        if f:
-            self.load_media(f)
-    
-    def save_session(self, session):
-        Layer.save_session(self, session)
-        session['path'] = self._path
-    
     def OnMediaLoaded(self, evt):
         self.ss.range = (0, self.video_dur, 0.01)
         self.to.range = (0, self.video_dur, 0.01)
