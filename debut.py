@@ -372,19 +372,19 @@ class MyDataLoader(wx.DropTarget):
         self.GetData()
         if self.textdo.TextLength > 1:
             text = self.textdo.Text
-            if re.match(r"https?://[\w/:%#\$&\?()~.=+-]+", text):
-                res = self.target.load_url(text.strip())
-                if res:
-                    self.target.buffer.SetFocus()
-                    result = wx.DragCopy
-                elif res is None:
-                    self.target.post_message("Load canceled.")
-                    result = wx.DragCancel
-                else:
-                    self.target.post_message("URL not found.")
-                    result = wx.DragNone
+            if re.match(r"https?://[\w/:%#\$&\?()~.=+-]+", text): # url_re
+                _load = self.target.load_url
             else:
-                self.target.post_message("Dropped text is not a URL.")
+                _load = self.target.load_file
+            res = _load(text.strip())
+            if res:
+                self.target.buffer.SetFocus()
+                result = wx.DragCopy
+            elif res is None:
+                self.target.post_message("Load canceled.")
+                result = wx.DragCancel
+            else:
+                self.target.post_message("Load failed.")
                 result = wx.DragNone
             self.textdo.Text = ''
         else:
