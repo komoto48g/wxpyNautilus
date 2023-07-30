@@ -186,8 +186,8 @@ def init_shell(self):
 
     error = r'(?i) +File "(.+?)", line ([0-9]+)'
     frame = r"(?i) +file '(.+?)', line ([0-9]+)"
-    where = r'> +([^*?"|\r\n]+?):([0-9]+)'
-    bp    = r'at +([^*?"|\r\n]+?):([0-9]+)'
+    where = r'(?i)> +([^*?"<>|\r\n]+?):([0-9]+)'
+    bp    = r'(?i)at ([^*?"<>|\r\n]+?):([0-9]+)'
     grep = '|'.join((frame, where, bp))
 
     @self.define_key('f4', pattern=error)
