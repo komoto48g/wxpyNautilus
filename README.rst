@@ -8,14 +8,14 @@ The goal of our journey is the rapid development of image processing (using cv2/
 and the graphical user interfaces (using matplotlib/wxpython). 
 To accomplish this, the framework consists of two main classes:
 
-1. A plugin-style GUI mainframe
+1.  A plugin-style GUI mainframe
 
     A `Plugin` means a python script file to process images, 
     which user can load, edit, reload, unload, and debug without terminating the program.
     
     .. image:: ./images/1a_mainframe.png
 
-2. An interactive shellframe
+2.  An interactive shellframe
 
     You can communicate with the main process using an interactive shell, 
     inspect, test, and debug the code at runtime.
@@ -33,10 +33,10 @@ Prerequisites
 
 This software works with **Python 3.8 and later versions**.
 
-1. Download the zip file from `wxpyNautilus (GitHub repository) <https://github.com/komoto48g/wxpyNautilus>`_
-   and extract it to a suitable directory.
+1.  Download the zip file from `wxpyNautilus (GitHub repository) <https://github.com/komoto48g/wxpyNautilus>`_
+    and extract it to a suitable directory.
 
-2. Install `mwxlib <https://github.com/komoto48g/mwxlib>`_ from `PyPI <https://pypi.org/project/mwxlib/>`_.
+2.  Install `mwxlib <https://github.com/komoto48g/mwxlib>`_ from `PyPI <https://pypi.org/project/mwxlib/>`_.
 
     >>> pip install mwxlib
 

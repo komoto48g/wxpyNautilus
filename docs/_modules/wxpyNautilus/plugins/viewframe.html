@@ -56,9 +56,10 @@
 <span class="kn">from</span> <span class="nn">wx</span> <span class="kn">import</span> <span class="n">aui</span>
 <span class="kn">from</span> <span class="nn">wx.lib.mixins.listctrl</span> <span class="kn">import</span> <span class="n">ListCtrlAutoWidthMixin</span>
 
-<span class="kn">from</span> <span class="nn">mwx.controls</span> <span class="kn">import</span> <span class="n">Icon</span>
+<span class="kn">from</span> <span class="nn">mwx.controls</span> <span class="kn">import</span> <span class="n">Icon</span><span class="p">,</span> <span class="n">Icon2</span><span class="p">,</span> <span class="n">Clipboard</span>
+<span class="kn">from</span> <span class="nn">mwx.framework</span> <span class="kn">import</span> <span class="n">CtrlInterface</span><span class="p">,</span> <span class="n">Menu</span>
 <span class="kn">from</span> <span class="nn">mwx.graphman</span> <span class="kn">import</span> <span class="n">Layer</span>
-<span class="kn">from</span> <span class="nn">mwx.framework</span> <span class="kn">import</span> <span class="n">CtrlInterface</span>
+
 
 <span class="k">if</span> <span class="n">wx</span><span class="o">.</span><span class="n">VERSION</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">wx.lib.mixins.listctrl</span> <span class="kn">import</span> <span class="n">CheckListCtrlMixin</span>
@@ -136,10 +137,10 @@
         
         <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
             <span class="mi">0</span> <span class="p">:</span> <span class="p">{</span>
-                            <span class="s1">&#39;*&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">Skip</span><span class="p">()),</span>
              <span class="s1">&#39;Lbutton dblclick&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnShowItems</span><span class="p">),</span> <span class="c1"># -&gt; frame_shown</span>
                 <span class="s1">&#39;enter pressed&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnShowItems</span><span class="p">),</span> <span class="c1"># -&gt; frame_shown</span>
                <span class="s1">&#39;delete pressed&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnRemoveItems</span><span class="p">),</span> <span class="c1"># -&gt; frame_removed/shown</span>
+                   <span class="s1">&#39;f2 pressed&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnEditAnnotation</span><span class="p">),</span>
                   <span class="s1">&#39;C-a pressed&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnSelectAllItems</span><span class="p">),</span>
                   <span class="s1">&#39;C-o pressed&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnLoadItems</span><span class="p">),</span>
                   <span class="s1">&#39;C-s pressed&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnSaveItems</span><span class="p">),</span>
@@ -167,6 +168,31 @@
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Target</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        
+        <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">frames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Target</span><span class="o">.</span><span class="n">all_frames</span>
+            <span class="k">if</span> <span class="n">frames</span><span class="p">:</span>
+                <span class="n">frame</span> <span class="o">=</span> <span class="n">frames</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">focused_item</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">all</span><span class="p">:</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="n">pformat</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">attributes</span><span class="p">,</span> <span class="n">sort_dicts</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">annotation</span><span class="p">)</span>
+                <span class="n">Clipboard</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="mi">101</span><span class="p">,</span> <span class="s2">&quot;&amp;Edit annotation&quot;</span><span class="p">,</span> <span class="s2">&quot;Edit annotation&quot;</span><span class="p">,</span> <span class="n">Icon</span><span class="p">(</span><span class="s1">&#39;pencil&#39;</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">OnEditAnnotation</span><span class="p">),</span>
+            <span class="p">(),</span>
+            <span class="p">(</span><span class="mi">102</span><span class="p">,</span> <span class="s2">&quot;Copy info&quot;</span><span class="p">,</span> <span class="n">Icon</span><span class="p">(</span><span class="s1">&#39;copy&#39;</span><span class="p">),</span>
+                <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">copy</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selected_items</span><span class="p">)))),</span>
+                
+            <span class="p">(</span><span class="mi">103</span><span class="p">,</span> <span class="s2">&quot;Copy ALL data&quot;</span><span class="p">,</span> <span class="n">Icon2</span><span class="p">(</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span> <span class="s1">&#39;+&#39;</span><span class="p">),</span>
+                <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">copy</span><span class="p">(),</span>
+                <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selected_items</span><span class="p">)))),</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_CONTEXT_MENU</span><span class="p">,</span>
+                  <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">Menu</span><span class="o">.</span><span class="n">Popup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="p">))</span>
     
 <div class="viewcode-block" id="CheckList.Destroy"><a class="viewcode-back" href="../../../wxpyNautilus.plugins.html#wxpyNautilus.plugins.viewframe.CheckList.Destroy">[docs]</a>    <span class="k">def</span> <span class="nf">Destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Target</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
@@ -243,6 +269,15 @@
         <span class="n">selected_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frames</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_items</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">export_index</span><span class="p">(</span><span class="n">frames</span><span class="o">=</span><span class="n">selected_frames</span><span class="p">)</span></div>
     
+<div class="viewcode-block" id="CheckList.OnEditAnnotation"><a class="viewcode-back" href="../../../wxpyNautilus.plugins.html#wxpyNautilus.plugins.viewframe.CheckList.OnEditAnnotation">[docs]</a>    <span class="k">def</span> <span class="nf">OnEditAnnotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">evt</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;Enter an annotation&#39;</span><span class="p">):</span>
+        <span class="n">frames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Target</span><span class="o">.</span><span class="n">all_frames</span>
+        <span class="k">if</span> <span class="n">frames</span><span class="p">:</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="n">frames</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">focused_item</span><span class="p">]</span>
+            <span class="k">with</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextEntryDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span>
+                <span class="n">caption</span><span class="o">=</span><span class="s1">&#39;Input Dialog&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">frame</span><span class="o">.</span><span class="n">annotation</span><span class="p">)</span> <span class="k">as</span> <span class="n">dlg</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">dlg</span><span class="o">.</span><span class="n">ShowModal</span><span class="p">()</span> <span class="o">==</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_OK</span><span class="p">:</span>
+                    <span class="n">frame</span><span class="o">.</span><span class="n">annotation</span> <span class="o">=</span> <span class="n">dlg</span><span class="o">.</span><span class="n">Value</span></div>
+    
     <span class="c1">## --------------------------------</span>
     <span class="c1">## Actions of frame-handler</span>
     <span class="c1">## --------------------------------</span>
@@ -278,7 +313,6 @@
     <span class="n">menukey</span> <span class="o">=</span> <span class="s2">&quot;Plugins/Extensions/&amp;Buffer listbox</span><span class="se">\t</span><span class="s2">Ctrl+b&quot;</span>
     <span class="n">caption</span> <span class="o">=</span> <span class="s2">&quot;Property list&quot;</span>
     <span class="n">dockable</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">unloadable</span> <span class="o">=</span> <span class="kc">False</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">all_pages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -307,26 +341,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">select_view</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">CurrentPage</span><span class="o">.</span><span class="n">Target</span><span class="p">)</span>
             <span class="n">v</span><span class="o">.</span><span class="n">Skip</span><span class="p">()</span>
         
-        <span class="bp">self</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_CHILD_FOCUS</span><span class="p">,</span> <span class="n">on_focus_set</span><span class="p">)</span>
-        
-        <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-            <span class="n">page</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">CurrentPage</span>
-            <span class="n">frame</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">Target</span><span class="o">.</span><span class="n">all_frames</span><span class="p">[</span><span class="n">page</span><span class="o">.</span><span class="n">focused_item</span><span class="p">]</span>
-            <span class="k">if</span> <span class="nb">all</span><span class="p">:</span>
-                <span class="n">text</span> <span class="o">=</span> <span class="n">pformat</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">attributes</span><span class="p">,</span> <span class="n">sort_dicts</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">annotation</span><span class="p">)</span>
-            <span class="n">Clipboard</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="mi">101</span><span class="p">,</span> <span class="s2">&quot;&amp;Edit annotation&quot;</span><span class="p">,</span> <span class="s2">&quot;Edit annotation&quot;</span><span class="p">,</span> <span class="n">Icon</span><span class="p">(</span><span class="s1">&#39;edit&#39;</span><span class="p">),</span>
-                <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ask</span><span class="p">()),</span>
-            <span class="p">(),</span>
-            <span class="p">(</span><span class="s2">&quot;Copy attributes&quot;</span><span class="p">,</span> <span class="n">Icon</span><span class="p">(</span><span class="s1">&#39;copy&#39;</span><span class="p">),</span> <span class="p">(</span>
-                <span class="p">(</span><span class="mi">102</span><span class="p">,</span> <span class="s2">&quot;ALL data&quot;</span><span class="p">,</span> <span class="n">Icon</span><span class="p">(</span><span class="s1">&#39;copy&#39;</span><span class="p">),</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">copy</span><span class="p">()),</span>
-                <span class="p">(</span><span class="mi">103</span><span class="p">,</span> <span class="s2">&quot;row data&quot;</span><span class="p">,</span> <span class="n">Icon</span><span class="p">(</span><span class="s1">&#39;edit&#39;</span><span class="p">),</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">copy</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
-            <span class="p">)),</span>
-        <span class="p">]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_CHILD_FOCUS</span><span class="p">,</span> <span class="n">on_focus_set</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="Plugin.attach"><a class="viewcode-back" href="../../../wxpyNautilus.plugins.html#wxpyNautilus.plugins.viewframe.Plugin.attach">[docs]</a>    <span class="k">def</span> <span class="nf">attach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">caption</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">target</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">lc</span><span class="o">.</span><span class="n">Target</span> <span class="k">for</span> <span class="n">lc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_pages</span><span class="p">]:</span>
@@ -336,23 +351,7 @@
 <div class="viewcode-block" id="Plugin.detach"><a class="viewcode-back" href="../../../wxpyNautilus.plugins.html#wxpyNautilus.plugins.viewframe.Plugin.detach">[docs]</a>    <span class="k">def</span> <span class="nf">detach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">lc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_pages</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="n">lc</span><span class="o">.</span><span class="n">Target</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">DeletePage</span><span class="p">(</span><span class="n">k</span><span class="p">)</span></div>
-    
-<div class="viewcode-block" id="Plugin.show_page"><a class="viewcode-back" href="../../../wxpyNautilus.plugins.html#wxpyNautilus.plugins.viewframe.Plugin.show_page">[docs]</a>    <span class="k">def</span> <span class="nf">show_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">SetSelection</span><span class="p">(</span><span class="nb">next</span><span class="p">((</span><span class="n">k</span>
-            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">lc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_pages</span><span class="p">)</span> <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="n">lc</span><span class="o">.</span><span class="n">Target</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span></div>
-    
-<div class="viewcode-block" id="Plugin.ask"><a class="viewcode-back" href="../../../wxpyNautilus.plugins.html#wxpyNautilus.plugins.viewframe.Plugin.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;Enter an annotation&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get response from the user using a dialog box.&quot;&quot;&quot;</span>
-        <span class="n">page</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">CurrentPage</span>
-        <span class="n">frames</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">Target</span><span class="o">.</span><span class="n">all_frames</span>
-        <span class="k">if</span> <span class="n">frames</span><span class="p">:</span>
-            <span class="n">frame</span> <span class="o">=</span> <span class="n">frames</span><span class="p">[</span><span class="n">page</span><span class="o">.</span><span class="n">focused_item</span><span class="p">]</span>
-            <span class="k">with</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextEntryDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span>
-                <span class="n">caption</span><span class="o">=</span><span class="s1">&#39;Input Dialog&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">frame</span><span class="o">.</span><span class="n">annotation</span><span class="p">)</span> <span class="k">as</span> <span class="n">dlg</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">dlg</span><span class="o">.</span><span class="n">ShowModal</span><span class="p">()</span> <span class="o">==</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_OK</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">selected_items</span><span class="p">:</span>
-                        <span class="n">frames</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">annotation</span> <span class="o">=</span> <span class="n">dlg</span><span class="o">.</span><span class="n">Value</span></div></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">DeletePage</span><span class="p">(</span><span class="n">k</span><span class="p">)</span></div></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
@@ -361,10 +360,8 @@
     
     <span class="n">app</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">App</span><span class="p">()</span>
     <span class="n">frm</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-    <span class="n">frm</span><span class="o">.</span><span class="n">load_plug</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dock</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;C:/usr/home/workspace/images/*.bmp&quot;</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;loading path =&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
-        <span class="n">frm</span><span class="o">.</span><span class="n">load_buffer</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">frm</span><span class="o">.</span><span class="n">load_plug</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">frm</span><span class="o">.</span><span class="n">load_frame</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;C:/usr/home/workspace/images/*.bmp&quot;</span><span class="p">))</span>
     <span class="n">frm</span><span class="o">.</span><span class="n">Show</span><span class="p">()</span>
     <span class="n">app</span><span class="o">.</span><span class="n">MainLoop</span><span class="p">()</span>
 </pre></div>

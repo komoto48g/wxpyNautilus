@@ -109,18 +109,6 @@
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="wxpyNautilus.plugins.ffmpeg_viewer.Plugin.load_session">
-<span class="sig-name descname"><span class="pre">load_session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/ffmpeg_viewer.html#Plugin.load_session"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.ffmpeg_viewer.Plugin.load_session" title="Permalink to this definition"></a></dt>
-<dd><p>Restore settings from a session file (to be overridden).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="wxpyNautilus.plugins.ffmpeg_viewer.Plugin.save_session">
-<span class="sig-name descname"><span class="pre">save_session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/ffmpeg_viewer.html#Plugin.save_session"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.ffmpeg_viewer.Plugin.save_session" title="Permalink to this definition"></a></dt>
-<dd><p>Save settings in a session file (to be overridden).</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="wxpyNautilus.plugins.ffmpeg_viewer.Plugin.OnMediaLoaded">
 <span class="sig-name descname"><span class="pre">OnMediaLoaded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/ffmpeg_viewer.html#Plugin.OnMediaLoaded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.ffmpeg_viewer.Plugin.OnMediaLoaded" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -143,32 +131,39 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="wxpyNautilus.plugins.ffmpeg_viewer.Plugin.set_offset">
 <span class="sig-name descname"><span class="pre">set_offset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/ffmpeg_viewer.html#Plugin.set_offset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.ffmpeg_viewer.Plugin.set_offset" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Set offset value by referring to ss/to value.</p>
+</dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="wxpyNautilus.plugins.ffmpeg_viewer.Plugin.get_offet">
-<span class="sig-name descname"><span class="pre">get_offet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/ffmpeg_viewer.html#Plugin.get_offet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.ffmpeg_viewer.Plugin.get_offet" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="wxpyNautilus.plugins.ffmpeg_viewer.Plugin.get_offset">
+<span class="sig-name descname"><span class="pre">get_offset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/ffmpeg_viewer.html#Plugin.get_offset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.ffmpeg_viewer.Plugin.get_offset" title="Permalink to this definition"></a></dt>
+<dd><p>Get offset value and assigns it to ss/to value.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="wxpyNautilus.plugins.ffmpeg_viewer.Plugin.set_crop">
-<span class="sig-name descname"><span class="pre">set_crop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/ffmpeg_viewer.html#Plugin.set_crop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.ffmpeg_viewer.Plugin.set_crop" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">set_crop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/ffmpeg_viewer.html#Plugin.set_crop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.ffmpeg_viewer.Plugin.set_crop" title="Permalink to this definition"></a></dt>
+<dd><p>Set crop area (W:H:Left:Top) by referring to frame roi.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="wxpyNautilus.plugins.ffmpeg_viewer.Plugin.seekdelta">
 <span class="sig-name descname"><span class="pre">seekdelta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/ffmpeg_viewer.html#Plugin.seekdelta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.ffmpeg_viewer.Plugin.seekdelta" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Seek relative position [ms].</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="wxpyNautilus.plugins.ffmpeg_viewer.Plugin.snapshot">
 <span class="sig-name descname"><span class="pre">snapshot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/ffmpeg_viewer.html#Plugin.snapshot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.ffmpeg_viewer.Plugin.snapshot" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Create a snapshot of the current frame.
+Load the snapshot image into the graph window.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="wxpyNautilus.plugins.ffmpeg_viewer.Plugin.export">
 <span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/ffmpeg_viewer.html#Plugin.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.ffmpeg_viewer.Plugin.export" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Export the cropped / clipped data to a media file.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -195,11 +190,6 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="wxpyNautilus.plugins.lineprofile.Plugin.dockable">
 <span class="sig-name descname"><span class="pre">dockable</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#wxpyNautilus.plugins.lineprofile.Plugin.dockable" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="wxpyNautilus.plugins.lineprofile.Plugin.unloadable">
-<span class="sig-name descname"><span class="pre">unloadable</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#wxpyNautilus.plugins.lineprofile.Plugin.unloadable" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -375,6 +365,11 @@
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="wxpyNautilus.plugins.viewframe.CheckList.OnEditAnnotation">
+<span class="sig-name descname"><span class="pre">OnEditAnnotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Enter</span> <span class="pre">an</span> <span class="pre">annotation'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/viewframe.html#CheckList.OnEditAnnotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.viewframe.CheckList.OnEditAnnotation" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="wxpyNautilus.plugins.viewframe.CheckList.on_frame_loaded">
 <span class="sig-name descname"><span class="pre">on_frame_loaded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/viewframe.html#CheckList.on_frame_loaded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.viewframe.CheckList.on_frame_loaded" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -416,11 +411,6 @@
 <span class="sig-name descname"><span class="pre">dockable</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#wxpyNautilus.plugins.viewframe.Plugin.dockable" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="wxpyNautilus.plugins.viewframe.Plugin.unloadable">
-<span class="sig-name descname"><span class="pre">unloadable</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#wxpyNautilus.plugins.viewframe.Plugin.unloadable" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="wxpyNautilus.plugins.viewframe.Plugin.all_pages">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_pages</span></span><a class="headerlink" href="#wxpyNautilus.plugins.viewframe.Plugin.all_pages" title="Permalink to this definition"></a></dt>
@@ -451,17 +441,6 @@
 <dt class="sig sig-object py" id="wxpyNautilus.plugins.viewframe.Plugin.detach">
 <span class="sig-name descname"><span class="pre">detach</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/viewframe.html#Plugin.detach"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.viewframe.Plugin.detach" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="wxpyNautilus.plugins.viewframe.Plugin.show_page">
-<span class="sig-name descname"><span class="pre">show_page</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/viewframe.html#Plugin.show_page"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.viewframe.Plugin.show_page" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="wxpyNautilus.plugins.viewframe.Plugin.ask">
-<span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Enter</span> <span class="pre">an</span> <span class="pre">annotation'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wxpyNautilus/plugins/viewframe.html#Plugin.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wxpyNautilus.plugins.viewframe.Plugin.ask" title="Permalink to this definition"></a></dt>
-<dd><p>Get response from the user using a dialog box.</p>
-</dd></dl>
 
 </dd></dl>
 

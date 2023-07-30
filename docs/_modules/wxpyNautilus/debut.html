@@ -114,10 +114,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">WrapMode</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">WrapMode</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\b</span><span class="s2"> </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mode</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">WrapMode</span><span class="p">]))</span>
 
-    <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-f9&#39;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">toggle_folder</span><span class="p">():</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">show_folder</span><span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_folder_shown</span><span class="p">())</span>
-
     <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;S-f9&#39;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">toggle_eol_view</span><span class="p">():</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ViewEOL</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ViewEOL</span>
@@ -125,7 +121,6 @@
 
     <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x [&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">beginning_of_buffer</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x ]&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_of_buffer</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x @&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goto_mark</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-c C-c&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goto_matched_paren</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x C-x&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange_point_and_mark</span><span class="p">)</span></div>
 
@@ -236,10 +231,10 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\b</span><span class="s2"> </span><span class="si">{</span><span class="n">text</span><span class="si">!r}</span><span class="s2"> was nowhere to be found.&quot;</span><span class="p">)</span>
 
-    <span class="n">error</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)^\s+File </span><span class="se">\&quot;</span><span class="s2">(.+?)</span><span class="se">\&quot;</span><span class="s2">, line ([0-9]+)&quot;</span>
-    <span class="n">frame</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)^\s+file \&#39;(.+?)\&#39;, line ([0-9]+)&quot;</span>
-    <span class="n">where</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;.*&gt;\s+([^*?</span><span class="se">\&quot;</span><span class="s2">|\r\n]+?):([0-9]+)&quot;</span>
-    <span class="n">bp</span>    <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;at \s+([^*?</span><span class="se">\&quot;</span><span class="s2">|\r\n]+?):([0-9]+)&quot;</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(?i) +File &quot;(.+?)&quot;, line ([0-9]+)&#39;</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i) +file &#39;(.+?)&#39;, line ([0-9]+)&quot;</span>
+    <span class="n">where</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;&gt; +([^*?&quot;|\r\n]+?):([0-9]+)&#39;</span>
+    <span class="n">bp</span>    <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;at +([^*?&quot;|\r\n]+?):([0-9]+)&#39;</span>
     <span class="n">grep</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">frame</span><span class="p">,</span> <span class="n">where</span><span class="p">,</span> <span class="n">bp</span><span class="p">))</span>
 
     <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
@@ -424,19 +419,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">GetData</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">textdo</span><span class="o">.</span><span class="n">TextLength</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">textdo</span><span class="o">.</span><span class="n">Text</span>
-            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;https?://[\w/:%#\$&amp;\?()~.=+-]+&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">load_url</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-                <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">SetFocus</span><span class="p">()</span>
-                    <span class="n">result</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">DragCopy</span>
-                <span class="k">elif</span> <span class="n">res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="s2">&quot;Load canceled.&quot;</span><span class="p">)</span>
-                    <span class="n">result</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">DragCancel</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="s2">&quot;URL not found.&quot;</span><span class="p">)</span>
-                    <span class="n">result</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">DragNone</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;https?://[\w/:%#\$&amp;\?()~.=+-]+&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span> <span class="c1"># url_re</span>
+                <span class="n">_load</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">load_url</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="s2">&quot;Dropped text is not a URL.&quot;</span><span class="p">)</span>
+                <span class="n">_load</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">load_file</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">SetFocus</span><span class="p">()</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">DragCopy</span>
+            <span class="k">elif</span> <span class="n">res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="s2">&quot;Load canceled.&quot;</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">DragCancel</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="s2">&quot;Load failed.&quot;</span><span class="p">)</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">DragNone</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">textdo</span><span class="o">.</span><span class="n">Text</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="k">else</span><span class="p">:</span>
