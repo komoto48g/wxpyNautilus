@@ -47,6 +47,8 @@ class MainFrame(Frame):
         
         home = os.path.dirname(__file__)
         
+        if home not in sys.path: # Add home (when importing Frame class)
+            sys.path.insert(0, home)
         sys.path.insert(0, os.path.join(home, 'plugins'))
         sys.path.insert(0, '') # Add local . to import si:local first
         try:
