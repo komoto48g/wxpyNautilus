@@ -171,8 +171,8 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
     
     def on_buffer_filename(self, buf):
         for key, data in self.items(): # <-- old key
-            if data.buffer is buf:
-                self.SetItemText(data._itemId, buf.name)
+            if data and data.buffer is buf:
+                self.SetItemText(data._itemId, buf.caption)
                 for item in self[buf.parent.Name]:
                     if item[1] is data:
                         item[0] = buf.name # --> new key
