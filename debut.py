@@ -371,12 +371,11 @@ class MyDataLoader(wx.DropTarget):
     def OnData(self, x, y, result):
         self.GetData()
         if self.textdo.TextLength > 1:
-            text = self.textdo.Text
-            if re.match(r"https?://[\w/:%#\$&\?()~.=+-]+", text): # url_re
-                _load = self.target.load_url
+            f = self.textdo.Text.strip()
+            if re.match(r"https?://[\w/:%#$&?()~.=+-]+", f): # url_re
+                res = self.target.load_url(f)
             else:
-                _load = self.target.load_file
-            res = _load(text.strip())
+                res = self.target.load_file(f)
             if res:
                 self.target.buffer.SetFocus()
                 result = wx.DragCopy
@@ -384,7 +383,7 @@ class MyDataLoader(wx.DropTarget):
                 self.target.post_message("Load canceled.")
                 result = wx.DragCancel
             else:
-                self.target.post_message("Load failed.")
+                self.target.post_message(f"Load failed: {f!r}")
                 result = wx.DragNone
             self.textdo.Text = ''
         else:
