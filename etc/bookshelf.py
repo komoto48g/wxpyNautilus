@@ -117,17 +117,16 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         if rest:
             ## Take the first element assuming it's client data.
             ## Set the item client data. (override as needed)
-            self.SetItemData(item, *rest)
+            try:
+                data = rest[0]
+                data._itemId = item
+                self.SetItemData(item, data)
+                if data.buffer:
+                    self.SetItemText(item, data.buffer.caption)
+            except Exception:
+                pass
         for branch in branches:
             self._set_item(item, *branch)
-    
-    def SetItemData(self, item, data, *rest):
-        """Sets the item client data. (override)"""
-        try:
-            data._itemId = item
-            wx.TreeCtrl.SetItemData(self, item, data)
-        except AttributeError:
-            pass
     
     ## --------------------------------
     ## Actions for bookshelf interfaces
