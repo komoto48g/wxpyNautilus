@@ -372,10 +372,7 @@ class MyDataLoader(wx.DropTarget):
         self.GetData()
         if self.textdo.TextLength > 1:
             f = self.textdo.Text.strip()
-            if re.match(r"https?://[\w/:%#$&?()~.=+-]+", f): # url_re
-                res = self.target.load_url(f)
-            else:
-                res = self.target.load_file(f)
+            res = self.target.load_file(f)
             if res:
                 self.target.buffer.SetFocus()
                 result = wx.DragCopy
@@ -383,7 +380,7 @@ class MyDataLoader(wx.DropTarget):
                 self.target.post_message("Load canceled.")
                 result = wx.DragCancel
             else:
-                self.target.post_message(f"Load failed: {f!r}")
+                self.target.post_message(f"Loading {f!r} failed.")
                 result = wx.DragNone
             self.textdo.Text = ''
         else:
@@ -445,8 +442,6 @@ def main(self):
     self.Bookshelf.watch(self.ghost)
     self.Bookshelf.SetDropTarget(MyDataLoader(self.Scratch))
 
-    ## self.post_message("Startup process has completed successfully.")
-
 
 quote_unqoute = """
     Anything one man can imagine, other man can make real.
@@ -471,6 +466,7 @@ if __name__ == "__main__":
     main(frame)
     frame.undefine_key('f12') # Don't close.
     if 1:
+        ## frame.post_message("Startup process has completed successfully.")
         ## If you want debugger skip a specific module,
         ## add the module:str to debugger.skip:set.
         frame.debugger.skip -= {
