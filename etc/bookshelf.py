@@ -181,14 +181,14 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
     def OnSelChanged(self, evt):
         if self and self.HasFocus():
             data = self.GetItemData(evt.Item)
-            if data:
+            if data and data.buffer:
                 data.buffer.SetFocus()
             self.SetFocus()
         evt.Skip()
     
     def OnItemTooltip(self, evt):
         data = self.GetItemData(evt.Item)
-        if data:
+        if data and data.buffer:
             evt.SetToolTip(data.buffer.filename)
         evt.Skip()
 
