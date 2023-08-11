@@ -25,7 +25,7 @@ def read_info(path):
 
 def capture_video(path, ss=0):
     command = ['ffmpeg',
-               '-ss', '{}'.format(ss),  # Note: placing -ss before -i will be faster,
+               '-ss', f"{ss}",          # Note: placing -ss before -i will be faster,
                '-i', path,              #       but maybe not accurate.
                '-frames:v', '1',        # -frame one shot
                '-f', 'rawvideo',        # -format raw
@@ -43,13 +43,13 @@ def capture_video(path, ss=0):
     return np.frombuffer(buf, np.uint8)
 
 
-def export_video(path, f, crop, ss, to):
+def export_video(path, crop, ss, to, filename):
     command = ['ffmpeg',
                '-i', path,
-               '-vf', 'crop={}'.format(crop),
-               '-ss', ss,
-               '-to', to,
-               '-y', f,
+               '-vf', f"{crop=}",
+               '-ss', f"{ss}",
+               '-to', f"{to}",
+               '-y', filename,
                ]
     print('>', ' '.join(command))
     with Popen(command) as fp:
@@ -216,7 +216,7 @@ class Plugin(Layer):
             return
         t = self.mc.Tell()
         w, h = self.video_size
-        buf = capture_video(self._path, ss=t/1000).reshape((h,w,3))
+        buf = capture_video(self._path, t/1000).reshape((h,w,3))
         name = "{}-ss{}".format(os.path.basename(self._path), int(t))
         self.graph.load(buf, name)
     
@@ -233,9 +233,9 @@ class Plugin(Layer):
             if dlg.ShowModal() != wx.ID_OK:
                 return
             fout = dlg.Path
-        export_video(self._path, fout,
+        export_video(self._path,
                      self.crop.Value or "{}:{}:0:0".format(*self.video_size),
-                     self.ss.value, self.to.value)
+                     self.ss.value, self.to.value, fout)
 
 
 if __name__ == "__main__":
