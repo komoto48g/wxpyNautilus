@@ -100,7 +100,8 @@ class Plugin(Layer):
                         updater=self.get_offset,
                         )
         self.crop = TextCtrl(self, icon="cut", size=(130,-1),
-                        updater=self.set_crop,
+                        handler=self.set_crop,
+                        updater=self.get_crop,
                         )
         
         self.snp = Button(self, handler=self.snapshot, tip='Snapshot', icon='clock')
@@ -182,7 +183,21 @@ class Plugin(Layer):
             pass
     
     def set_crop(self):
-        """Set crop area (W:H:Left:Top) by referring to frame roi."""
+        """Set crop area (W:H:Left:Top) to roi."""
+        frame = self.graph.frame
+        if frame:
+            try:
+                w, h, xo, yo = eval(self.crop.Value.replace(':', ','))
+                xo -= 0.5  # Correction with half-pixel
+                yo -= 0.5  # to select left-top (not center) position
+                nx = xo, xo+w
+                ny = yo, yo+h
+                frame.region = frame.xyfrompixel(nx, ny)
+            except Exception:
+                self.message("Failed to evaluate crop text.")
+    
+    def get_crop(self):
+        """Get crop area (W:H:Left:Top) from roi."""
         crop = ''
         frame = self.graph.frame
         if frame:
