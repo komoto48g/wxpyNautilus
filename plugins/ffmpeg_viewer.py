@@ -25,7 +25,7 @@ def read_info(path):
 
 def capture_video(path, ss=0):
     command = ['ffmpeg',
-               '-ss', '{}'.format(ss),  # Note: placing -ss before -i will be faster,
+               '-ss', f"{ss}",          # Note: placing -ss before -i will be faster,
                '-i', path,              #       but maybe not accurate.
                '-frames:v', '1',        # -frame one shot
                '-f', 'rawvideo',        # -format raw
@@ -43,13 +43,13 @@ def capture_video(path, ss=0):
     return np.frombuffer(buf, np.uint8)
 
 
-def export_video(path, f, crop, ss, to):
+def export_video(path, crop, ss, to, filename):
     command = ['ffmpeg',
                '-i', path,
-               '-vf', 'crop={}'.format(crop),
-               '-ss', ss,
-               '-to', to,
-               '-y', f,
+               '-vf', f"{crop=}",
+               '-ss', f"{ss}",
+               '-to', f"{to}",
+               '-y', filename,
                ]
     print('>', ' '.join(command))
     with Popen(command) as fp:
@@ -100,7 +100,8 @@ class Plugin(Layer):
                         updater=self.get_offset,
                         )
         self.crop = TextCtrl(self, icon="cut", size=(130,-1),
-                        updater=self.set_crop,
+                        handler=self.set_crop,
+                        updater=self.get_crop,
                         )
         
         self.snp = Button(self, handler=self.snapshot, tip='Snapshot', icon='clock')
@@ -182,7 +183,21 @@ class Plugin(Layer):
             pass
     
     def set_crop(self):
-        """Set crop area (W:H:Left:Top) by referring to frame roi."""
+        """Set crop area (W:H:Left:Top) to roi."""
+        frame = self.graph.frame
+        if frame:
+            try:
+                w, h, xo, yo = eval(self.crop.Value.replace(':', ','))
+                xo -= 0.5  # Correction with half-pixel
+                yo -= 0.5  # to select left-top (not center) position
+                nx = xo, xo+w
+                ny = yo, yo+h
+                frame.region = frame.xyfrompixel(nx, ny)
+            except Exception:
+                self.message("Failed to evaluate crop text.")
+    
+    def get_crop(self):
+        """Get crop area (W:H:Left:Top) from roi."""
         crop = ''
         frame = self.graph.frame
         if frame:
@@ -216,7 +231,7 @@ class Plugin(Layer):
             return
         t = self.mc.Tell()
         w, h = self.video_size
-        buf = capture_video(self._path, ss=t/1000).reshape((h,w,3))
+        buf = capture_video(self._path, t/1000).reshape((h,w,3))
         name = "{}-ss{}".format(os.path.basename(self._path), int(t))
         self.graph.load(buf, name)
     
@@ -233,9 +248,9 @@ class Plugin(Layer):
             if dlg.ShowModal() != wx.ID_OK:
                 return
             fout = dlg.Path
-        export_video(self._path, fout,
+        export_video(self._path,
                      self.crop.Value or "{}:{}:0:0".format(*self.video_size),
-                     self.ss.value, self.to.value)
+                     self.ss.value, self.to.value, fout)
 
 
 if __name__ == "__main__":
