@@ -48,12 +48,15 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         
-        @self.handler.bind('tab pressed')
         @self.handler.bind('enter pressed')
         def enter(v):
             data = self.GetItemData(self.Selection)
             if data:
                 data.buffer.SetFocus()
+        
+        @self.handler.bind('f5 pressed')
+        def refresh(v):
+            self.reset(clear=0)
         
         @self.handler.bind('delete pressed')
         def delete(v):
