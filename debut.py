@@ -13,7 +13,7 @@ from wx import aui
 from wx import stc
 
 import mwx
-from mwx.controls import Icon
+from mwx.controls import Icon, Clipboard
 from mwx.nutshell import Nautilus, EditorBook
 from mwx.py.filling import FillingTree
 
@@ -430,6 +430,15 @@ def main(self):
     ##       and also after this module is reloaded.
     self.Bookshelf.watch(self.ghost)
     self.Bookshelf.SetDropTarget(MyDataLoader(self.Scratch))
+
+    @self.Bind(wx.EVT_CONTEXT_MENU)
+    def copy_message(v):
+        if v.EventObject is self.statusbar:
+            mwx.Menu.Popup(self, [
+                (wx.ID_COPY, "&Copy message", Icon('copy'),
+                    lambda v: Clipboard.write(self.statusbar.read())),
+            ])
+        v.Skip()
 
 
 quote_unqoute = """
