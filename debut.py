@@ -5,17 +5,14 @@
 __version__ = "1.0rc"
 __author__ = "Kazuya O'moto <komoto@jeol.co.jp>"
 
-import builtins
 import getopt
 import sys
 import os
-import re
 import wx
 from wx import aui
 from wx import stc
 
 import mwx
-from mwx.utilus import FSM
 from mwx.controls import Icon
 from mwx.nutshell import Nautilus, EditorBook
 from mwx.py.filling import FillingTree
@@ -24,14 +21,6 @@ try:
     from etc import bookshelf
 except ImportError:
     from .etc import bookshelf
-
-
-def subclasses(cls):
-    try:
-        return cls.__subclasses__()
-    except AttributeError:
-        pass
-builtins.subclasses = subclasses
 
 
 ## This monkey patch forces the filling-tree to display only atoms.
@@ -298,7 +287,7 @@ def stylus(self):
     """
     ## Customize the keymaps of the ShellFrame.
     self.define_key('C-x C-S-o', self.load_session)
-    self.define_key('C-x C-S-s', self.save_session_as)
+    self.define_key('C-x C-S-s', self.save_session)
 
     @self.define_key('Xbutton1', p=-1)
     @self.define_key('Xbutton2', p=+1)
