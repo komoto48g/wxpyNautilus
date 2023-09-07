@@ -9,8 +9,8 @@ import wx
 from wx import aui
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
 
+from mwx.framework import CtrlInterface, Menu, StatusBar
 from mwx.controls import Icon, Icon2, Clipboard
-from mwx.framework import CtrlInterface, Menu
 from mwx.graphman import Layer
 
 
@@ -102,6 +102,7 @@ class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
         self.handler.clear(0)
         
         self.Bind(wx.EVT_LIST_COL_CLICK, self.OnSortItems)
+        self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected)
         
         self.context = { # bound to the target
             None: {
@@ -201,7 +202,11 @@ class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
     def OnSaveItems(self, evt):
         frames = self.Target.all_frames
         selected_frames = [frames[j] for j in self.selected_items]
-        self.parent.parent.export_index(frames=selected_frames)
+        if selected_frames:
+            self.parent.message("Exporting {} frames.".format(len(selected_frames)))
+            self.parent.parent.export_index(frames=selected_frames)
+        else:
+            self.parent.message("No frame selected.")
     
     def OnEditAnnotation(self, evt):
         frames = self.Target.all_frames
@@ -211,6 +216,12 @@ class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
                     'Enter an annotation', frame.annotation) as dlg:
                 if dlg.ShowModal() == wx.ID_OK:
                     frame.annotation = dlg.Value
+    
+    def OnItemSelected(self, evt):
+        frames = self.Target.all_frames
+        frame = frames[evt.Index]
+        self.parent.message(frame.pathname)
+        evt.Skip()
     
     ## --------------------------------
     ## Actions of frame-handler
@@ -253,23 +264,24 @@ class Plugin(Layer):
         return [self.nb.GetPage(i) for i in range(self.nb.PageCount)]
     
     @property
-    def selected_buffers(self):
-        page = self.nb.CurrentPage
-        return page.Target[page.selected_items]
-    
-    @property
-    def focused_buffer(self):
-        page = self.nb.CurrentPage
-        return page.Target[page.focused_item]
+    def message(self):
+        return self.statusline
     
     def Init(self):
         self.nb = aui.AuiNotebook(self, size=(400,150),
             style = (aui.AUI_NB_DEFAULT_STYLE|aui.AUI_NB_RIGHT)
                   &~(aui.AUI_NB_CLOSE_ON_ACTIVE_TAB|aui.AUI_NB_MIDDLE_CLICK_CLOSE)
         )
-        self.layout((self.nb,), expand=2, border=0)
         self.attach(self.graph, "graph")
         self.attach(self.output, "output")
+        
+        self.statusline = StatusBar(self)
+        self.layout((
+                self.nb,
+                (self.statusline, 0, wx.EXPAND),
+            ),
+            expand=2, border=0, vspacing=0,
+        )
         
         def on_focus_set(v):
             self.parent.select_view(self.nb.CurrentPage.Target)
