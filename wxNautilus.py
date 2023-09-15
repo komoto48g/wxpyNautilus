@@ -46,12 +46,13 @@ class MainFrame(Frame):
         self.SetIcon(submarine.GetIcon())
         
         home = os.path.dirname(__file__)
-        
-        if home not in sys.path: # Add home (to import Frame)
-            sys.path.insert(0, home)
-        
-        sys.path.insert(0, os.path.join(home, 'plugins'))
-        sys.path.insert(0, '') # Add local . to import si:local first
+        paths = [
+            home,   # Add ~/ to import si:home
+            '',     # Add ./ to import si:local first
+        ]
+        for f in paths:
+            if f not in sys.path:
+                sys.path.insert(0, f)
         try:
             si = __import__('siteinit')
         except ImportError:

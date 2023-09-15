@@ -31,9 +31,8 @@ def init_mainframe(self):
     ## Plugins
     ## --------------------------------
     def load_plug(name):
-        cur = os.path.dirname(__file__)
-        path = os.path.join(cur, name)
-        self.load_plug(path)
+        home = os.path.dirname(__file__)
+        self.load_plug(os.path.join(home, name))
 
     load_plug("plugins/ffmpeg_viewer")
     load_plug("plugins/lineprofile")
