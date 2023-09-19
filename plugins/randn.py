@@ -12,8 +12,7 @@ class Plugin(Layer):
     """Test layer
     """
     def Init(self):
-        self.ksize = LParam("ksize", (1,99,2), 13,
-                            tip="kernel window size")
+        self.ksize = LParam("ksize", (1,99,2), 13) # "kernel window size"
         
         self.btn = Button(self, label="Run", icon='->',
                           handler=lambda v: self.run(),)

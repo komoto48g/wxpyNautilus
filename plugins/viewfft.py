@@ -1,6 +1,6 @@
 #! python3
 # -*- coding: utf-8 -*-
-"""View of FFT/iFFT
+"""View of FFT/iFFT.
 
 Author: Kazuya O'moto <komoto@jeol.co.jp>
 """
@@ -15,7 +15,7 @@ from mwx.graphman import Layer
 
 
 def fftresize(src, maxsize=None):
-    """Resize src image to 2**n squared ROI"""
+    """Resize src image to 2**n squared ROI."""
     h, w = src.shape
     if not maxsize:
         maxsize = w
@@ -25,9 +25,9 @@ def fftresize(src, maxsize=None):
 
 
 class Plugin(Layer):
-    """FFT view
+    """FFT view.
     
-    FFT src (graph.buffer) to dst (output.buffer)
+    FFT src (graph.buffer) to dst (output.buffer).
     Note:
         Rectangular regions will result in distorted patterns.
         長方形のリージョンは歪んだパターンになるので要注意
@@ -41,14 +41,9 @@ class Plugin(Layer):
         
         self.pix = Param("mask", (2,4,8,16,32,64))
         
-        self.layout(
-            (self.pchk,), title="normal FFT",
-            expand=1, show=1, vspacing=4
-        )
-        self.layout(
-            (self.pix,), title="inverse FFT",
-            expand=1, show=1, type=None, style='chkbox', tw=32
-        )
+        self.layout((self.pchk,), title="normal FFT")
+        self.layout((self.pix,), title="inverse FFT", type=None, style='chkbox', tw=32)
+        
         self.parent.define_key('C-f', self.newfft)
         self.parent.define_key('C-S-f', self.newifft)
     
@@ -58,7 +53,7 @@ class Plugin(Layer):
         return Layer.Destroy(self)
     
     def newfft(self, evt):
-        """New FFT of graph to output"""
+        """New FFT of graph to output."""
         frame = self.graph.frame
         if frame:
             self.message("FFT execution...")
@@ -76,7 +71,7 @@ class Plugin(Layer):
             self.message("\b done")
     
     def newifft(self, evt):
-        """New inverse FFT of output to graph"""
+        """New inverse FFT of output to graph."""
         frame = self.output.frame
         if frame:
             self.message("iFFT execution...")
@@ -85,7 +80,6 @@ class Plugin(Layer):
             if self.pix.check:
                 y, x = np.ogrid[-h/2:h/2, -w/2:w/2]
                 mask = np.hypot(y,x) > w/self.pix.value
-                ## src = cv2.bitwise_and(src, src, mask.astype(np.uint8)) !! unsupported <complex>
                 frame.roi[mask] = 0
                 frame.update_buffer()
                 frame.parent.draw()
@@ -104,7 +98,6 @@ if __name__ == "__main__":
     app = wx.App()
     frm = Frame(None)
     frm.load_plug(__file__, show=1, dock=4)
-    for path in glob.glob(r"C:/usr/home/workspace/images/*.bmp"):
-        frm.load_buffer(path)
+    frm.load_frame(glob.glob(r"C:/usr/home/workspace/images/*.bmp"))
     frm.Show()
     app.MainLoop()

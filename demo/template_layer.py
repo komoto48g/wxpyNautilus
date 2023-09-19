@@ -19,8 +19,7 @@ class Plugin(Layer):
     menukey = "Plugins/&Templates/"
     
     def Init(self):
-        self.ksize = LParam("ksize", (1,99,2), 13,
-                            tip="kernel window size")
+        self.ksize = LParam("ksize", (1,99,2), 13) # "kernel window size"
         
         self.btn = Button(self, label="Run",
                           handler=lambda v: self.run(), icon='->')
