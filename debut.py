@@ -102,6 +102,11 @@ def init_buffer(self):
         self.anchor = self.mark
         self.Cut()
 
+    @self.define_key('C-x C-insert')
+    def copy_line():
+        text, lp = self.CurLine
+        Clipboard.write("{}:{}:\n{}".format(self.filename, self.cline+1, text))
+
 
 def init_editor(self):
     """Customize the keymaps of the Editor.
@@ -123,17 +128,17 @@ def init_editor(self):
             self.buffer.py_exec_region(shell.globals, shell.locals)
             self.post_message(f"Reloaded {self.buffer.name!r} successfully.")
 
+    @self.define_key('C-x 0', dir=None)
     @self.define_key('C-x up', dir=wx.UP)
     @self.define_key('C-x down', dir=wx.DOWN)
     @self.define_key('C-x left', dir=wx.LEFT)
     @self.define_key('C-x right', dir=wx.RIGHT)
     def split(dir):
-        j = self.all_buffers.index(self.CurrentPage)
-        self.Split(j, dir)
-
-    @self.define_key('C-x 0')
-    def unsplit(v):
-        self.move_tab(self.CurrentPage, self.all_tabs[0])
+        if dir:
+            j = self.all_buffers.index(self.CurrentPage)
+            self.Split(j, dir)
+        else:
+            self.move_tab(self.CurrentPage, self.all_tabs[0]) # unsplit
 
 
 def init_shell(self):
@@ -169,7 +174,7 @@ def init_shell(self):
             self.post_message(f"\b failed: {e!r}")
         else:
             if self.parent.load(obj):
-                self.post_message(f"\b {obj!r}")
+                self.post_message(f"\b {text!r}")
             else:
                 self.post_message(f"\b {text!r} was nowhere to be found.")
 
