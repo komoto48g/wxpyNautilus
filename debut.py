@@ -396,10 +396,6 @@ def main(self):
     if not hasattr(self, "Config"):
         self.Config = EditorBook(self, name="Config")
         self.Config.load_file(__file__)
-        try:
-            self.Config.default_buffer._load_file(self.SESSION_FILE)
-        except FileNotFoundError:
-            self.Config.default_buffer._save_file(self.SESSION_FILE)
         self.ghost.AddPage(self.Config, 'Config', bitmap=Icon('proc'))
 
     self.set_hookable(self.Config) # Bind pointer to enable trace.
