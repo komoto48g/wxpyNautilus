@@ -37,7 +37,6 @@ def init_mainframe(self):
     load_plug("plugins/ffmpeg_viewer")
     load_plug("plugins/lineprofile")
     load_plug("plugins/viewframe")
-    load_plug("plugins/viewfft")
 
     ## --------------------------------
     ## Global keymap of the main Frame 
