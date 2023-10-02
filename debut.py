@@ -432,14 +432,14 @@ def main(self):
     self.Bookshelf.watch(self.ghost)
     self.Bookshelf.SetDropTarget(MyDataLoader(self.Scratch))
 
-    @self.Bind(wx.EVT_CONTEXT_MENU)
     def copy_message(v):
-        if v.EventObject is self.statusbar:
+        if v.EventObject is self.message: #<mwx.StatusBar>
             mwx.Menu.Popup(self, [
                 (wx.ID_COPY, "&Copy message", Icon('copy'),
-                    lambda v: Clipboard.write(self.statusbar.read())),
+                    lambda v: Clipboard.write(self.message.read())),
             ])
         v.Skip()
+    self.Bind(wx.EVT_CONTEXT_MENU, copy_message)
 
 
 quote_unqoute = """
@@ -473,4 +473,5 @@ if __name__ == "__main__":
         }
         ## Dive into objects to inspect.
         dive(frame)
+        frame.handler.debug = 0
     app.MainLoop()
