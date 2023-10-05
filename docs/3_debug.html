@@ -2,20 +2,20 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>3. Debugger in the Shell &#8212; wxpyNautilus  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=532c1bf3" />
     
-    <script src="_static/jquery.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/jquery.js?v=5d32c60e"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -52,7 +52,7 @@
           <div class="body" role="main">
             
   <section id="debugger-in-the-shell">
-<h1><span class="section-number">3. </span>Debugger in the Shell<a class="headerlink" href="#debugger-in-the-shell" title="Permalink to this heading"></a></h1>
+<h1><span class="section-number">3. </span>Debugger in the Shell<a class="headerlink" href="#debugger-in-the-shell" title="Link to this heading"></a></h1>
 <p>Nautilus debugger is based on <code class="docutils literal notranslate"><span class="pre">pdb</span></code>.
 In addition, some shortcut keys can be used to step-in, out, and over the stack frames.
 There are three ways to enter debug mode.</p>
@@ -75,7 +75,7 @@ There are three ways to enter debug mode.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="o">-</span><span class="n">g</span>     <span class="p">:</span> <span class="n">quit</span>
 <span class="n">C</span><span class="o">-</span><span class="n">q</span>     <span class="p">:</span> <span class="n">quit</span>
 <span class="n">C</span><span class="o">-</span><span class="n">n</span>     <span class="p">:</span> <span class="nb">next</span>   <span class="p">(</span><span class="n">step</span><span class="o">-</span><span class="n">over</span><span class="p">)</span>
-<span class="n">C</span><span class="o">-</span><span class="n">s</span>     <span class="p">:</span> <span class="n">step</span>   <span class="p">(</span><span class="n">setep</span><span class="o">-</span><span class="ow">in</span><span class="p">)</span>
+<span class="n">C</span><span class="o">-</span><span class="n">s</span>     <span class="p">:</span> <span class="n">step</span>   <span class="p">(</span><span class="n">step</span><span class="o">-</span><span class="ow">in</span><span class="p">)</span>
 <span class="n">C</span><span class="o">-</span><span class="n">r</span>     <span class="p">:</span> <span class="k">return</span> <span class="p">(</span><span class="n">step</span><span class="o">-</span><span class="n">out</span><span class="p">)</span>
 <span class="n">C</span><span class="o">-</span><span class="n">b</span>     <span class="p">:</span> <span class="nb">set</span> <span class="n">a</span> <span class="nb">breakpoint</span> <span class="n">at</span> <span class="n">the</span> <span class="n">current</span> <span class="n">line</span><span class="o">.</span>
 <span class="n">C</span><span class="o">-@</span>     <span class="p">:</span> <span class="n">jump</span> <span class="n">to</span> <span class="n">the</span> <span class="n">first</span><span class="o">-</span><span class="n">lineno</span> <span class="n">of</span> <span class="n">the</span> <span class="n">code</span><span class="o">.</span>
@@ -83,7 +83,7 @@ There are three ways to enter debug mode.</p>
 </div>
 </div>
 <section id="command-hook">
-<h2><span class="section-number">3.1. </span>command-hook<a class="headerlink" href="#command-hook" title="Permalink to this heading"></a></h2>
+<h2><span class="section-number">3.1. </span>command-hook<a class="headerlink" href="#command-hook" title="Link to this heading"></a></h2>
 <p>Typing function you want to debug followed by <code class="docutils literal notranslate"><span class="pre">&#64;debug</span></code> enters debug mode in the shell as follows:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="nd">@debug</span>
 </pre></div>
@@ -94,7 +94,7 @@ The pointer (=&gt;) indicates the position of the current frame.</p>
 <img alt="_images/3-1_debug-command-hook.png" src="_images/3-1_debug-command-hook.png" />
 </section>
 <section id="trace-hook">
-<h2><span class="section-number">3.2. </span>trace-hook<a class="headerlink" href="#trace-hook" title="Permalink to this heading"></a></h2>
+<h2><span class="section-number">3.2. </span>trace-hook<a class="headerlink" href="#trace-hook" title="Link to this heading"></a></h2>
 <p>Press [C-S-space] in <strong>Log</strong> window to set a trace pointer (=&gt;) where you want to break at.
 When the frame reached the point, the shell goes to the debug mode.</p>
 <img alt="_images/3-1_debug-trace-hook.png" src="_images/3-1_debug-trace-hook.png" />
@@ -117,7 +117,7 @@ To quit tracing, press [C-g].</p>
 </div>
 </section>
 <section id="event-hook">
-<h2><span class="section-number">3.3. </span>event-hook<a class="headerlink" href="#event-hook" title="Permalink to this heading"></a></h2>
+<h2><span class="section-number">3.3. </span>event-hook<a class="headerlink" href="#event-hook" title="Link to this heading"></a></h2>
 <p>This mode is for wx.Event handlers that need to be called with proper event arguments.</p>
 <p>Move to Inspector window.
 Right-click the target widget and select [Watch the event] menu.</p>
@@ -258,8 +258,8 @@ Tick the checkboxes of the events you want to hook, where blue string indicates 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Kazuya O&#39;moto.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2022, Kazuya O&#39;moto.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>
