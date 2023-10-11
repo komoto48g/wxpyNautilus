@@ -309,6 +309,22 @@ def stylus(self):
         except AttributeError:
             pass
 
+    @self.define_key('M-left', p=-1)
+    @self.define_key('M-right', p=+1)
+    def other_window(p=1):
+        "Move focus to other window"
+        pages = [x for x in self.get_all_pages() if x.IsShownOnScreen()]
+        wnd = wx.Window.FindFocus()
+        while wnd:
+            if wnd in pages:
+                j = (pages.index(wnd) + p) % len(pages)
+                obj = pages[j]
+                if isinstance(obj, aui.AuiNotebook):
+                    obj = obj.CurrentPage
+                obj.SetFocus()
+                break
+            wnd = wnd.Parent
+
     @self.define_key('C-d', clear=0)
     @self.define_key('C-S-d', clear=1)
     def duplicate_line(clear=True):
