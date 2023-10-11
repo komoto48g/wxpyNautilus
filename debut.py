@@ -216,9 +216,8 @@ def init_shell(self):
 
     @self.define_key('C-f4')
     def HL():
-        obj = self.cmdline
         try:
-            highlight(self.eval(obj))
+            highlight(self.eval(self.cmdline))
         except Exception:
             pass
 
@@ -257,7 +256,7 @@ class py_text_mode:
 
 class py_interactive_mode:
     STYLE = {
-        stc.STC_STYLE_DEFAULT     : "fore:#7f7f7f,back:#202020,size:9,face:MS Gothic",
+        stc.STC_STYLE_DEFAULT     : "fore:#7f7f7f,back:#102030,size:9,face:MS Gothic",
         stc.STC_STYLE_LINENUMBER  : "fore:#000000,back:#f0f0f0,size:9",
         stc.STC_STYLE_BRACELIGHT  : "fore:#ffffff,back:#202020,bold",
         stc.STC_STYLE_BRACEBAD    : "fore:#ffffff,back:#ff0000,bold",
@@ -364,11 +363,11 @@ def stylus(self):
 ## --------------------------------
 
 class MyDataLoader(wx.DropTarget):
-    """DnD target loader.
+    """DnD target <EditorBook> loader.
     
     Supports URL text and file data formats.
     """
-    def __init__(self, target: EditorBook):
+    def __init__(self, target):
         wx.DropTarget.__init__(self)
         
         self.target = target
