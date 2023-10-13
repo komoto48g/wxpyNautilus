@@ -84,7 +84,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
     
     def reset(self, clear=True):
         """Build tree control.
-        All items will be rebuilt after clear if specified.
+        All items will be reset after clear if specified.
         """
         try:
             self.Freeze()
@@ -135,21 +135,26 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
     ## Actions for bookshelf interfaces
     ## --------------------------------
     
+    def reset_tree(self, editor):
+        """Reset a branch for EditorBook/Buffer."""
+        self[editor.Name] = [
+            [buf.name, ItemData(self, buf)] for buf in editor.all_buffers
+        ]
+    
     def watch(self, target):
         self.unwatch()
         self.target = target
         if self.target:
             for editor in self.target.get_pages(EditorBook):
                 editor.handler.append(self.context)
-                self[editor.Name] = [[buf.name, ItemData(self, buf)]
-                                        for buf in editor.all_buffers]
+                self.reset_tree(editor)
             self.reset()
     
     def unwatch(self):
         if self.target:
             for editor in self.target.get_pages(EditorBook):
                 editor.handler.remove(self.context)
-            self.clear()
+            self[:] = [] # clear tree
             self.reset()
         self.target = None
     
@@ -163,23 +168,15 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
     
     def on_buffer_selected(self, buf):
         data = self[f"{buf.parent.Name}/{buf.name}"]
-        if data:
-            self.SelectItem(data._itemId)
+        self.SelectItem(data._itemId)
     
     def on_buffer_caption(self, buf):
         data = self[f"{buf.parent.Name}/{buf.name}"]
-        if data:
-            self.SetItemText(data._itemId, buf.caption)
+        self.SetItemText(data._itemId, buf.caption)
     
     def on_buffer_filename(self, buf):
-        for key, data in self.items(): # <-- old key
-            if data and data.buffer is buf:
-                self.SetItemText(data._itemId, buf.caption)
-                for item in self[buf.parent.Name]:
-                    if item[1] is data:
-                        item[0] = buf.name # --> new key
-                        break
-                break
+        self.reset_tree(buf.parent)
+        self.reset()
     
     def OnSelChanged(self, evt):
         if self and self.HasFocus():
