@@ -154,7 +154,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         if self.target:
             for editor in self.target.get_pages(EditorBook):
                 editor.handler.remove(self.context)
-            self.clear()
+            self[:] = [] # clear tree
             self.reset()
         self.target = None
     
