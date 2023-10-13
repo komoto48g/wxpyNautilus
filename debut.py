@@ -111,6 +111,8 @@ def init_buffer(self):
 def init_editor(self):
     """Customize the keymaps of the Editor.
     """
+    self.TabCtrlHeight = 0
+
     self.define_key('C-x k',   self.kill_all_buffers)
     self.define_key('C-x C-k', self.kill_buffer)
     self.define_key('C-x C-n', self.new_buffer)
@@ -349,13 +351,15 @@ def stylus(self):
     for page in self.get_all_pages(Nautilus):
         init_shell(page)
 
+    ## Define *new* event handlers.
+    for editor in self.get_all_pages(EditorBook):
+        editor.SetDropTarget(MyDataLoader(editor))
+        editor.handler.define('buffer_new', init_buffer)
+    self.handler.define('shell_new', init_shell)
+
     ## Stylize all child windows.
     self.Config.set_attributes(Style=py_text_mode.STYLE)
     self.Scratch.set_attributes(Style=py_interactive_mode.STYLE)
-
-    ## Don't kill config buffers.
-    self.Config.undefine_key('C-x k')
-    self.Config.undefine_key('C-x C-k')
 
 
 ## --------------------------------
@@ -417,7 +421,7 @@ def main(self):
 
     @self.Config.define_key('M-j')
     def eval_buffer():
-        """Evaluate this <conf> code and call new stylus"""
+        """Evaluate this <conf> code."""
         locals = {'self': self}
         self.Config.buffer.py_exec_region(
             locals, locals, self.Config.buffer.filename
@@ -428,22 +432,21 @@ def main(self):
     ## Stylize ShellFrame window
     stylus(self)
 
-    ## Define *new* event handlers.
-    for editor in self.get_all_pages(EditorBook):
-        editor.SetDropTarget(MyDataLoader(editor))
-        editor.handler.define('buffer_new', init_buffer)
-    self.handler.define('shell_new', init_shell)
-
-    ## Bookshelf treeview extension
+    ## Tree view
     if not hasattr(self, "Bookshelf"):
         self.Bookshelf = bookshelf.EditorTreeCtrl(self,
                             style=wx.TR_DEFAULT_STYLE|wx.TR_HIDE_ROOT,
                             name="Bookshelf")
-        self.ghost.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
+        ## self.ghost.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
+        self._mgr.AddPane(self.Bookshelf,
+                          aui.AuiPaneInfo().Name("bookshelf")
+                             .Caption("Bookshelf").Left().Show(1))
 
-    ## Note: Bookshelf context must be coded in the editor/shell
-    ##       after the *new* event handlers is defined above,
-    ##       and also after this module is reloaded.
+    @self.define_key('C-f11')
+    def toggle_bookshelf():
+        self.toggle_window(self.Bookshelf)
+
+    ## Note: Bookshelf context must be coded after stylus
     self.Bookshelf.watch(self.ghost)
     self.Bookshelf.SetDropTarget(MyDataLoader(self.Scratch))
 
@@ -478,7 +481,7 @@ if __name__ == "__main__":
     frame = mwx.deb(loop=0, debrc=session,
                     introText=__doc__ + quote_unqoute)
     main(frame)
-    frame.undefine_key('f12') # Don't close.
+    frame.define_key('f12', None) # Don't close.
     if 1:
         ## frame.post_message("Startup process has completed successfully.")
         ## If you want debugger skip a specific module,
