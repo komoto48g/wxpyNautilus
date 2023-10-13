@@ -437,10 +437,10 @@ def main(self):
         self.Bookshelf = bookshelf.EditorTreeCtrl(self,
                             style=wx.TR_DEFAULT_STYLE|wx.TR_HIDE_ROOT,
                             name="Bookshelf")
-        ## self.ghost.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
-        self._mgr.AddPane(self.Bookshelf,
-                          aui.AuiPaneInfo().Name("bookshelf")
-                             .Caption("Bookshelf").Left().Show(1))
+        self.ghost.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
+        ## self._mgr.AddPane(self.Bookshelf,
+        ##                   aui.AuiPaneInfo().Name("bookshelf")
+        ##                      .Caption("Bookshelf").Left().Show(1))
 
     @self.define_key('C-f11')
     def toggle_bookshelf():
