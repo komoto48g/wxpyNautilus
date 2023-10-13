@@ -361,10 +361,6 @@ def stylus(self):
     self.Config.set_attributes(Style=py_text_mode.STYLE)
     self.Scratch.set_attributes(Style=py_interactive_mode.STYLE)
 
-    ## Don't kill config buffers.
-    self.Config.undefine_key('C-x k')
-    self.Config.undefine_key('C-x C-k')
-
 
 ## --------------------------------
 ## Main program
@@ -485,7 +481,7 @@ if __name__ == "__main__":
     frame = mwx.deb(loop=0, debrc=session,
                     introText=__doc__ + quote_unqoute)
     main(frame)
-    frame.undefine_key('f12') # Don't close.
+    frame.define_key('f12', None) # Don't close.
     if 1:
         ## frame.post_message("Startup process has completed successfully.")
         ## If you want debugger skip a specific module,
