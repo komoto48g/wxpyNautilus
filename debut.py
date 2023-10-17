@@ -122,6 +122,13 @@ def init_editor(self):
     self.define_key('C-x S-s', self.save_buffer_as)
     self.define_key('C-x C-f', self.open_buffer) # cf. find-file
 
+    @self.define_key('f4')
+    def break_point():
+        shell = self.parent.current_shell
+        self.buffer.red_pointer = -1
+        self.buffer.pointer = self.buffer.cline # set point to break
+        self.buffer.py_exec_region(shell.globals, shell.locals)
+
     @self.define_key('f5')
     def reload_buffer():
         self.load_buffer()
@@ -216,7 +223,7 @@ def init_shell(self):
     def close_shell():
         self.parent.delete_shell(self)
 
-    @self.define_key('C-f4')
+    @self.define_key('C-f2')
     def HL():
         try:
             highlight(self.eval(self.cmdline))
