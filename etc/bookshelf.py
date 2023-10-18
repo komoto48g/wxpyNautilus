@@ -63,7 +63,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
             data = self.GetItemData(self.Selection)
             if data:
                 buf = data.buffer
-                buf.parent.delete_buffer(buf) # -> focus moves
+                buf.parent.kill_buffer(buf) # -> focus moves
                 self.SetFocus()
         
         @self.handler.bind('*button* pressed')
@@ -106,8 +106,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
         item, cookie = self.GetFirstChild(root)
         while item:
             caption = self.GetItemText(item)
-            caption = re.sub(r"^\W+\s+(.*)", r"\1", caption)
-            if key == caption:
+            if key == re.sub(r"^\W+\s+(.*)", r"\1", caption):
                 return item
             item, cookie = self.GetNextChild(root, cookie)
     
