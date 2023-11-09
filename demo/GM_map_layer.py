@@ -1,5 +1,4 @@
 #! python3
-# -*- coding: utf-8 -*-
 """Gumowski-Mira Map - Mythic Bird
 
 http://www.atomosyd.net/spip.php?article98

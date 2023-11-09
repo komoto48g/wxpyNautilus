@@ -1,5 +1,4 @@
 #! python3
-# -*- coding: utf-8 -*-
 """siteinit file
 
 Initialize mainframe settings.

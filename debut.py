@@ -1,5 +1,4 @@
 #! python3
-# -*- coding: utf-8 -*-
 """deb utilus ver 1.0rc
 """
 __version__ = "1.0rc"
