@@ -487,7 +487,7 @@ if __name__ == "__main__":
     frame = mwx.deb(loop=0, debrc=session,
                     introText=__doc__ + quote_unqoute)
     main(frame)
-    frame.define_key('f12', None) # Don't close.
+    frame.undefine_key('f12') # Don't close.
     if 1:
         ## frame.post_message("Startup process has completed successfully.")
         ## If you want debugger skip a specific module,
@@ -498,4 +498,6 @@ if __name__ == "__main__":
         ## Dive into objects to inspect.
         dive(frame)
         frame.handler.debug = 0
+        frame.shell.handler.debug = 0
+        frame.debugger.handler.debug = 0
     app.MainLoop()
