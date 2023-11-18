@@ -4,6 +4,8 @@
 __version__ = "1.0rc"
 __author__ = "Kazuya O'moto <komoto@jeol.co.jp>"
 
+import contextlib
+import warnings
 import getopt
 import sys
 import os
@@ -36,6 +38,22 @@ try:
     FillingTree.filter = atomic
 except AttributeError:
     pass
+
+
+@contextlib.contextmanager
+def ignore(*category):
+    """Ignore warnings.
+    
+    It can be used as decorators as well as in with statements.
+    cf. contextlib.suppress
+    
+    Note:
+        ignore() does not ignore warnings.
+        ignore(Warning) ignores all warnings.
+    """
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category)
+        yield
 
 
 ## --------------------------------
@@ -429,6 +447,7 @@ def main(self):
     self.set_hookable(self.Config) # Bind pointer to enable trace.
 
     @self.Config.define_key('M-j')
+    @ignore(UserWarning) # ignore warning for duplicate define_key in ...
     def eval_buffer():
         """Evaluate this <conf> code."""
         locals = {'self': self}
