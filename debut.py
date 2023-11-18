@@ -360,8 +360,11 @@ def stylus(self):
     ## Define *new* event handlers.
     for editor in self.get_all_pages(EditorBook):
         editor.SetDropTarget(MyDataLoader(editor))
-        editor.handler.define('buffer_new', init_buffer)
-    self.handler.define('shell_new', init_shell)
+        editor.handler.unbind('buffer_new')
+        editor.handler.bind('buffer_new', init_buffer)
+
+    self.handler.unbind('shell_new')
+    self.handler.bind('shell_new', init_shell)
 
     ## Stylize all child windows.
     self.Config.set_attributes(Style=py_text_mode.STYLE)
