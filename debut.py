@@ -179,6 +179,16 @@ def init_shell(self):
         self.insertLineBreak()
         self.cpos = self.anchor = p
 
+    @self.define_key('M-enter')
+    @self.define_key('M-S-enter', clear=0) # insert command
+    def duplicate_command(clear=True):
+        cmd = self.MultilineCommand.rstrip('\r\n')
+        if cmd:
+            self.mark = self.cpos
+            if clear:
+                self.clearCommand() # => move to the prompt end
+            self.write(cmd, -1)
+
     @self.define_key('f1')
     def help(v):
         text = self.SelectedText or self.expr_at_caret
@@ -350,8 +360,8 @@ def stylus(self):
                 break
             wnd = wnd.Parent
 
-    @self.define_key('C-d', clear=0)
-    @self.define_key('C-S-d', clear=1)
+    @self.define_key('C-d')
+    @self.define_key('C-S-d', clear=0) # insert line
     def duplicate_line(clear=True):
         """Duplicate an expression at the caret-line."""
         buf = wx.Window.FindFocus()
