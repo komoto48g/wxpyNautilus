@@ -124,8 +124,8 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
                 data = rest[0]
                 data._itemId = item
                 self.SetItemData(item, data)
-                if data.buffer:
-                    self.SetItemText(item, data.buffer.caption)
+                if (buf := data.buffer):
+                    self.SetItemText(item, buf.caption_prefix + buf.name)
             except Exception:
                 pass
         for branch in branches:
@@ -172,7 +172,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
     
     def on_buffer_caption(self, buf):
         data = self[f"{buf.parent.Name}/{buf.name}"]
-        self.SetItemText(data._itemId, buf.caption)
+        self.SetItemText(data._itemId, buf.caption_prefix + buf.name)
     
     def on_buffer_filename(self, buf):
         self.reset_tree(buf.parent)
