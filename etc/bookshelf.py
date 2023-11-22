@@ -65,7 +65,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
             if data:
                 buf = data.buffer
                 buf.parent.kill_buffer(buf) # -> focus moves
-                self.SetFocus()
+                wx.CallAfter(self.SetFocus)
         
         @self.handler.bind('*button* pressed')
         @self.handler.bind('*button* released')
