@@ -13,25 +13,7 @@ from mwx.controls import Icon, Icon2, Clipboard
 from mwx.graphman import Layer
 
 
-if wx.VERSION < (4,1,0):
-    from wx.lib.mixins.listctrl import CheckListCtrlMixin
-    
-    class CheckListCtrl(wx.ListCtrl, CheckListCtrlMixin):
-        def __init__(self, *args, **kwargs):
-            wx.ListCtrl.__init__(self, *args, **kwargs)
-            CheckListCtrlMixin.__init__(self)
-            
-            self.IsItemChecked = self.IsChecked # for wx 4.1 compatibility
-
-else:
-    class CheckListCtrl(wx.ListCtrl):
-        def __init__(self, *args, **kwargs):
-            wx.ListCtrl.__init__(self, *args, **kwargs)
-            
-            self.EnableCheckBoxes()
-
-
-class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
+class CheckList(wx.ListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
     """CheckList of Graph buffers.
     
     Note:
@@ -59,10 +41,12 @@ class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
             yield [self.GetItemText(j, k) for k in cols]
     
     def __init__(self, parent, target, **kwargs):
-        CheckListCtrl.__init__(self, parent, size=(400,130),
-                               style=wx.LC_REPORT|wx.LC_HRULES, **kwargs)
+        wx.ListCtrl.__init__(self, parent, size=(400,130),
+                             style=wx.LC_REPORT|wx.LC_HRULES, **kwargs)
         ListCtrlAutoWidthMixin.__init__(self)
         CtrlInterface.__init__(self)
+        
+        self.EnableCheckBoxes()
         
         self.parent = parent
         self.Target = target
@@ -141,8 +125,10 @@ class CheckList(CheckListCtrl, ListCtrlAutoWidthMixin, CtrlInterface):
                   lambda v: Menu.Popup(self, self.menu))
     
     def Destroy(self):
-        self.Target.handler.remove(self.context)
-        return CheckListCtrl.Destroy(self)
+        try:
+            self.Target.handler.remove(self.context)
+        finally:
+            return wx.ListCtrl.Destroy(self)
     
     def UpdateInfo(self, frame):
         ls = ("{}".format(frame.index),
