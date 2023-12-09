@@ -45,7 +45,7 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
             },
         }
         
-        self.Bind(wx.EVT_TREE_ITEM_GETTOOLTIP, self.OnItemTooltip)
+        ## self.Bind(wx.EVT_TREE_ITEM_GETTOOLTIP, self.OnItemTooltip)
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
         
@@ -186,11 +186,11 @@ class EditorTreeCtrl(wx.TreeCtrl, CtrlInterface, TreeList):
             self.SetFocus()
         evt.Skip()
     
-    def OnItemTooltip(self, evt):
-        data = self.GetItemData(evt.Item)
-        if data and data.buffer:
-            evt.SetToolTip(data.buffer.filename)
-        evt.Skip()
+    ## def OnItemTooltip(self, evt):
+    ##     data = self.GetItemData(evt.Item)
+    ##     if data and data.buffer:
+    ##         evt.SetToolTip(data.buffer.filename)
+    ##     evt.Skip()
 
 
 class Plugin(Layer):
