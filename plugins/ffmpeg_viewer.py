@@ -200,7 +200,7 @@ class Plugin(Layer):
         crop = ''
         frame = self.graph.frame
         if frame:
-            nx, ny = frame.xytopixel(frame.region)
+            nx, ny = frame.xytopixel(*frame.region)
             if nx.size:
                 xo, yo = nx[0], ny[1]
                 xp, yp = nx[1], ny[0]
