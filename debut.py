@@ -480,11 +480,8 @@ def main(self):
         ##                   aui.AuiPaneInfo().Name("bookshelf")
         ##                      .Caption("Bookshelf").Left().Show(1))
 
-    @self.define_key('C-f11')
-    def toggle_bookshelf():
-        self.toggle_window(self.Bookshelf)
-
-    ## Note: Bookshelf context must be coded after stylus
+    ## Note: Bookshelf context must be coded after stylus,
+    ##       since [buffer_new] transaction is overwritten.
     self.Bookshelf.watch(self.ghost)
     self.Bookshelf.SetDropTarget(MyDataLoader(self.Scratch))
 
