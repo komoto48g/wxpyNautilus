@@ -377,14 +377,11 @@ def stylus(self):
         for buf in page.all_buffers:
             init_buffer(buf)
 
+    self.handler.unbind('buffer_new')
+    self.handler.bind('buffer_new', init_buffer)
+
     for page in self.get_all_pages(Nautilus):
         init_shell(page)
-
-    ## Define *new* event handlers.
-    for editor in self.get_all_pages(EditorBook):
-        editor.SetDropTarget(MyDataLoader(editor))
-        editor.handler.unbind('buffer_new')
-        editor.handler.bind('buffer_new', init_buffer)
 
     self.handler.unbind('shell_new')
     self.handler.bind('shell_new', init_shell)
@@ -392,7 +389,6 @@ def stylus(self):
     ## Stylize all child windows.
     self.Config.set_attributes(Style=py_text_mode.STYLE)
     self.Scratch.set_attributes(Style=py_interactive_mode.STYLE)
-
 
 ## --------------------------------
 ## Main program
@@ -465,9 +461,12 @@ def main(self):
     ## Stylize ShellFrame window
     stylus(self)
 
+    for editor in self.get_all_pages(EditorBook):
+        editor.SetDropTarget(MyDataLoader(editor))
+
     ## Note: Bookshelf context must be coded after stylus,
     ##       as [* buffer_new] transaction is overwritten.
-    self.Bookshelf.watch(self.ghost)
+    ## self.Bookshelf.watch(self.ghost)
     self.Bookshelf.SetDropTarget(MyDataLoader(self.Scratch))
 
     def copy_message(v):
