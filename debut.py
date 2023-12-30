@@ -394,45 +394,6 @@ def stylus(self):
 ## Main program
 ## --------------------------------
 
-class MyDataLoader(wx.DropTarget):
-    """DnD target <EditorBook> loader.
-    
-    Supports URL text and file data formats.
-    """
-    def __init__(self, target):
-        wx.DropTarget.__init__(self)
-        
-        self.target = target
-        self.textdo = wx.TextDataObject()
-        self.filedo = wx.FileDataObject()
-        self.DataObject = wx.DataObjectComposite()
-        self.DataObject.Add(self.textdo)
-        self.DataObject.Add(self.filedo, True)
-    
-    def OnData(self, x, y, result):
-        self.GetData()
-        if self.textdo.TextLength > 1:
-            f = self.textdo.Text.strip()
-            res = self.target.load_file(f)
-            if res:
-                self.target.buffer.SetFocus()
-                result = wx.DragCopy
-            elif res is None:
-                self.target.post_message("Load canceled.")
-                result = wx.DragCancel
-            else:
-                self.target.post_message(f"Loading {f!r} failed.")
-                result = wx.DragNone
-            self.textdo.Text = ''
-        else:
-            for f in self.filedo.Filenames:
-                if self.target.load_file(f):
-                    self.target.buffer.SetFocus()
-                    self.target.post_message(f"Loaded {f!r} successfully.")
-            self.filedo.SetData(wx.DF_FILENAME, None)
-        return result
-
-
 def main(self):
     """Initialize Nautilus configuration.
     
@@ -460,14 +421,6 @@ def main(self):
 
     ## Stylize ShellFrame window
     stylus(self)
-
-    for editor in self.get_all_pages(EditorBook):
-        editor.SetDropTarget(MyDataLoader(editor))
-
-    ## Note: Bookshelf context must be coded after stylus,
-    ##       as [* buffer_new] transaction is overwritten.
-    ## self.Bookshelf.watch(self.ghost)
-    self.Bookshelf.SetDropTarget(MyDataLoader(self.Scratch))
 
     def copy_message(v):
         if v.EventObject is self.message: #<mwx.StatusBar>
