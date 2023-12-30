@@ -465,21 +465,6 @@ def main(self):
     ## Stylize ShellFrame window
     stylus(self)
 
-    if not hasattr(self, "Bookshelf"):
-        try:
-            from etc import bookshelf
-        except ImportError:
-            from .etc import bookshelf
-
-        self.Bookshelf = bookshelf.EditorTreeCtrl(self,
-                            style=wx.TR_DEFAULT_STYLE|wx.TR_HIDE_ROOT,
-                            name="Bookshelf")
-        self.ghost.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
-        ## self._mgr.AddPane(self.Bookshelf,
-        ##                   aui.AuiPaneInfo().Name("bookshelf")
-        ##                      .Caption("Bookshelf").Right().Show(1))
-        ## self._mgr.Update()
-
     ## Note: Bookshelf context must be coded after stylus,
     ##       as [* buffer_new] transaction is overwritten.
     self.Bookshelf.watch(self.ghost)
