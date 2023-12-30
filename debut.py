@@ -18,11 +18,6 @@ from mwx.controls import Icon, Clipboard
 from mwx.nutshell import Nautilus, EditorBook
 from mwx.py.filling import FillingTree
 
-try:
-    from etc import bookshelf
-except ImportError:
-    from .etc import bookshelf
-
 
 ## This monkey patch forces the filling-tree to display only atoms.
 try:
@@ -382,14 +377,11 @@ def stylus(self):
         for buf in page.all_buffers:
             init_buffer(buf)
 
+    self.handler.unbind('buffer_new')
+    self.handler.bind('buffer_new', init_buffer)
+
     for page in self.get_all_pages(Nautilus):
         init_shell(page)
-
-    ## Define *new* event handlers.
-    for editor in self.get_all_pages(EditorBook):
-        editor.SetDropTarget(MyDataLoader(editor))
-        editor.handler.unbind('buffer_new')
-        editor.handler.bind('buffer_new', init_buffer)
 
     self.handler.unbind('shell_new')
     self.handler.bind('shell_new', init_shell)
@@ -398,49 +390,9 @@ def stylus(self):
     self.Config.set_attributes(Style=py_text_mode.STYLE)
     self.Scratch.set_attributes(Style=py_interactive_mode.STYLE)
 
-
 ## --------------------------------
 ## Main program
 ## --------------------------------
-
-class MyDataLoader(wx.DropTarget):
-    """DnD target <EditorBook> loader.
-    
-    Supports URL text and file data formats.
-    """
-    def __init__(self, target):
-        wx.DropTarget.__init__(self)
-        
-        self.target = target
-        self.textdo = wx.TextDataObject()
-        self.filedo = wx.FileDataObject()
-        self.DataObject = wx.DataObjectComposite()
-        self.DataObject.Add(self.textdo)
-        self.DataObject.Add(self.filedo, True)
-    
-    def OnData(self, x, y, result):
-        self.GetData()
-        if self.textdo.TextLength > 1:
-            f = self.textdo.Text.strip()
-            res = self.target.load_file(f)
-            if res:
-                self.target.buffer.SetFocus()
-                result = wx.DragCopy
-            elif res is None:
-                self.target.post_message("Load canceled.")
-                result = wx.DragCancel
-            else:
-                self.target.post_message(f"Loading {f!r} failed.")
-                result = wx.DragNone
-            self.textdo.Text = ''
-        else:
-            for f in self.filedo.Filenames:
-                if self.target.load_file(f):
-                    self.target.buffer.SetFocus()
-                    self.target.post_message(f"Loaded {f!r} successfully.")
-            self.filedo.SetData(wx.DF_FILENAME, None)
-        return result
-
 
 def main(self):
     """Initialize Nautilus configuration.
@@ -469,24 +421,6 @@ def main(self):
 
     ## Stylize ShellFrame window
     stylus(self)
-
-    ## Tree view
-    if not hasattr(self, "Bookshelf"):
-        self.Bookshelf = bookshelf.EditorTreeCtrl(self,
-                            style=wx.TR_DEFAULT_STYLE|wx.TR_HIDE_ROOT,
-                            name="Bookshelf")
-        self.ghost.AddPage(self.Bookshelf, "Bookshelf", bitmap=Icon('book'))
-        ## self._mgr.AddPane(self.Bookshelf,
-        ##                   aui.AuiPaneInfo().Name("bookshelf")
-        ##                      .Caption("Bookshelf").Left().Show(1))
-
-    @self.define_key('C-f11')
-    def toggle_bookshelf():
-        self.toggle_window(self.Bookshelf)
-
-    ## Note: Bookshelf context must be coded after stylus
-    self.Bookshelf.watch(self.ghost)
-    self.Bookshelf.SetDropTarget(MyDataLoader(self.Scratch))
 
     def copy_message(v):
         if v.EventObject is self.message: #<mwx.StatusBar>
