@@ -123,8 +123,6 @@ def init_buffer(self):
 def init_editor(self):
     """Customize the keymaps of the Editor.
     """
-    self.TabCtrlHeight = 0
-
     self.define_key('C-x k',   self.kill_all_buffers)
     self.define_key('C-x C-k', self.kill_buffer)
     self.define_key('C-x C-n', self.new_buffer)
@@ -421,6 +419,10 @@ def main(self):
 
     ## Stylize ShellFrame window
     stylus(self)
+
+    ## Note: Bookshelf context must be coded after stylus,
+    ##       as the configuration of the ghost may change.
+    self.Bookshelf.watch(self.ghost)
 
     def copy_message(v):
         if v.EventObject is self.message: #<mwx.StatusBar>
