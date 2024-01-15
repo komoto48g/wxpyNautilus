@@ -455,8 +455,10 @@ if __name__ == "__main__":
     frame = mwx.deb(loop=0, debrc=session,
                     introText=__doc__ + quote_unqoute)
     main(frame)
+    ## Test for warnings
+    with ignore(UserWarning):
+        frame.define_key("f12", None) # Don't close
     if 1:
-        ## frame.post_message("Startup process has completed successfully.")
         ## If you want debugger skip a specific module,
         ## add the module:str to debugger.skip:set.
         frame.debugger.skip -= {

@@ -2,7 +2,7 @@
 """Nautilus package
 """
 from mwx.framework import App
-from mwx.graphman import Layer
+from mwx.graphman import Layer, Thread
 from .wxNautilus import MainFrame as Frame
 
 
