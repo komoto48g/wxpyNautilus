@@ -1,4 +1,6 @@
 #! python3
+"""FFmpeg wrapper.
+"""
 from subprocess import Popen, PIPE
 import numpy as np
 import os

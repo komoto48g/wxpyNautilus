@@ -3,7 +3,7 @@
 """
 __version__ = "1.0rc"
 __author__ = "Kazuya O'moto <komoto@jeol.co.jp>"
-__copyright__ = "Copyright (c) 2018-2022"
+__copyright__ = "Copyright (c) 2018-2024"
 __license__ = """\
 This program is under MIT license
 see https://opensource.org/licenses/MIT

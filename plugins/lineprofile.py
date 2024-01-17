@@ -1,7 +1,5 @@
 #! python3
-"""Line profile
-
-Author: Kazuya O'moto <komoto@jeol.co.jp>
+"""Line profile.
 """
 from mwx.graphman import Layer
 from mwx.matplot2lg import LineProfile
