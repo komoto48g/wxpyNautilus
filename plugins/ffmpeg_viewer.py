@@ -142,7 +142,6 @@ class Plugin(Layer):
         evt.Skip()
     
     def OnMediaPause(self, evt):
-        self.get_offset(self.to)
         evt.Skip()
     
     def load_media(self, path=None):
@@ -252,11 +251,3 @@ class Plugin(Layer):
         export_video(self._path,
                      self.crop.Value or "{}:{}:0:0".format(*self.video_size),
                      self.ss.value, self.to.value, fout)
-
-
-if __name__ == "__main__":
-    app = wx.App()
-    frm = Frame(None)
-    frm.load_plug(__file__, show=1)
-    frm.Show()
-    app.MainLoop()

@@ -18,23 +18,10 @@ class Plugin(Layer):
         self.layout((self.plot,), expand=2, border=0)
         
         @self.handler.bind('page_shown')
-        def activate(*v):
+        def activate(v):
             self.plot.attach(*self.parent.graphic_windows)
             self.plot.linplot(self.parent.selected_view.frame)
         
         @self.handler.bind('page_closed')
-        def deactivate(*v):
+        def deactivate(v):
             self.plot.detach(*self.parent.graphic_windows)
-
-
-if __name__ == "__main__":
-    import glob
-    import wx
-    from mwx.graphman import Frame
-    
-    app = wx.App()
-    frm = Frame(None)
-    frm.load_plug(__file__, show=1)
-    frm.load_frame(glob.glob(r"C:/usr/home/workspace/images/*.bmp"))
-    frm.Show()
-    app.MainLoop()
