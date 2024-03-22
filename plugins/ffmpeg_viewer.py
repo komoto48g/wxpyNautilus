@@ -1,4 +1,6 @@
 #! python3
+"""FFmpeg wrapper.
+"""
 from subprocess import Popen, PIPE
 import numpy as np
 import os
@@ -28,8 +30,8 @@ def capture_video(path, ss=0):
                '-i', path,              #       but maybe not accurate.
                '-frames:v', '1',        # -frame one shot
                '-f', 'rawvideo',        # -format raw
-               '-pix_fmt', 'rgb24',     # -pixel rgb24, gray, etc.
-               'pipe:'                  # -pipe:stdout '-'
+               '-pix_fmt', 'rgb24',     # rgb24, gray, etc.
+               'pipe:'                  # pipe to stdout: '-'
                ]
     bufsize = 4096 # w * h * 3
     buf = b"" # bytearray()
@@ -140,7 +142,6 @@ class Plugin(Layer):
         evt.Skip()
     
     def OnMediaPause(self, evt):
-        self.get_offset(self.to)
         evt.Skip()
     
     def load_media(self, path=None):
@@ -154,12 +155,15 @@ class Plugin(Layer):
         self.info = read_info(path)
         if self.info:
             v = next(x for x in self.info['streams'] if x['codec_type'] == 'video')
-            ## self.video_fps = eval(v['r_frame_rate']) # Real base framerate
-            self.video_fps = eval(v['avg_frame_rate'])  # Average framerate
+            ## self.video_fps = eval(v['r_frame_rate']) # real base frame rate
+            self.video_fps = eval(v['avg_frame_rate'])  # averaged frame rate
             self.video_dur = eval(v['duration'])        # duration [s]
-            self.video_size = v['width'], v['height']   # pixel size
-            self.message(f"Loaded {path!r} successfully.")
+            w, h = v['width'], v['height']
+            if v['tags'].get('rotate') in ('90', '270'):
+                w, h = h, w  # transpose
+            self.video_size = w, h
             self._path = path
+            self.message(f"Loaded {path!r} successfully.")
             return True
         else:
             self.message(f"Failed to load file {path!r}.")
@@ -250,11 +254,3 @@ class Plugin(Layer):
         export_video(self._path,
                      self.crop.Value or "{}:{}:0:0".format(*self.video_size),
                      self.ss.value, self.to.value, fout)
-
-
-if __name__ == "__main__":
-    app = wx.App()
-    frm = Frame(None)
-    frm.load_plug(__file__, show=1)
-    frm.Show()
-    app.MainLoop()

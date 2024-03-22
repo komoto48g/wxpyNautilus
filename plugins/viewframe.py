@@ -1,7 +1,5 @@
 #! python3
-"""Property list of buffers
-
-Author: Kazuya O'moto <komoto@jeol.co.jp>
+"""Property list of buffers.
 """
 from pprint import pformat
 import wx
@@ -283,15 +281,3 @@ class Plugin(Layer):
         for k, lc in enumerate(self.all_pages):
             if target is lc.Target:
                 self.nb.DeletePage(k)
-
-
-if __name__ == "__main__":
-    import glob
-    from mwx.graphman import Frame
-    
-    app = wx.App()
-    frm = Frame(None)
-    frm.load_plug(__file__, show=1)
-    frm.load_frame(glob.glob(r"C:/usr/home/workspace/images/*.bmp"))
-    frm.Show()
-    app.MainLoop()
