@@ -29,13 +29,10 @@ def init_mainframe(self):
     ## --------------------------------
     ## Plugins
     ## --------------------------------
-    def load_plug(name):
-        home = os.path.dirname(__file__)
-        self.load_plug(os.path.join(home, name))
-
-    load_plug("plugins/ffmpeg_viewer")
-    load_plug("plugins/lineprofile")
-    load_plug("plugins/viewframe")
+    from mwx.py import frame_listview, line_profile, ffmpeg_view
+    self.load_plug(frame_listview)
+    self.load_plug(line_profile)
+    self.load_plug(ffmpeg_view)
 
     ## --------------------------------
     ## Global keymap of the main Frame 
