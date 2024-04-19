@@ -1,17 +1,13 @@
 #! python3
 """siteinit file
-
-Initialize mainframe settings.
 """
-import sys
-import os
 
 
 def init_mainframe(self):
     ## Specify an editor to edit plugins.
     self.Editor = "C:/usr/home/bin/xyzzy/xyzzy.exe"
 
-    ## Image/CCD unit length per pixel [mm/pixel]
+    ## Image/CCD unit length per pixel [mm/pix]
     self.graph.unit = self.output.unit = 0.05
 
     ## Cutoff tolerance of the score percentile
@@ -25,14 +21,6 @@ def init_mainframe(self):
 
     ## window layout
     self.histogram.modeline.Show()
-
-    ## --------------------------------
-    ## Plugins
-    ## --------------------------------
-    from mwx.py import frame_listview, line_profile, ffmpeg_view
-    self.load_plug(frame_listview)
-    self.load_plug(line_profile)
-    self.load_plug(ffmpeg_view)
 
     ## --------------------------------
     ## Global keymap of the main Frame 
