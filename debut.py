@@ -132,20 +132,13 @@ def init_editor(self):
     self.define_key('C-x S-s', self.save_buffer_as)
     self.define_key('C-x C-f', self.open_buffer) # cf. find-file
 
-    @self.define_key('f4')
-    def break_point():
-        shell = self.parent.current_shell
-        self.buffer.red_pointer = -1
-        self.buffer.pointer = self.buffer.cline # set point to break
-        self.buffer.py_exec_region(shell.globals, shell.locals)
-
+    @self.define_key('S-f5', load=True)
     @self.define_key('f5')
-    def reload_buffer():
-        self.load_buffer()
-        if self.buffer.code:
-            shell = self.parent.current_shell
-            self.buffer.py_exec_region(shell.globals, shell.locals)
-            self.post_message(f"Reloaded {self.buffer.name!r} successfully.")
+    def eval_buffer(load=False):
+        if load:
+            self.load_buffer()
+        shell = self.parent.current_shell
+        self.buffer.py_exec_region(shell.globals, shell.locals)
 
 
 def init_shell(self):
@@ -394,14 +387,14 @@ def main(self):
 
     self.set_hookable(self.Config) # Bind pointer to enable trace.
 
-    @self.Config.define_key('M-j')
+    ## @self.Config.define_key('M-j') #? control-code ^J is inserted when debugger closed.
+    @self.Config.define_key('C-S-j')
     @ignore(UserWarning) # ignore warning for duplicate define_key in ...
     def eval_buffer():
         """Evaluate this <conf> code."""
         locals = {'self': self}
-        self.Config.buffer.py_exec_region(
-            locals, locals, self.Config.buffer.filename
-        )
+        buffer = self.Config.buffer
+        buffer.py_exec_region(locals, locals, buffer.filename)
         if "main" in locals:
             locals["main"](self)
 
