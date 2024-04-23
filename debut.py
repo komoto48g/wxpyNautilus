@@ -451,22 +451,22 @@ if __name__ == "__main__":
     if session:
         print(f"Starting session {session!r}")
 
-    app = wx.App()
-    frame = mwx.deb(loop=0, debrc=session,
-                    introText=__doc__ + quote_unqoute)
-    main(frame)
-    ## Test for warnings
-    with ignore(UserWarning):
-        frame.define_key("f12", None) # Don't close
-    if 1:
-        ## If you want debugger skip a specific module,
-        ## add the module:str to debugger.skip:set.
-        frame.debugger.skip -= {
-            mwx.FSM.__module__, # for debugging FSM
-        }
-        ## Dive into objects to inspect.
-        dive(frame)
-        frame.handler.debug = 0
-        frame.shell.handler.debug = 0
-        frame.debugger.handler.debug = 0
-    app.MainLoop()
+    with mwx.App():
+        frame = mwx.deb(loop=0, debrc=session,
+                        introText=__doc__ + quote_unqoute)
+        main(frame)
+
+        ## Test for warnings
+        with ignore(UserWarning):
+            frame.define_key("f12", None) # Don't close
+        if 1:
+            ## If you want debugger skip a specific module,
+            ## add the module:str to debugger.skip:set.
+            frame.debugger.skip -= {
+                mwx.FSM.__module__, # for debugging FSM
+            }
+            ## Dive into objects to inspect.
+            dive(frame)
+            frame.handler.debug = 0
+            frame.shell.handler.debug = 0
+            frame.debugger.handler.debug = 0

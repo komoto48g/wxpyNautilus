@@ -59,6 +59,11 @@ class MainFrame(Frame):
         else:
             print(f"Executing {si.__file__!r}")
             si.init_mainframe(self)
+        try:
+            import debut
+            debut.main(self.shellframe)
+        except ImportError:
+            pass
         
         from mwx.plugins import frame_listview, line_profile, fft_view
         self.load_plug(frame_listview)
@@ -115,10 +120,5 @@ if __name__ == "__main__":
             frm.load_session(session, flush=False)
         except FileNotFoundError:
             print(f"- No such file {session!r}")
-    try:
-        import debut
-        debut.main(frm.shellframe)
-    except ImportError:
-        pass
     frm.Show()
     app.MainLoop()
