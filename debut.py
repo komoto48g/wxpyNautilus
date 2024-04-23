@@ -147,18 +147,6 @@ def init_editor(self):
             self.buffer.py_exec_region(shell.globals, shell.locals)
             self.post_message(f"Reloaded {self.buffer.name!r} successfully.")
 
-    @self.define_key('C-x 0', dir=None)
-    @self.define_key('C-x up', dir=wx.UP)
-    @self.define_key('C-x down', dir=wx.DOWN)
-    @self.define_key('C-x left', dir=wx.LEFT)
-    @self.define_key('C-x right', dir=wx.RIGHT)
-    def split(dir):
-        if dir:
-            j = self.all_buffers.index(self.CurrentPage)
-            self.Split(j, dir)
-        else:
-            self.move_tab(self.CurrentPage, self.all_tabs[0]) # unsplit
-
 
 def init_shell(self):
     """Customize the keymaps of the Shell.
