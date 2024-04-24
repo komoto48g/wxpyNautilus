@@ -440,14 +440,14 @@ if __name__ == "__main__":
         ## Test for warnings
         with ignore(UserWarning):
             frame.define_key("f12", None) # Don't close
-        if 1:
-            ## If you want debugger skip a specific module,
-            ## add the module:str to debugger.skip:set.
-            frame.debugger.skip -= {
-                mwx.FSM.__module__, # for debugging FSM
-            }
-            ## Dive into objects to inspect.
-            dive(frame)
-            frame.handler.debug = 0
-            frame.shell.handler.debug = 0
-            frame.debugger.handler.debug = 0
+
+        ## If you want debugger skip a specific module,
+        ## add the module:str to debugger.skip:set.
+        frame.debugger.skip -= {
+            mwx.FSM.__module__, # for debugging FSM
+        }
+        ## Dive into objects to inspect.
+        dive(frame)
+        frame.handler.debug = 0
+        frame.shell.handler.debug = 0
+        frame.debugger.handler.debug = 0
