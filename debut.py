@@ -4,8 +4,6 @@
 __version__ = "1.0rc"
 __author__ = "Kazuya O'moto <komoto@jeol.co.jp>"
 
-import contextlib
-import warnings
 import getopt
 import sys
 import os
@@ -14,6 +12,7 @@ from wx import aui
 from wx import stc
 
 import mwx
+from mwx.utilus import ignore
 from mwx.controls import Icon, Clipboard
 from mwx.nutshell import Nautilus, EditorBook
 from mwx.py.filling import FillingTree
@@ -33,22 +32,6 @@ try:
     FillingTree.filter = atomic
 except AttributeError:
     pass
-
-
-@contextlib.contextmanager
-def ignore(*category):
-    """Ignore warnings.
-    
-    It can be used as decorators as well as in with statements.
-    cf. contextlib.suppress
-    
-    Note:
-        ignore() does not ignore warnings.
-        ignore(Warning) ignores all warnings.
-    """
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", category)
-        yield
 
 
 ## --------------------------------
@@ -389,7 +372,7 @@ def main(self):
 
     ## @self.Config.define_key('M-j') #? control-code ^J is inserted when debugger closed.
     @self.Config.define_key('C-S-j')
-    @ignore(UserWarning) # ignore warning for duplicate define_key in ...
+    @ignore(UserWarning)
     def eval_buffer():
         """Evaluate this <conf> code."""
         locals = {'self': self}
@@ -436,10 +419,6 @@ if __name__ == "__main__":
         frame = mwx.deb(loop=0, debrc=session,
                         introText=__doc__ + quote_unqoute)
         main(frame)
-
-        ## Test for warnings
-        with ignore(UserWarning):
-            frame.define_key("f12", None) # Don't close
 
         ## If you want debugger skip a specific module,
         ## add the module:str to debugger.skip:set.
