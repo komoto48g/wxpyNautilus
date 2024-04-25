@@ -4,8 +4,6 @@
 __version__ = "1.0rc"
 __author__ = "Kazuya O'moto <komoto@jeol.co.jp>"
 
-import contextlib
-import warnings
 import getopt
 import sys
 import os
@@ -14,6 +12,7 @@ from wx import aui
 from wx import stc
 
 import mwx
+from mwx.utilus import ignore
 from mwx.controls import Icon, Clipboard
 from mwx.nutshell import Nautilus, EditorBook
 from mwx.py.filling import FillingTree
@@ -33,22 +32,6 @@ try:
     FillingTree.filter = atomic
 except AttributeError:
     pass
-
-
-@contextlib.contextmanager
-def ignore(*category):
-    """Ignore warnings.
-    
-    It can be used as decorators as well as in with statements.
-    cf. contextlib.suppress
-    
-    Note:
-        ignore() does not ignore warnings.
-        ignore(Warning) ignores all warnings.
-    """
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", category)
-        yield
 
 
 ## --------------------------------
@@ -132,32 +115,13 @@ def init_editor(self):
     self.define_key('C-x S-s', self.save_buffer_as)
     self.define_key('C-x C-f', self.open_buffer) # cf. find-file
 
-    @self.define_key('f4')
-    def break_point():
-        shell = self.parent.current_shell
-        self.buffer.red_pointer = -1
-        self.buffer.pointer = self.buffer.cline # set point to break
-        self.buffer.py_exec_region(shell.globals, shell.locals)
-
+    @self.define_key('S-f5', load=True)
     @self.define_key('f5')
-    def reload_buffer():
-        self.load_buffer()
-        if self.buffer.code:
-            shell = self.parent.current_shell
-            self.buffer.py_exec_region(shell.globals, shell.locals)
-            self.post_message(f"Reloaded {self.buffer.name!r} successfully.")
-
-    @self.define_key('C-x 0', dir=None)
-    @self.define_key('C-x up', dir=wx.UP)
-    @self.define_key('C-x down', dir=wx.DOWN)
-    @self.define_key('C-x left', dir=wx.LEFT)
-    @self.define_key('C-x right', dir=wx.RIGHT)
-    def split(dir):
-        if dir:
-            j = self.all_buffers.index(self.CurrentPage)
-            self.Split(j, dir)
-        else:
-            self.move_tab(self.CurrentPage, self.all_tabs[0]) # unsplit
+    def eval_buffer(load=False):
+        if load:
+            self.load_buffer()
+        shell = self.parent.current_shell
+        self.buffer.py_exec_region(shell.globals, shell.locals)
 
 
 def init_shell(self):
@@ -406,14 +370,14 @@ def main(self):
 
     self.set_hookable(self.Config) # Bind pointer to enable trace.
 
-    @self.Config.define_key('M-j')
-    @ignore(UserWarning) # ignore warning for duplicate define_key in ...
+    ## @self.Config.define_key('M-j') #? control-code ^J is inserted when debugger closed.
+    @self.Config.define_key('C-S-j')
+    @ignore(UserWarning)
     def eval_buffer():
         """Evaluate this <conf> code."""
         locals = {'self': self}
-        self.Config.buffer.py_exec_region(
-            locals, locals, self.Config.buffer.filename
-        )
+        buffer = self.Config.buffer
+        buffer.py_exec_region(locals, locals, buffer.filename)
         if "main" in locals:
             locals["main"](self)
 
@@ -451,14 +415,11 @@ if __name__ == "__main__":
     if session:
         print(f"Starting session {session!r}")
 
-    app = wx.App()
-    frame = mwx.deb(loop=0, debrc=session,
-                    introText=__doc__ + quote_unqoute)
-    main(frame)
-    ## Test for warnings
-    with ignore(UserWarning):
-        frame.define_key("f12", None) # Don't close
-    if 1:
+    with mwx.App():
+        frame = mwx.deb(loop=0, debrc=session,
+                        introText=__doc__ + quote_unqoute)
+        main(frame)
+
         ## If you want debugger skip a specific module,
         ## add the module:str to debugger.skip:set.
         frame.debugger.skip -= {
@@ -469,4 +430,3 @@ if __name__ == "__main__":
         frame.handler.debug = 0
         frame.shell.handler.debug = 0
         frame.debugger.handler.debug = 0
-    app.MainLoop()
