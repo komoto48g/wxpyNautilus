@@ -426,7 +426,5 @@ if __name__ == "__main__":
             mwx.FSM.__module__, # for debugging FSM
         }
         ## Dive into objects to inspect.
-        dive(frame)
-        frame.handler.debug = 0
-        frame.shell.handler.debug = 0
-        frame.debugger.handler.debug = 0
+        shell = dive(frame)
+        wx.CallAfter(shell.SetFocus)
