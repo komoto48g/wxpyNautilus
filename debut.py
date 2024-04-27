@@ -14,7 +14,7 @@ from wx import stc
 import mwx
 from mwx.utilus import ignore
 from mwx.controls import Icon, Clipboard
-from mwx.nutshell import Nautilus, EditorBook
+from mwx.nutshell import EditorBook  # Contains custom STYLE constants for wx.stc.
 from mwx.py.filling import FillingTree
 
 
@@ -334,7 +334,7 @@ def stylus(self):
             shell.SetFocus()
 
     ## Customize keymaps.
-    for page in self.get_all_pages(EditorBook):
+    for page in self.all_editors:
         init_editor(page)
         for buf in page.all_buffers:
             init_buffer(buf)
@@ -342,7 +342,7 @@ def stylus(self):
     self.handler.unbind('buffer_new')
     self.handler.bind('buffer_new', init_buffer)
 
-    for page in self.get_all_pages(Nautilus):
+    for page in self.all_shells:
         init_shell(page)
 
     self.handler.unbind('shell_new')
