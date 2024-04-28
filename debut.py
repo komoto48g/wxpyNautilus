@@ -188,8 +188,8 @@ def init_shell(self):
 
     @self.define_key('S-f4', pattern=error_re)
     @self.define_key('S-f10', pattern=grep_re)
-    def grep_barckward(pattern):
-        for err in self.grep_barckward(pattern):
+    def grep_backward(pattern):
+        for err in self.grep_backward(pattern):
             target = ':'.join(filter(None, err.groups()))
             if self.parent.load(target):
                 self.post_message(f"\b {target}")
@@ -386,7 +386,7 @@ def main(self):
 
     ## Note: Bookshelf context must be coded after stylus,
     ##       as the configuration of the ghost may change.
-    self.Bookshelf.watch(self.ghost)
+    self.Bookshelf.attach(self)
 
     def copy_message(v):
         if v.EventObject is self.message: #<mwx.StatusBar>
