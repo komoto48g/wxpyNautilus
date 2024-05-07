@@ -352,6 +352,19 @@ def stylus(self):
     self.Config.set_attributes(Style=py_text_mode.STYLE)
     self.Scratch.set_attributes(Style=py_interactive_mode.STYLE)
 
+    @self.define_key('C-x f11', win=self.ghost)
+    @self.define_key('C-x S-f11', win=self.watcher)
+    def toggle_pane(win):
+        pane = self._mgr.GetPane(win)
+        if pane.IsDocked():
+            ## toggle the pnae state to maximumized or not.
+            if self.console.IsShown():
+                self._mgr.MaximizePane(pane)
+            else:
+                self._mgr.RestoreMaximizedPane()
+            self._mgr.Update()
+
+
 ## --------------------------------
 ## Main program
 ## --------------------------------
