@@ -13,8 +13,8 @@ from wx import stc
 
 import mwx
 from mwx.utilus import ignore
-from mwx.controls import Icon, Clipboard
-from mwx.nutshell import EditorBook  # Contains custom STYLE constants for wx.stc.
+from mwx.controls import Clipboard
+from mwx.nutshell import EditorBook  # noqa: Contains custom STYLE constants for wx.stc.
 from mwx.py.filling import FillingTree
 
 
@@ -381,15 +381,6 @@ def main(self):
     ## Note: Bookshelf context must be coded after stylus,
     ##       as the configuration of the ghost may change.
     self.Bookshelf.attach(self)
-
-    def copy_message(v):
-        if v.EventObject is self.message: #<mwx.StatusBar>
-            mwx.Menu.Popup(self, [
-                (wx.ID_COPY, "&Copy message", Icon('copy'),
-                    lambda v: Clipboard.write(self.message.read())),
-            ])
-        v.Skip()
-    self.Bind(wx.EVT_CONTEXT_MENU, copy_message)
 
 
 quote_unqoute = """
