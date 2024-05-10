@@ -349,7 +349,6 @@ def stylus(self):
     self.handler.bind('shell_new', init_shell)
 
     ## Stylize all child windows.
-    self.Config.set_attributes(Style=py_text_mode.STYLE)
     self.Scratch.set_attributes(Style=py_interactive_mode.STYLE)
 
     @self.define_key('C-x f11', win=self.ghost)
@@ -369,31 +368,13 @@ def stylus(self):
 ## Main program
 ## --------------------------------
 
+@ignore(UserWarning)
 def main(self):
     """Initialize Nautilus configuration.
     
     Note:
         This function is executed once at startup.
     """
-    ## Config loader extension
-    if not hasattr(self, "Config"):
-        self.Config = EditorBook(self, name="Config")
-        self.Config.load_file(__file__)
-        self.ghost.AddPage(self.Config, 'Config', bitmap=Icon('proc'))
-
-    self.set_hookable(self.Config) # Bind pointer to enable trace.
-
-    ## @self.Config.define_key('M-j') #? control-code ^J is inserted when debugger closed.
-    @self.Config.define_key('C-S-j')
-    @ignore(UserWarning)
-    def eval_buffer():
-        """Evaluate this <conf> code."""
-        locals = {'self': self}
-        buffer = self.Config.buffer
-        buffer.py_exec_region(locals, locals, buffer.filename)
-        if "main" in locals:
-            locals["main"](self)
-
     ## Stylize ShellFrame window
     stylus(self)
 
