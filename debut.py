@@ -13,8 +13,8 @@ from wx import stc
 
 import mwx
 from mwx.utilus import ignore
-from mwx.controls import Icon, Clipboard
-from mwx.nutshell import EditorBook  # Contains custom STYLE constants for wx.stc.
+from mwx.controls import Clipboard
+from mwx.nutshell import EditorBook  # noqa: Contains custom STYLE constants for wx.stc.
 from mwx.py.filling import FillingTree
 
 
@@ -349,53 +349,38 @@ def stylus(self):
     self.handler.bind('shell_new', init_shell)
 
     ## Stylize all child windows.
-    self.Config.set_attributes(Style=py_text_mode.STYLE)
     self.Scratch.set_attributes(Style=py_interactive_mode.STYLE)
+
+    @self.define_key('C-x f11', win=self.ghost)
+    @self.define_key('C-x S-f11', win=self.watcher)
+    def toggle_pane(win):
+        pane = self._mgr.GetPane(win)
+        if pane.IsDocked():
+            ## toggle the pnae state to maximumized or not.
+            if self.console.IsShown():
+                self._mgr.MaximizePane(pane)
+            else:
+                self._mgr.RestoreMaximizedPane()
+            self._mgr.Update()
+
 
 ## --------------------------------
 ## Main program
 ## --------------------------------
 
+@ignore(UserWarning)
 def main(self):
     """Initialize Nautilus configuration.
     
     Note:
         This function is executed once at startup.
     """
-    ## Config loader extension
-    if not hasattr(self, "Config"):
-        self.Config = EditorBook(self, name="Config")
-        self.Config.load_file(__file__)
-        self.ghost.AddPage(self.Config, 'Config', bitmap=Icon('proc'))
-
-    self.set_hookable(self.Config) # Bind pointer to enable trace.
-
-    ## @self.Config.define_key('M-j') #? control-code ^J is inserted when debugger closed.
-    @self.Config.define_key('C-S-j')
-    @ignore(UserWarning)
-    def eval_buffer():
-        """Evaluate this <conf> code."""
-        locals = {'self': self}
-        buffer = self.Config.buffer
-        buffer.py_exec_region(locals, locals, buffer.filename)
-        if "main" in locals:
-            locals["main"](self)
-
     ## Stylize ShellFrame window
     stylus(self)
 
     ## Note: Bookshelf context must be coded after stylus,
     ##       as the configuration of the ghost may change.
     self.Bookshelf.attach(self)
-
-    def copy_message(v):
-        if v.EventObject is self.message: #<mwx.StatusBar>
-            mwx.Menu.Popup(self, [
-                (wx.ID_COPY, "&Copy message", Icon('copy'),
-                    lambda v: Clipboard.write(self.message.read())),
-            ])
-        v.Skip()
-    self.Bind(wx.EVT_CONTEXT_MENU, copy_message)
 
 
 quote_unqoute = """
