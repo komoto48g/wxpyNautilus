@@ -383,6 +383,26 @@ def main(self):
     self.Bookshelf.attach(self)
 
 
+def deb(target=None, loop=True, **kwargs):
+    app = wx.GetApp() or wx.App()
+    try:
+        frame = mwx.deb(target, loop=0, **kwargs) # Don't enter loop.
+        main(frame)
+        if 1:
+            ## If you want debugger skip a specific module,
+            ## add the module:str to debugger.skip:set.
+            frame.debugger.skip -= {
+                mwx.FSM.__module__, # for debugging FSM
+            }
+            ## Dive into objects to inspect.
+            shell = dive(frame)
+            wx.CallAfter(shell.SetFocus)
+        return frame
+    finally:
+        if loop and not app.GetMainLoop():
+            app.MainLoop()
+
+
 quote_unqoute = """
     Anything one man can imagine, other man can make real.
     --- Jules Verne (1828--1905)
@@ -400,17 +420,5 @@ if __name__ == "__main__":
     if session:
         print(f"Starting session {session!r}")
 
-    app = wx.App()
-    frame = mwx.deb(loop=0, debrc=session,
-                    introText=__doc__ + quote_unqoute)
-    main(frame)
-
-    ## If you want debugger skip a specific module,
-    ## add the module:str to debugger.skip:set.
-    frame.debugger.skip -= {
-        mwx.FSM.__module__, # for debugging FSM
-    }
-    ## Dive into objects to inspect.
-    shell = dive(frame)
-    wx.CallAfter(shell.SetFocus)
-    app.MainLoop()
+    deb(debrc=session,
+        introText=__doc__ + quote_unqoute)
