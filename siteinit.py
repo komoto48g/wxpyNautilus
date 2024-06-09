@@ -40,9 +40,3 @@ def init_mainframe(self):
     ##             return next.SetFocus()
     ##     else:
     ##         self.graph.SetFocus()
-
-    @self.define_key('f8')
-    def toggle_clip(v):
-        clip = self.selected_view.frame.get_clip_on()
-        self.selected_view.frame.set_clip_on(not clip)
-        self.selected_view.draw()

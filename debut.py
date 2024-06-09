@@ -41,7 +41,7 @@ except AttributeError:
 def init_stc_interface(self):
     """Customize the common keymaps.
     """
-    @self.define_key('f9')
+    @self.define_key('f8')
     def toggle_wrap_mode():
         mode = ['no-wrap',
                 'word-wrap',
@@ -51,7 +51,7 @@ def init_stc_interface(self):
         self.WrapMode = (self.WrapMode + 1) % 4
         self.post_message("\b {!r}".format(mode[self.WrapMode]))
 
-    @self.define_key('S-f9')
+    @self.define_key('S-f8')
     def toggle_eol_view():
         self.ViewEOL = not self.ViewEOL
         self.ViewWhiteSpace = not self.ViewWhiteSpace
@@ -117,11 +117,19 @@ def init_editor(self):
 
     @self.define_key('S-f5', load=True)
     @self.define_key('f5')
-    def eval_buffer(load=False):
+    def eval_buffer(evt, load=False):
         if load:
             self.load_buffer()
         shell = self.parent.current_shell
         self.buffer.py_exec_region(shell.globals, shell.locals)
+        evt.Skip()
+
+    @self.define_key('C-S-f9')
+    def load_file():
+        text = self.buffer.SelectedText or self.buffer.expr_at_caret
+        filename = os.path.join(os.path.dirname(self.buffer.filename), text)
+        if self.load_file(filename):
+            self.post_message(f"\b {text!r}")
 
 
 def init_shell(self):
