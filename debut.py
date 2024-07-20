@@ -113,7 +113,7 @@ def init_editor(self):
     self.define_key('C-x s',   self.save_all_buffers)
     self.define_key('C-x C-s', self.save_buffer)
     self.define_key('C-x S-s', self.save_buffer_as)
-    self.define_key('C-x C-f', self.open_buffer) # cf. find-file
+    self.define_key('C-x C-f', self.find_file)
 
     @self.define_key('S-f5', load=True)
     @self.define_key('f5')
@@ -385,10 +385,6 @@ def main(self):
     """
     ## Stylize ShellFrame window
     stylus(self)
-
-    ## Note: Bookshelf context must be coded after stylus,
-    ##       as the configuration of the ghost may change.
-    self.Bookshelf.attach(self)
 
 
 def deb(target=None, loop=True, **kwargs):
