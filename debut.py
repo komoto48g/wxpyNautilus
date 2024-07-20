@@ -393,22 +393,21 @@ def main(self):
 
 def deb(target=None, loop=True, **kwargs):
     app = wx.GetApp() or wx.App()
-    try:
-        frame = mwx.deb(target, loop=0, **kwargs) # Don't enter loop.
-        main(frame)
-        if 1:
-            ## If you want debugger skip a specific module,
-            ## add the module:str to debugger.skip:set.
-            frame.debugger.skip -= {
-                mwx.FSM.__module__, # for debugging FSM
-            }
-            ## Dive into objects to inspect.
-            shell = dive(frame)
-            wx.CallAfter(shell.SetFocus)
+    frame = mwx.deb(target, loop=0, **kwargs) # Don't enter loop.
+    main(frame)
+    if 1:
+        ## If you want debugger skip a specific module,
+        ## add the module:str to debugger.skip:set.
+        frame.debugger.skip -= {
+            mwx.FSM.__module__, # for debugging FSM
+        }
+        ## Dive into objects to inspect.
+        shell = dive(frame)
+        wx.CallAfter(shell.SetFocus)
+    if not loop:
         return frame
-    finally:
-        if loop and not app.GetMainLoop():
-            app.MainLoop()
+    if not app.GetMainLoop():
+        return app.MainLoop()
 
 
 quote_unqoute = """
