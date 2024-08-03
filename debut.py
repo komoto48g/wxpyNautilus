@@ -147,7 +147,7 @@ def init_shell(self):
     @self.define_key('M-enter')
     @self.define_key('M-S-enter', clear=0) # insert command
     def duplicate_command(clear=True):
-        cmd = self.MultilineCommand.rstrip('\r\n')
+        cmd = self.getMultilineCommand()
         if cmd:
             self.mark = self.cpos
             if clear:
@@ -179,14 +179,14 @@ def init_shell(self):
             else:
                 self.post_message(f"\b {text!r} was nowhere to be found.")
 
-    error_re = r' +File "(.+?)", line ([0-9]+)'
-    frame_re = r" +file '(.+?)', line ([0-9]+)"
-    where_re = r'> +([^*?"<>|\r\n]+?):([0-9]+)'
-    break_re = r'at ([^*?"<>|\r\n]+?):([0-9]+)'
-    grep_re = '|'.join((frame_re, where_re, break_re))
+    py_error_re = r' +File "(.*?)", line ([0-9]+)'
+    py_frame_re = r" +file '(.*?)', line ([0-9]+)"
+    py_where_re = r'> +([^*?"<>|\r\n]+?):([0-9]+)'
+    py_break_re = r'at ([^*?"<>|\r\n]+?):([0-9]+)'
+    py_grep_re = '|'.join((py_frame_re, py_where_re, py_break_re))
 
-    @self.define_key('f4', pattern=error_re)
-    @self.define_key('f10', pattern=grep_re)
+    @self.define_key('f4', pattern=py_error_re)
+    @self.define_key('f10', pattern=py_grep_re)
     def grep_forward(pattern):
         for err in self.grep_forward(pattern):
             target = ':'.join(filter(None, err.groups()))
@@ -194,8 +194,8 @@ def init_shell(self):
                 self.post_message(f"\b {target}")
             break
 
-    @self.define_key('S-f4', pattern=error_re)
-    @self.define_key('S-f10', pattern=grep_re)
+    @self.define_key('S-f4', pattern=py_error_re)
+    @self.define_key('S-f10', pattern=py_grep_re)
     def grep_backward(pattern):
         for err in self.grep_backward(pattern):
             target = ':'.join(filter(None, err.groups()))
@@ -218,7 +218,7 @@ def init_shell(self):
     @self.define_key('C-f2')
     def HL():
         try:
-            highlight(self.eval(self.cmdline))
+            highlight(self.eval(self.expr_at_caret))
         except Exception:
             pass
 
