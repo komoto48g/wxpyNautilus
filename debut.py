@@ -120,9 +120,7 @@ def init_editor(self):
     def eval_buffer(evt, load=False):
         if load:
             self.load_buffer()
-        shell = self.parent.current_shell
-        self.buffer.py_exec_region(shell.globals, shell.locals)
-        evt.Skip()
+        self.buffer.exec_region()
 
     @self.define_key('C-S-f9')
     def load_file():
@@ -155,13 +153,13 @@ def init_shell(self):
             self.write(cmd, -1)
 
     @self.define_key('f1')
-    def help(v):
+    def help(evt):
         text = self.SelectedText or self.expr_at_caret
         try:
             obj = self.eval(text)
             self.help(obj)
         except Exception:
-            v.Skip()
+            evt.Skip()
 
     @self.define_key('f2')
     def load_target():
