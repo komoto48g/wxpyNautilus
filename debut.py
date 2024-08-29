@@ -282,11 +282,12 @@ class py_interactive_mode:
     }
 
 
+@ignore(UserWarning)
 def stylus(self):
     """Stylize Nautilus window.
-    
+
     Note:
-        This function is executed every time you reload.
+        This function is executed once at startup.
     """
     ## Customize the keymaps of the ShellFrame.
     self.define_key('C-x C-S-o', self.load_session)
@@ -373,22 +374,12 @@ def stylus(self):
 ## --------------------------------
 ## Main program
 ## --------------------------------
-
-@ignore(UserWarning)
-def main(self):
-    """Initialize Nautilus configuration.
-    
-    Note:
-        This function is executed once at startup.
-    """
-    ## Stylize ShellFrame window
-    stylus(self)
-
+main = stylus  # for backward compatibility
 
 def deb(target=None, loop=True, **kwargs):
     app = wx.GetApp() or wx.App()
     frame = mwx.deb(target, loop=0, **kwargs) # Don't enter loop.
-    main(frame)
+    stylus(frame)
     if 1:
         ## If you want debugger skip a specific module,
         ## add the module:str to debugger.skip:set.
