@@ -248,7 +248,6 @@ class py_text_mode:
         stc.STC_P_DEFNAME         : "fore:#0000ff,bold",
         stc.STC_P_WORD            : "fore:#0000ff",
         stc.STC_P_WORD2           : "fore:#7f007f",
-        stc.STC_P_WORD3           : "fore:#ff0000,back:#ffff00", # optional for search word
         stc.STC_P_DECORATOR       : "fore:#c04040,bold",
     }
 
@@ -277,7 +276,6 @@ class py_interactive_mode:
         stc.STC_P_DEFNAME         : "fore:#3a96ff,bold",
         stc.STC_P_WORD            : "fore:#80c0ff",
         stc.STC_P_WORD2           : "fore:#ff80ff",
-        stc.STC_P_WORD3           : "fore:#ff0000,back:#ffff00", # optional for search word
         stc.STC_P_DECORATOR       : "fore:#ff8040",
     }
 
