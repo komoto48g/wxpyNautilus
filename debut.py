@@ -14,7 +14,6 @@ from wx import stc
 import mwx
 from mwx.utilus import ignore
 from mwx.controls import Clipboard
-from mwx.nutshell import EditorBook  # noqa: Contains custom STYLE constants for wx.stc.
 from mwx.py.filling import FillingTree
 
 
@@ -220,65 +219,10 @@ def init_shell(self):
         except Exception:
             pass
 
+
 ## --------------------------------
 ## Setup the console of Nautilus
 ## --------------------------------
-
-class py_text_mode:
-    STYLE = {
-        stc.STC_STYLE_DEFAULT     : "fore:#7f7f7f,back:#fffff8,size:9,face:MS Gothic",
-        stc.STC_STYLE_LINENUMBER  : "fore:#000000,back:#fffff8,size:9",
-        stc.STC_STYLE_BRACELIGHT  : "fore:#000000,back:#cccccc,bold",
-        stc.STC_STYLE_BRACEBAD    : "fore:#000000,back:#ff0000,bold",
-        stc.STC_STYLE_CONTROLCHAR : "size:6",
-        stc.STC_STYLE_CARETLINE   : "fore:#000000,back:#f0f0ff,size:2", # optional
-        stc.STC_STYLE_ANNOTATION  : "fore:#7f0000,back:#ff7f7f", # optional
-        stc.STC_P_DEFAULT         : "fore:#000000",
-        stc.STC_P_OPERATOR        : "fore:#000000",
-        stc.STC_P_IDENTIFIER      : "fore:#000000",
-        stc.STC_P_COMMENTLINE     : "fore:#007f00,back:#f0fff0",
-        stc.STC_P_COMMENTBLOCK    : "fore:#007f00,back:#f0fff0,eol",
-        stc.STC_P_NUMBER          : "fore:#e02000",
-        stc.STC_P_STRINGEOL       : "fore:#7f7f7f,back:#ffc0c0,eol",
-        stc.STC_P_CHARACTER       : "fore:#7f7f7f",
-        stc.STC_P_STRING          : "fore:#7f7f7f",
-        stc.STC_P_TRIPLE          : "fore:#7f7f7f",
-        stc.STC_P_TRIPLEDOUBLE    : "fore:#7f7f7f",
-        stc.STC_P_CLASSNAME       : "fore:#7f00ff,bold",
-        stc.STC_P_DEFNAME         : "fore:#0000ff,bold",
-        stc.STC_P_WORD            : "fore:#0000ff",
-        stc.STC_P_WORD2           : "fore:#7f007f",
-        stc.STC_P_DECORATOR       : "fore:#c04040,bold",
-    }
-
-
-class py_interactive_mode:
-    STYLE = {
-        stc.STC_STYLE_DEFAULT     : "fore:#7f7f7f,back:#102030,size:9,face:MS Gothic",
-        stc.STC_STYLE_LINENUMBER  : "fore:#000000,back:#f0f0f0,size:9",
-        stc.STC_STYLE_BRACELIGHT  : "fore:#ffffff,back:#202020,bold",
-        stc.STC_STYLE_BRACEBAD    : "fore:#ffffff,back:#ff0000,bold",
-        stc.STC_STYLE_CONTROLCHAR : "size:6",
-        stc.STC_STYLE_CARETLINE   : "fore:#ffffff,back:#123460,size:2", # optional
-        stc.STC_STYLE_ANNOTATION  : "fore:#7f0000,back:#ff7f7f", # optional
-        stc.STC_P_DEFAULT         : "fore:#cccccc",
-        stc.STC_P_OPERATOR        : "fore:#cccccc",
-        stc.STC_P_IDENTIFIER      : "fore:#cccccc",
-        stc.STC_P_COMMENTLINE     : "fore:#42c18c,back:#004040",
-        stc.STC_P_COMMENTBLOCK    : "fore:#42c18c,back:#004040,eol",
-        stc.STC_P_NUMBER          : "fore:#ffc080",
-        stc.STC_P_STRINGEOL       : "fore:#cccccc,back:#004040,eol",
-        stc.STC_P_CHARACTER       : "fore:#a0a0a0",
-        stc.STC_P_STRING          : "fore:#a0a0a0",
-        stc.STC_P_TRIPLE          : "fore:#a0a0a0,back:#004040",
-        stc.STC_P_TRIPLEDOUBLE    : "fore:#a0a0a0,back:#004040",
-        stc.STC_P_CLASSNAME       : "fore:#61d6d6,bold",
-        stc.STC_P_DEFNAME         : "fore:#3a96ff,bold",
-        stc.STC_P_WORD            : "fore:#80c0ff",
-        stc.STC_P_WORD2           : "fore:#ff80ff",
-        stc.STC_P_DECORATOR       : "fore:#ff8040",
-    }
-
 
 @ignore(UserWarning)
 def stylus(self):
@@ -352,9 +296,6 @@ def stylus(self):
 
     self.handler.unbind('shell_new')
     self.handler.bind('shell_new', init_shell)
-
-    ## Stylize all child windows.
-    self.Scratch.set_attributes(Style=py_interactive_mode.STYLE)
 
     @self.define_key('C-x f11', win=self.ghost)
     @self.define_key('C-x S-f11', win=self.watcher)
