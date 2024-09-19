@@ -23,6 +23,15 @@ def init_mainframe(self):
     self.histogram.modeline.Show()
 
     ## --------------------------------
+    ## Plugins
+    ## --------------------------------
+
+    from mwx.plugins import frame_listview, line_profile, fft_view
+    self.load_plug(frame_listview)
+    self.load_plug(line_profile)
+    self.load_plug(fft_view)
+
+    ## --------------------------------
     ## Global keymap of the main Frame 
     ## --------------------------------
 

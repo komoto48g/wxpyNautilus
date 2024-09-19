@@ -64,11 +64,6 @@ class MainFrame(Frame):
             debut.main(self.shellframe)
         except ImportError:
             pass
-        
-        from mwx.plugins import frame_listview, line_profile, fft_view
-        self.load_plug(frame_listview)
-        self.load_plug(line_profile)
-        self.load_plug(fft_view)
 
 
 submarine = PyEmbeddedImage(
