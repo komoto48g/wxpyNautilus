@@ -1,15 +1,10 @@
 #! python3
 """deb utilus ver 1.0rc
 """
-__version__ = "1.0rc"
-__author__ = "Kazuya O'moto <komoto@jeol.co.jp>"
-
 import getopt
 import sys
 import os
 import wx
-from wx import aui
-from wx import stc
 
 import mwx
 from mwx.utilus import ignore
@@ -17,7 +12,7 @@ from mwx.controls import Clipboard
 from mwx.py.filling import FillingTree
 
 
-## This monkey patch forces the filling-tree to display only atoms.
+## Monkey patch for filling-tree to display only atoms.
 try:
     _FillingTree_filter_org = FillingTree.filter
     def atomic(self, obj, key):
@@ -242,7 +237,7 @@ def stylus(self):
     def other_editor(p=1):
         """Move focus to other topmost notebook page."""
         nb = wx.Window.FindFocus()
-        while isinstance(nb.Parent, aui.AuiNotebook):
+        while isinstance(nb.Parent, wx.aui.AuiNotebook):
             nb = nb.Parent
         try:
             if nb.PageCount > 1:
@@ -260,7 +255,7 @@ def stylus(self):
             if wnd in pages:
                 j = (pages.index(wnd) + p) % len(pages)
                 obj = pages[j]
-                if isinstance(obj, aui.AuiNotebook):
+                if isinstance(obj, wx.aui.AuiNotebook):
                     obj = obj.CurrentPage
                 obj.SetFocus()
                 break
@@ -271,7 +266,7 @@ def stylus(self):
     def duplicate_line(clear=True):
         """Duplicate an expression at the caret-line."""
         buf = wx.Window.FindFocus()
-        if not isinstance(buf, stc.StyledTextCtrl):
+        if not isinstance(buf, wx.stc.StyledTextCtrl):
             return
         text = buf.SelectedText or buf.expr_at_caret or buf.topic_at_caret
         if text:

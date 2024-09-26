@@ -61,7 +61,7 @@ class MainFrame(Frame):
             si.init_mainframe(self)
         try:
             import debut
-            debut.main(self.shellframe)
+            debut.stylus(self.shellframe)
         except ImportError:
             pass
 
