@@ -61,7 +61,7 @@ def init_buffer(self):
     """
     ## Buffer text control
     init_stc_interface(self)
-    
+
     @self.define_key('enter')
     def newline_and_indent():
         n = self.py_electric_indent()
@@ -128,7 +128,7 @@ def init_shell(self):
     """Customize the keymaps of the Shell.
     """
     init_stc_interface(self)
-    
+
     @self.define_key('S-enter') # cf. [C-RET] Shell.insertLineBreak
     def open_line():
         self.back_to_indentation()
@@ -236,7 +236,7 @@ def stylus(self):
     @self.define_key('C-x n', p=+1)
     def other_editor(p=1):
         """Move focus to other topmost notebook page."""
-        nb = wx.Window.FindFocus()
+        nb = self.FindFocus()
         while isinstance(nb.Parent, wx.aui.AuiNotebook):
             nb = nb.Parent
         try:
@@ -250,7 +250,7 @@ def stylus(self):
     def other_window(p=1):
         "Move focus to other window"
         pages = [x for x in self.get_all_pages() if x.IsShownOnScreen()]
-        wnd = wx.Window.FindFocus()
+        wnd = self.FindFocus()
         while wnd:
             if wnd in pages:
                 j = (pages.index(wnd) + p) % len(pages)
@@ -265,7 +265,7 @@ def stylus(self):
     @self.define_key('C-S-d', clear=0) # insert line
     def duplicate_line(clear=True):
         """Duplicate an expression at the caret-line."""
-        buf = wx.Window.FindFocus()
+        buf = self.FindFocus()
         if not isinstance(buf, wx.stc.StyledTextCtrl):
             return
         text = buf.SelectedText or buf.expr_at_caret or buf.topic_at_caret
@@ -308,43 +308,36 @@ def stylus(self):
 ## --------------------------------
 ## Main program
 ## --------------------------------
-main = stylus  # for backward compatibility
-
-def deb(target=None, loop=True, **kwargs):
-    app = wx.GetApp() or wx.App()
-    frame = mwx.deb(target, loop=0, **kwargs) # Don't enter loop.
-    stylus(frame)
-    if 1:
-        ## If you want debugger skip a specific module,
-        ## add the module:str to debugger.skip:set.
-        frame.debugger.skip -= {
-            mwx.FSM.__module__, # for debugging FSM
-        }
-        ## Dive into objects to inspect.
-        shell = dive(frame)
-        wx.CallAfter(shell.SetFocus)
-    if not loop:
-        return frame
-    if not app.GetMainLoop():
-        return app.MainLoop()
-
-
 quote_unqoute = """
     Anything one man can imagine, other man can make real.
     --- Jules Verne (1828--1905)
-    """
+"""
+
+def main(target=None, **kwargs):
+    app = wx.GetApp() or wx.App()
+    frame = mwx.deb(target, loop=0, # Don't enter loop.
+                    introText=(__doc__ or '') + quote_unqoute,
+                    **kwargs)
+    stylus(frame)
+    if 1:
+        ## To skip debugging a specific module, add module:str to debugger.skip:set.
+        frame.debugger.skip -= {
+            mwx.FSM.__module__, # for debugging FSM
+        }
+        shell = dive(frame)
+        wx.CallAfter(shell.SetFocus)
+    if not app.GetMainLoop():
+        app.MainLoop()
 
 
 if __name__ == "__main__":
-    session = None
+    session = ''
     opts, args = getopt.gnu_getopt(sys.argv[1:], "s:")
     for k, v in opts:
         if k == "-s":
             if not v.endswith(".debrc"):
                 v += ".debrc"
-            session = v
+            session = v.strip()
     if session:
         print(f"Starting session {session!r}")
-
-    deb(debrc=session,
-        introText=__doc__ + quote_unqoute)
+    main(debrc=session)
