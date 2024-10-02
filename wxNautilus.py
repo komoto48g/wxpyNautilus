@@ -44,12 +44,11 @@ class MainFrame(Frame):
         
         self.SetIcon(submarine.GetIcon())
         
-        home = os.path.dirname(__file__)
-        paths = [
-            home,   # Add ~/ to import si:home
-            '',     # Add ./ to import si:local first
-        ]
-        for f in paths:
+        HOME = os.path.dirname(__file__)
+        for f in [
+                HOME,   # Add ~/ to import si:home
+                '',     # Add ./ to import si:local first
+                ]:
             if f not in sys.path:
                 sys.path.insert(0, f)
         try:

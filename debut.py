@@ -215,10 +215,6 @@ def init_shell(self):
             pass
 
 
-## --------------------------------
-## Setup the console of Nautilus
-## --------------------------------
-
 @ignore(UserWarning)
 def stylus(self):
     """Stylize Nautilus window.
