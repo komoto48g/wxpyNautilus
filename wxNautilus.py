@@ -1,7 +1,7 @@
 #! python3
 """The frontend of Graph and Plug manager
 """
-__version__ = "1.0rc"
+__version__ = "1.1rc"
 __author__ = "Kazuya O'moto <komoto@jeol.co.jp>"
 __copyright__ = "Copyright (c) 2018-2024"
 __license__ = """\
@@ -11,7 +11,6 @@ see https://opensource.org/licenses/MIT
 logo icon: Submarine icons created by Smashicons - Flaticon
 see https://www.flaticon.com/free-icons/submarine
 """
-import getopt
 import sys
 import os
 import wx
@@ -98,21 +97,22 @@ submarine = PyEmbeddedImage(
 
 
 if __name__ == "__main__":
-    session = None
-    opts, args = getopt.gnu_getopt(sys.argv[1:], "s:")
-    for k, v in opts:
-        if k == "-s":
-            if not v.endswith(".jssn"):
-                v += ".jssn"
-            session = v
-    
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-s', '--session')
+    argv = parser.parse_args()
+
     app = wx.App()
     frm = MainFrame(None)
-    if session:
+    ssn = argv.session
+    if ssn:
+        if not ssn.endswith(".jssn"):
+            ssn += ".jssn"
         try:
-            print(f"Starting session {session!r}")
-            frm.load_session(session, flush=False)
+            print(f"Starting session {ssn!r}")
+            frm.load_session(ssn, flush=False)
         except FileNotFoundError:
-            print(f"- No such file {session!r}")
+            print(f"- No such file {ssn!r}")
     frm.Show()
     app.MainLoop()
