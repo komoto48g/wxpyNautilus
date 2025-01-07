@@ -159,17 +159,18 @@ def init_shell(self):
     def load_target():
         text = self.SelectedText or self.expr_at_caret
         if not text:
-            self.post_message("No target")
-            return
-        try:
-            obj = self.eval(text)
-        except Exception as e:
-            self.post_message(f"\b failed: {e!r}")
+            ## self.post_message("No target")
+            obj = self.target
         else:
-            if self.parent.load(obj):
-                self.post_message(f"\b {text!r}")
-            else:
-                self.post_message(f"\b {text!r} was nowhere to be found.")
+            try:
+                obj = self.eval(text)
+            except Exception as e:
+                self.post_message(f"\b failed: {e!r}")
+                return
+        if self.parent.load(obj):
+            self.post_message(f"\b {text!r}")
+        else:
+            self.post_message(f"\b {text!r} was nowhere to be found.")
 
     py_error_re = r' +File "(.*?)", line ([0-9]+)'
     py_frame_re = r" +file '(.*?)', line ([0-9]+)"
