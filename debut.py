@@ -35,7 +35,7 @@ except AttributeError:
 def init_stc_interface(self):
     """Customize the common keymaps.
     """
-    @self.define_key('f8')
+    @self.define_key('f9')
     def toggle_wrap_mode():
         mode = ['no-wrap',
                 'word-wrap',
@@ -45,7 +45,7 @@ def init_stc_interface(self):
         self.WrapMode = (self.WrapMode + 1) % 4
         self.post_message("\b {!r}".format(mode[self.WrapMode]))
 
-    @self.define_key('S-f8')
+    @self.define_key('S-f9')
     def toggle_eol_view():
         self.ViewEOL = not self.ViewEOL
         self.ViewWhiteSpace = not self.ViewWhiteSpace
