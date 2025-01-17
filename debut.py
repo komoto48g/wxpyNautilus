@@ -139,7 +139,7 @@ def init_shell(self):
     @self.define_key('M-enter')
     @self.define_key('M-S-enter', clear=0) # insert command
     def duplicate_command(clear=True):
-        cmd = self.getMultilineCommand()
+        cmd = self.getMultilineCommand(rstrip=False)
         if cmd:
             self.mark = self.cpos
             if clear:
