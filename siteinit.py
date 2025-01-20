@@ -16,8 +16,8 @@ def init_mainframe(self):
 
     ## matplotlib/wxagg backend
     ## Restrict imshow sizes max <= 24e6 (bytes typ.)
-    self.graph.nbytes_threshold = 8e6
-    self.output.nbytes_threshold = 8e6
+    ## self.graph.nbytes_threshold = 8e6
+    ## self.output.nbytes_threshold = 8e6
 
     ## window layout
     self.histogram.modeline.Show()

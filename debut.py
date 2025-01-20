@@ -275,15 +275,15 @@ def stylus(self):
             shell.SetFocus()
 
     ## Customize keymaps.
-    for page in self.all_editors:
+    for page in self.get_all_editors():
         init_editor(page)
-        for buf in page.all_buffers:
+        for buf in page.get_all_buffers():
             init_buffer(buf)
 
     self.handler.unbind('buffer_new')
     self.handler.bind('buffer_new', init_buffer)
 
-    for page in self.all_shells:
+    for page in self.get_all_shells():
         init_shell(page)
 
     self.handler.unbind('shell_new')
