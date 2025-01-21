@@ -1,0 +1,37 @@
+wxpyNautilus package
+====================
+
+Submodules
+----------
+
+wxpyNautilus.debut module
+-------------------------
+
+.. automodule:: wxpyNautilus.debut
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+wxpyNautilus.siteinit module
+----------------------------
+
+.. automodule:: wxpyNautilus.siteinit
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+wxpyNautilus.wxNautilus module
+------------------------------
+
+.. automodule:: wxpyNautilus.wxNautilus
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: wxpyNautilus
+   :members:
+   :undoc-members:
+   :show-inheritance:

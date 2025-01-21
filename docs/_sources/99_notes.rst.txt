@@ -1,0 +1,11 @@
+Appendix
+========
+
+FSM
+---
+
+The theory of Finite State Machine (FSM), developed in mid 20th century, is one of the most useful models in system design.
+The catalog of techniques that are simplified by FSM is astonishing: text processing, compilers, hardware controls, languages, AI, and much more.
+As with most mathematical and physical ideas which are truly fundamental, the concept of FSM is very simple.
+
+The FSM is the most important framework in this library, used for the key/mouse event handlers, inter-object communication, threads, notify, etc.

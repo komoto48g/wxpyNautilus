@@ -1,0 +1,62 @@
+.. wxpyNautilus documentation master file, created by
+   sphinx-quickstart on Mon Aug  8 06:35:11 2022.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+
+========================================
+Welcome to wxpyNautilus's documentation!
+========================================
+
+:Author: Kazuya O'moto
+:Generated: |today|
+:License: MIT
+
+.. include:: ../README.rst
+
+
+Tutorial
+========
+
+.. toctree::
+   :numbered:
+   :maxdepth: 4
+   :caption: Tutorial:
+
+   0-1_shellframe
+   0-2_inspector
+   0-3_debugger
+   0-4_dive
+   0-5_mainframe
+   0-0_showcase
+
+
+Feature
+=======
+
+.. toctree::
+   :numbered:
+   :maxdepth: 4
+   :caption: Feature:
+
+   1_config
+   2_inspect
+   3_debug
+
+
+Contents of package
+===================
+
+.. toctree::
+   :maxdepth: 4
+   :caption: Contents:
+
+   wxpyNautilus
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
