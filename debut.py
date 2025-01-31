@@ -55,6 +55,18 @@ def init_stc_interface(self):
     self.define_key('C-c C-c', self.goto_matched_paren)
     self.define_key('C-x C-x', self.exchange_point_and_mark)
 
+    @self.define_key('C-x right', expand=1)
+    @self.define_key('C-x left', expand=0)
+    def fold(expand):
+        lc, le = self.get_indent_region(self.cline)
+        self.FoldLine(lc, expand)
+
+    @self.define_key('C-x S-right', expand=1)
+    @self.define_key('C-x S-left', expand=0)
+    def fold_all(expand):
+        self.FoldAll(expand)
+        self.recenter()
+
 
 def init_buffer(self):
     """Customize the keymaps of the Buffer.
@@ -223,9 +235,8 @@ def stylus(self):
     Note:
         This function is executed once at startup.
     """
-    ## Customize the keymaps of the ShellFrame.
-    self.define_key('C-x C-S-o', self.load_session)
-    self.define_key('C-x C-S-s', self.save_session)
+    ## self.define_key('C-x o', self.load_session)
+    self.define_key('C-x s', self.save_session)
 
     @self.define_key('Xbutton1', p=-1)
     @self.define_key('Xbutton2', p=+1)
