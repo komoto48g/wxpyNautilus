@@ -1,7 +1,6 @@
 #! python3
 """deb utilus ver 1.0rc
 """
-import getopt
 import sys
 import os
 import wx
@@ -339,13 +338,15 @@ def main(target=None, **kwargs):
 
 
 if __name__ == "__main__":
-    session = ''
-    opts, args = getopt.gnu_getopt(sys.argv[1:], "s:")
-    for k, v in opts:
-        if k == "-s":
-            if not v.endswith(".debrc"):
-                v += ".debrc"
-            session = v.strip()
-    if session:
-        print(f"Starting session {session!r}")
-    main(debrc=session)
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-s', '--session')
+    argv = parser.parse_args()
+
+    ssn = argv.session or ""
+    if ssn:
+        if not ssn.endswith(".debrc"):
+            ssn += ".debrc"
+        print(f"Starting session {ssn!r}")
+    main(debrc=ssn)
