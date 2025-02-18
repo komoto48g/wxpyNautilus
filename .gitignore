@@ -4,10 +4,6 @@
 *.ssn
 *.db
 *.lnk
-*.pptx
-*.docx
-*.xlsx
-*.l
 *.log
 *.out
 *.txt
@@ -18,7 +14,6 @@ exclude_files
 # Resources
 docfiles*/
 test*/
-icons*/
 !requirements.txt
 !docs/_sources/*.txt
 
