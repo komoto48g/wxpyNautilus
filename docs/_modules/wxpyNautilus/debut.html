@@ -103,7 +103,19 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x [&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">beginning_of_buffer</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x ]&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_of_buffer</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-c C-c&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goto_matched_paren</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x C-x&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange_point_and_mark</span><span class="p">)</span></div>
+    <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x C-x&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange_point_and_mark</span><span class="p">)</span>
+
+    <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x right&#39;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x left&#39;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fold</span><span class="p">(</span><span class="n">expand</span><span class="p">):</span>
+        <span class="n">lc</span><span class="p">,</span> <span class="n">le</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_indent_region</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cline</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">FoldLine</span><span class="p">(</span><span class="n">lc</span><span class="p">,</span> <span class="n">expand</span><span class="p">)</span>
+
+    <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x S-right&#39;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x S-left&#39;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fold_all</span><span class="p">(</span><span class="n">expand</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">FoldAll</span><span class="p">(</span><span class="n">expand</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recenter</span><span class="p">()</span></div>
 
 
 
@@ -285,9 +297,8 @@
 <span class="sd">    Note:</span>
 <span class="sd">        This function is executed once at startup.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1">## Customize the keymaps of the ShellFrame.</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x C-S-o&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_session</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x C-S-s&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_session</span><span class="p">)</span>
+    <span class="c1">## self.define_key(&#39;C-x o&#39;, self.load_session)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;C-x s&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_session</span><span class="p">)</span>
 
     <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;Xbutton1&#39;</span><span class="p">,</span> <span class="n">p</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
     <span class="nd">@self</span><span class="o">.</span><span class="n">define_key</span><span class="p">(</span><span class="s1">&#39;Xbutton2&#39;</span><span class="p">,</span> <span class="n">p</span><span class="o">=+</span><span class="mi">1</span><span class="p">)</span>
@@ -445,26 +456,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../0-0_showcase.html">6. Showcase</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../0-0_showcase.html#wing-of-phoenix">6.1. Wing of Phoenix</a></li>
-</ul>
-</li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Feature:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../1_config.html">1. Configuration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../1_config.html#shellframe">1.1. ShellFrame</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../1_config.html#mainframe">1.2. Mainframe</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../2_inspect.html">2. Inspection in the Shell</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../2_inspect.html#autocomp">2.1. Autocomp</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../2_inspect.html#apropos">2.2. Apropos</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../2_inspect.html#tooltip">2.3. Tooltip</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../3_debug.html">3. Debugger in the Shell</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../3_debug.html#command-hook">3.1. command-hook</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../3_debug.html#trace-hook">3.2. trace-hook</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../3_debug.html#event-hook">3.3. event-hook</a></li>
 </ul>
 </li>
 </ul>

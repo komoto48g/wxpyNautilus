@@ -31,19 +31,6 @@ Tutorial
    0-0_showcase
 
 
-Feature
-=======
-
-.. toctree::
-   :numbered:
-   :maxdepth: 4
-   :caption: Feature:
-
-   1_config
-   2_inspect
-   3_debug
-
-
 Contents of package
 ===================
 
