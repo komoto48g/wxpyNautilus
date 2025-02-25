@@ -54,14 +54,18 @@ def init_stc_interface(self):
     self.define_key('C-c C-c', self.goto_matched_paren)
     self.define_key('C-x C-x', self.exchange_point_and_mark)
 
-    @self.define_key('C-x right', expand=1)
     @self.define_key('C-x left', expand=0)
+    @self.define_key('C-x right', expand=1)
+    @self.define_key('C-x ,', expand=0)
+    @self.define_key('C-x .', expand=1)
     def fold(expand):
         lc, le = self.get_indent_region(self.cline)
         self.FoldLine(lc, expand)
 
-    @self.define_key('C-x S-right', expand=1)
     @self.define_key('C-x S-left', expand=0)
+    @self.define_key('C-x S-right', expand=1)
+    @self.define_key('C-x S-,', expand=0)
+    @self.define_key('C-x S-.', expand=1)
     def fold_all(expand):
         self.FoldAll(expand)
         self.recenter()
