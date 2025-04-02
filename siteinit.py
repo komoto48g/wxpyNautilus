@@ -4,9 +4,6 @@
 
 
 def init_mainframe(self):
-    ## Specify an editor to edit plugins.
-    self.EDITOR = "C:/usr/home/bin/xyzzy/xyzzy.exe"
-
     ## Image/CCD unit length per pixel [mm/pix]
     self.graph.unit = self.output.unit = 0.05
 
