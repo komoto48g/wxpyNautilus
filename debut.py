@@ -49,6 +49,8 @@ def init_stc_interface(self):
         self.ViewEOL = not self.ViewEOL
         self.ViewWhiteSpace = not self.ViewWhiteSpace
 
+    self.define_key('M-S-,', self.beginning_of_buffer)  # M-<
+    self.define_key('M-S-.', self.end_of_buffer)        # M->
     self.define_key('C-x [', self.beginning_of_buffer)
     self.define_key('C-x ]', self.end_of_buffer)
     self.define_key('C-c C-c', self.goto_matched_paren)
