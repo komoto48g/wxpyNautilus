@@ -355,4 +355,4 @@ if __name__ == "__main__":
         if not ssn.endswith(".debrc"):
             ssn += ".debrc"
         print(f"Starting session {ssn!r}")
-    main(debrc=ssn)
+    main(session=ssn)
