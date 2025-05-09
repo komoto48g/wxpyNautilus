@@ -1,7 +1,6 @@
 #! python3
 """deb utilus ver 1.0rc
 """
-import sys
 import os
 import wx
 
@@ -96,7 +95,7 @@ def init_buffer(self):
         n = self.py_current_indent()
         self.goto_char(self.bol)
         self.InsertText(self.bol, ' ' * n + os.linesep)
-        self.goto_char(self.cpos + n) # relative indentation position
+        self.goto_char(self.cpos + n)  # relative indentation position
 
     @self.define_key('M-w')
     def copy_region():
@@ -146,7 +145,7 @@ def init_shell(self):
     """
     init_stc_interface(self)
 
-    @self.define_key('S-enter') # cf. [C-RET] Shell.insertLineBreak
+    @self.define_key('S-enter')  # cf. [C-RET] Shell.insertLineBreak
     def open_line():
         self.back_to_indentation()
         p = self.cpos
@@ -154,13 +153,13 @@ def init_shell(self):
         self.cpos = self.anchor = p
 
     @self.define_key('M-enter')
-    @self.define_key('M-S-enter', clear=0) # insert command
+    @self.define_key('M-S-enter', clear=0)  # insert command
     def duplicate_command(clear=True):
         cmd = self.getMultilineCommand(rstrip=False)
         if cmd:
             self.mark = self.cpos
             if clear:
-                self.clearCommand() # => move to the prompt end
+                self.clearCommand()  # => move to the prompt end
             self.write(cmd, -1)
 
     @self.define_key('f1')
@@ -275,7 +274,7 @@ def stylus(self):
             wnd = wnd.Parent
 
     @self.define_key('C-d')
-    @self.define_key('C-S-d', clear=0) # insert line
+    @self.define_key('C-S-d', clear=0)  # insert line
     def duplicate_line(clear=True):
         """Duplicate an expression at the caret-line."""
         buf = self.FindFocus()
@@ -286,8 +285,8 @@ def stylus(self):
             shell = self.current_shell
             buf.mark = buf.cpos
             if clear:
-                shell.clearCommand() # move to the prompt end
-            shell.write(text, -1) # write at the end of command-line
+                shell.clearCommand()  # move to the prompt end
+            shell.write(text, -1)  # write at the end of command-line
             shell.SetFocus()
 
     ## Customize keymaps.
@@ -328,14 +327,14 @@ quote_unqoute = """
 
 def main(target=None, **kwargs):
     app = wx.GetApp() or wx.App()
-    frame = mwx.deb(target, loop=0, # Don't enter loop.
+    frame = mwx.deb(target, loop=0,  # Don't enter loop.
                     introText=(__doc__ or '') + quote_unqoute,
                     **kwargs)
     stylus(frame)
     if 1:
         ## To skip debugging a specific module, add module:str to debugger.skip:set.
         frame.debugger.skip -= {
-            mwx.FSM.__module__, # for debugging FSM
+            mwx.FSM.__module__,  # for debugging FSM
         }
         shell = dive(frame)
         wx.CallAfter(shell.SetFocus)
