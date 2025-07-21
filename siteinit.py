@@ -4,6 +4,8 @@
 
 
 def init_mainframe(self):
+    """Set up the main frame.
+    """
     ## Image/CCD unit length per pixel [mm/pix]
     self.graph.unit = self.output.unit = 0.05
 
