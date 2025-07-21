@@ -14,7 +14,6 @@ exclude_files
 # Resources
 test*/
 !requirements.txt
-!docs/_sources/*.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
