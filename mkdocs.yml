@@ -1,0 +1,85 @@
+site_name: wxpyNautilus
+## copyright: "&copy; 2025 Kazuya O'moto <komoto@jeol.co.jp>"
+repo_url: https://github.com/komoto48g/wxpyNautilus
+repo_name: komoto/wxpyNautilus
+
+theme:
+  name: material
+  language: ja
+  ## font:
+  ##   text: Noto Sans JP
+  ##   code: Source Code Pro
+  features:
+    - navigation.expand     # サイドバー (ナビゲーション) を展開
+    - navigation.indexes    # index.md を各ディレクトリのトップページとして扱う
+    - navigation.top        # 上に戻るボタンを表示する
+    - navigation.tabs       # 上にタブをつける
+    - toc.integrate
+
+nav:
+  - Home: index.md
+  - Outline:
+    - 1_intro.md
+    - 2_inspect.md
+    - 3_debug.md
+  - Tutorial:
+    - 0-1_shellframe.md
+    - 0-2_inspector.md
+    - 0-3_debugger.md
+    - 0-4_dive.md
+    - 0-5_mainframe.md
+    - 0-0_showcase.md
+  - API Reference: 4_apiref.md
+
+
+plugins:
+  - search
+  - autorefs
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          ## paths: ["."]
+          options:
+            ## backlinks: tree
+            members_order: source
+            parameter_headings: true
+            filters: ["!^_"]            # アンダースコアで始まるのを除外する
+            separate_signature: false   # シグネチャを別途表示する
+            show_root_heading: true     # 見出しをルートによって階層的に表示する
+            show_root_full_path: true   # ルートの完全パスを表示する．例；package/module/class/meth/attr
+            show_signature_annotations: true  # 型アノテーションをドキュメントに含める
+            show_source: true               # ソースコード埋め込み
+            show_symbol_type_heading: true  # iconify -> 本文
+            show_symbol_type_toc: true      # iconify -> 目次
+            summary: true                   # summary 本文の最初に目次が付く
+            docstring_section_style: list   # summary のスタイル
+
+markdown_extensions:
+  - admonition          # !!! 拡張
+  - pymdownx.details    # ??? 拡張
+  - pymdownx.magiclink
+  - footnotes
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+  - pymdownx.highlight:
+      use_pygments: true
+      pygments_style: monokai
+      linenums: false
+      auto_title: false
+  - pymdownx.superfences
+  - pymdownx.smartsymbols
+  - pymdownx.arithmatex:
+      generic: true
+
+use_directory_urls: false  # pages/index.html までリダイレクトする
+
+## site_dir: ../docs  # pages 出力先を変更 (デフォルト ./site)
+
+extra_css:
+  - css/custom.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js

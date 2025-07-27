@@ -1,0 +1,101 @@
+/* フッターを非表示にする */
+/*footer {
+  display: none;
+}*/
+
+/* 画面幅も対するページ全体の幅の最大 (デフォルトは 1200px) */
+.md-grid {
+  max-width: 90%;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* 本文，箇条書き部分の行間隔を狭める (デフォルトは 1.6) */
+.md-content p,
+.md-content ul li,
+.md-content ol li {
+    line-height: 1.4;
+}
+
+/* 画像のレイアウト，テキストの回り込み */
+.md-content img.left {
+    float: left;
+    margin-right: 1em;
+    margin-bottom: 1em;
+}
+.md-content img.right {
+    float: right;
+    margin-left: 1em;
+    margin-bottom: 1em;
+}
+.md-content img.center {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 1em;
+}
+
+/* タイトル */
+.md-typeset h1 {
+  font-weight: bold;
+  border-bottom: solid 4px #4051b5;
+}
+.md-typeset h2 {
+  border-bottom: solid 2px #4051b5;
+}
+.md-typeset h3 {
+  border-bottom: dotted 2px gray;
+}
+
+/* Admonition タイトル/テキストのフォントサイズを大きくする (デフォルトは 14~16px) */
+.md-typeset .admonition {
+    font-size: 14px;
+}
+.md-typeset .admonition-title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+
+/* WEBフォントで「ふい字(HuiFontP109)」 ver130717
+ * http://customtemplate.blog112.fc2.com/blog-entry-143.html
+ */
+@font-face{
+    font-family:'HuiFontP109';
+    src:url('https://dl.dropboxusercontent.com/s/6snqvg654tirsyv/HuiFontP109.eot');
+    src:url('https://dl.dropboxusercontent.com/s/6snqvg654tirsyv/HuiFontP109.eot?#iefix') format('embedded-opentype'),
+    url('https://dl.dropboxusercontent.com/s/7pscemjdvt0wyiq/HuiFontP109.woff') format('woff'),
+    url('https://dl.dropboxusercontent.com/s/0w9uuopxrns8ehi/HuiFontP109.ttf') format('truetype'),
+    url('https://dl.dropboxusercontent.com/s/xnnsbxtz8o6d98i/HuiFontP109.svg#HuiFontP109') format('svg');
+}
+.memo{
+    position:relative;
+    background:#fffde7;
+    color:#795548;
+    width:90%;
+    margin:2em auto;
+    padding:1em 1em;
+    transform: rotate(0deg);
+    box-shadow:1px 1px 4px rgba(0,0,0,0.2);
+    font-family:'HuiFontP109'; 
+    font-size:16px;
+}
+.memo::before{
+    position:relative;
+    display:inline-block;
+    padding:0 1em 0.1em 0.2em;
+    font-size:110%;
+    font-weight:bold;
+}
+.memo::after{
+    content:'Memo';
+    position:absolute;
+    background:#f0f0f080;
+    text-align: center;
+    left:50%;
+    top:-15px;
+    margin-left:-75px;
+    width:150px;
+    height:30px;
+    box-shadow:1px 1px 4px rgba(0,0,0,0.2);
+    transform: rotate(-4deg);
+}
