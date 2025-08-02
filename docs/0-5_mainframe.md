@@ -100,15 +100,3 @@ From the shell, you can access objects:
 >>> self.graph.buffer
 # Currently selected graph frame.buffer array.
 ```
-
-
-<!--
-## Usage of the shell
-
-You can use the shell to test image processing on loaded images.
-
-<video controls width=786 src="./_static/demo-denoising.mp4">
-</video>
-
-Isn't she lovely? (I meant the little one. ^^)
--->

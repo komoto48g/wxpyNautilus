@@ -42,18 +42,18 @@ plugins:
           ## paths: ["."]
           options:
             ## backlinks: tree
+            filters: ["!^_"]
             members_order: source
-            parameter_headings: true
-            filters: ["!^_"]            # アンダースコアで始まるのを除外する
-            separate_signature: false   # シグネチャを別途表示する
-            show_root_heading: true     # 見出しをルートによって階層的に表示する
-            show_root_full_path: true   # ルートの完全パスを表示する．例；package/module/class/meth/attr
-            show_signature_annotations: true  # 型アノテーションをドキュメントに含める
-            show_source: true               # ソースコード埋め込み
-            show_symbol_type_heading: true  # iconify -> 本文
-            show_symbol_type_toc: true      # iconify -> 目次
-            summary: true                   # summary 本文の最初に目次が付く
-            docstring_section_style: list   # summary のスタイル
+            parameter_headings: false
+            separate_signature: false
+            show_root_heading: true
+            show_root_full_path: true
+            show_signature_annotations: true
+            show_source: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            summary: true
+            docstring_section_style: list
 
 markdown_extensions:
   - admonition          # !!! 拡張
