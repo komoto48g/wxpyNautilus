@@ -47,7 +47,7 @@ class Plugin(Layer):
             row=2,
         )
         self.clear()
-    
+
     def clear(self):
         self.xy = 1., 1.
         self.XY = np.resize(0., (2,0))
@@ -57,7 +57,7 @@ class Plugin(Layer):
                               picker=True, pickradius=4)
         self.graph.load(np.resize(0, (1024,1024)),
                         "*background*", localunit=0.05)
-    
+
     def run(self, N=100000):
         self.message("calculating...")
         params = (self.alpha.value,
@@ -76,7 +76,7 @@ class Plugin(Layer):
         self.message("\b drawing to graph...")
         self.graph.draw(art)
         self.message("\b done. Total {:,} points".format(self.XY.shape[1]))
-    
+
     def output_hist(self):
         h, x, y, mesh = plt.hist2d(*self.XY, bins=1024)
         self.output.load(np.int16(h), "*histogram*", localunit=1)
@@ -87,7 +87,7 @@ class Plugin(Layer):
 
 if __name__ == "__main__":
     from mwx.graphman import Frame
-    
+
     app = wx.App()
     frm = Frame(None)
     frm.load_plug(Plugin, show=1)

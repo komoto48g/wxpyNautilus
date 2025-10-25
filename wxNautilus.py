@@ -24,7 +24,7 @@ class MainFrame(Frame):
     """the Frontend of Graph and Plug manager
     """
     Name = "wxpyNautilus"
-    
+
     def About(self):
         info = wx.adv.AboutDialogInfo()
         info.Name = self.Name
@@ -37,7 +37,7 @@ class MainFrame(Frame):
         info.Artists = []
         info.SetWebSite("https://github.com/komoto48g")
         wx.adv.AboutBox(info)
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
