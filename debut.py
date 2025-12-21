@@ -27,7 +27,7 @@ except AttributeError:
 
 
 ## --------------------------------
-## Configuration of Shell / Editor 
+## Configuration of Shell / Editor.
 ## --------------------------------
 
 def init_stc_interface(self):
@@ -57,16 +57,12 @@ def init_stc_interface(self):
 
     @self.define_key('C-x left', expand=0)
     @self.define_key('C-x right', expand=1)
-    @self.define_key('C-x ,', expand=0)
-    @self.define_key('C-x .', expand=1)
     def fold(expand):
         lc, le = self.get_indent_region(self.cline)
         self.FoldLine(lc, expand)
 
     @self.define_key('C-x S-left', expand=0)
     @self.define_key('C-x S-right', expand=1)
-    @self.define_key('C-x S-,', expand=0)
-    @self.define_key('C-x S-.', expand=1)
     def fold_all(expand):
         self.FoldAll(expand)
         self.recenter()
@@ -75,7 +71,6 @@ def init_stc_interface(self):
 def init_buffer(self):
     """Customize the keymaps of the Buffer.
     """
-    ## Buffer text control
     init_stc_interface(self)
 
     @self.define_key('enter')
@@ -175,7 +170,7 @@ def init_shell(self):
     def load_target():
         text = self.SelectedText or self.expr_at_caret
         if not text:
-            ## self.post_message("No target")
+            # self.post_message("No target")
             obj = self.target
         else:
             try:
@@ -239,7 +234,7 @@ def stylus(self):
     Note:
         This function is executed once at startup.
     """
-    ## self.define_key('C-x o', self.load_session)
+    # self.define_key('C-x o', self.load_session)
     self.define_key('C-x s', self.save_session)
 
     @self.define_key('Xbutton1', p=-1)
@@ -318,7 +313,7 @@ def stylus(self):
 
 
 ## --------------------------------
-## Main program
+## Main program.
 ## --------------------------------
 quote_unqoute = """
     Anything one man can imagine, other man can make real.
