@@ -48,3 +48,10 @@ def init_mainframe(self):
     ##             return next.SetFocus()
     ##     else:
     ##         self.graph.SetFocus()
+
+    @self.shellframe.Scratch.define_key('f7')
+    def _load():
+        self.shellframe.Scratch.save_buffer()
+        f = self.shellframe.Scratch.buffer.filename
+        if not self.reload_plug(f):
+            self.load_plug(f, show=1)
