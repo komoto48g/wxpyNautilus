@@ -9,7 +9,7 @@ You can also debug the code in the following step:
 
 1.  In **Scratch** window, select the buffer you want to debug.
 
-2.  Pressing [M-j] compiles the code and evaluetes it in the currently selected shell namespace.
+2.  Pressing [M-j] compiles the code and evaluates it in the currently selected shell namespace.
     The code "<scratch>" now can be referenced from the debugger of the shell.
 
 3.  Then, you can debug the code using :ref:`command-hook` and :ref:`trace-hook` as well as the **Log** window.
