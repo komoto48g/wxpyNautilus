@@ -127,12 +127,23 @@ def init_editor(self):
             self.load_buffer()
         self.buffer.exec_region()
 
-    @self.define_key('C-S-f9')
-    def load_file():
+    @self.define_key('f1')
+    def info_target(evt):
         text = self.buffer.SelectedText or self.buffer.expr_at_caret
-        filename = os.path.join(os.path.dirname(self.buffer.filename), text)
-        if self.load_file(filename):
-            self.post_message(f"\b {text!r}")
+        try:
+            self.buffer.help(self.buffer.eval(text))
+        except Exception as e:
+            self.post_message(e)
+            evt.Skip()
+
+    @self.define_key('f2')
+    def load_target(evt):
+        text = self.buffer.SelectedText or self.buffer.expr_at_caret
+        try:
+            self.parent.load(self.buffer.eval(text))
+        except Exception as e:
+            self.post_message(e)
+            evt.Skip()
 
 
 def init_shell(self):
@@ -158,30 +169,22 @@ def init_shell(self):
             self.write(cmd, -1)
 
     @self.define_key('f1')
-    def help(evt):
+    def info_target(evt):
         text = self.SelectedText or self.expr_at_caret
         try:
-            obj = self.eval(text)
-            self.help(obj)
-        except Exception:
+            self.help(self.eval(text))
+        except Exception as e:
+            self.post_message(e)
             evt.Skip()
 
     @self.define_key('f2')
-    def load_target():
+    def load_target(evt):
         text = self.SelectedText or self.expr_at_caret
-        if not text:
-            # self.post_message("No target")
-            obj = self.target
-        else:
-            try:
-                obj = self.eval(text)
-            except Exception as e:
-                self.post_message(f"\b failed: {e!r}")
-                return
-        if self.parent.load(obj):
-            self.post_message(f"\b {text!r}")
-        else:
-            self.post_message(f"\b {text!r} was nowhere to be found.")
+        try:
+            self.parent.load(self.eval(text) if text else self.target)
+        except Exception as e:
+            self.post_message(e)
+            evt.Skip()
 
     py_error_re = r' +File "(.*?)", line ([0-9]+)'
     py_frame_re = r" +file '(.*?)', line ([0-9]+)"
@@ -194,8 +197,7 @@ def init_shell(self):
     def grep_forward(pattern):
         for err in self.grep_forward(pattern):
             target = ':'.join(filter(None, err.groups()))
-            if self.parent.load(target):
-                self.post_message(f"\b {target}")
+            self.parent.load(target)
             break
 
     @self.define_key('S-f4', pattern=py_error_re)
@@ -203,8 +205,7 @@ def init_shell(self):
     def grep_backward(pattern):
         for err in self.grep_backward(pattern):
             target = ':'.join(filter(None, err.groups()))
-            if self.parent.load(target):
-                self.post_message(f"\b {target}")
+            self.parent.load(target)
             break
 
     @self.define_key('S-f12')
@@ -290,14 +291,13 @@ def stylus(self):
         for buf in page.get_all_buffers():
             init_buffer(buf)
 
-    self.handler.unbind('buffer_new')
-    self.handler.bind('buffer_new', init_buffer)
+    self.handler.define('editor_new', init_editor)
+    self.handler.define('buffer_new', init_buffer)
 
     for page in self.get_all_shells():
         init_shell(page)
 
-    self.handler.unbind('shell_new')
-    self.handler.bind('shell_new', init_shell)
+    self.handler.define('shell_new', init_shell)
 
     @self.define_key('C-x f11', win=self.ghost)
     @self.define_key('C-x S-f11', win=self.watcher)
@@ -319,6 +319,7 @@ quote_unqoute = """
     Anything one man can imagine, other man can make real.
     --- Jules Verne (1828--1905)
 """
+
 
 def main(target=None, **kwargs):
     app = wx.GetApp() or wx.App()
