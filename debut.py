@@ -127,13 +127,6 @@ def init_editor(self):
             self.load_buffer()
         self.buffer.exec_region()
 
-    @self.define_key('C-S-f9')
-    def load_file():
-        text = self.buffer.SelectedText or self.buffer.expr_at_caret
-        filename = os.path.join(os.path.dirname(self.buffer.filename), text)
-        if self.load_file(filename):
-            self.post_message(f"\b {text!r}")
-
 
 def init_shell(self):
     """Customize the keymaps of the Shell.
@@ -290,14 +283,13 @@ def stylus(self):
         for buf in page.get_all_buffers():
             init_buffer(buf)
 
-    self.handler.unbind('buffer_new')
-    self.handler.bind('buffer_new', init_buffer)
+    self.handler.define('editor_new', init_editor)
+    self.handler.define('buffer_new', init_buffer)
 
     for page in self.get_all_shells():
         init_shell(page)
 
-    self.handler.unbind('shell_new')
-    self.handler.bind('shell_new', init_shell)
+    self.handler.define('shell_new', init_shell)
 
     @self.define_key('C-x f11', win=self.ghost)
     @self.define_key('C-x S-f11', win=self.watcher)
@@ -319,6 +311,7 @@ quote_unqoute = """
     Anything one man can imagine, other man can make real.
     --- Jules Verne (1828--1905)
 """
+
 
 def main(target=None, **kwargs):
     app = wx.GetApp() or wx.App()
