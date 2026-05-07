@@ -120,24 +120,6 @@ def init_editor(self):
     self.define_key('C-x S-s', self.save_buffer_as)
     self.define_key('C-x C-f', self.find_file)
 
-    @self.define_key('f1')
-    def info_target(evt):
-        text = self.buffer.SelectedText or self.buffer.expr_at_caret
-        try:
-            self.buffer.help(self.buffer.eval(text))
-        except Exception as e:
-            self.post_message(e)
-            evt.Skip()
-
-    @self.define_key('f2')
-    def load_target(evt):
-        text = self.buffer.SelectedText or self.buffer.expr_at_caret
-        try:
-            self.parent.load(self.buffer.eval(text))
-        except Exception as e:
-            self.post_message(e)
-            evt.Skip()
-
 
 def init_shell(self):
     """Customize the keymaps of the Shell.
@@ -160,24 +142,6 @@ def init_shell(self):
             if clear:
                 self.clearCommand()  # => move to the prompt end
             self.write(cmd, -1)
-
-    @self.define_key('f1')
-    def info_target(evt):
-        text = self.SelectedText or self.expr_at_caret
-        try:
-            self.help(self.eval(text))
-        except Exception as e:
-            self.post_message(e)
-            evt.Skip()
-
-    @self.define_key('f2')
-    def load_target(evt):
-        text = self.SelectedText or self.expr_at_caret
-        try:
-            self.parent.load(self.eval(text) if text else self.target)
-        except Exception as e:
-            self.post_message(e)
-            evt.Skip()
 
     py_error_re = r' +File "(.*?)", line ([0-9]+)'
     py_frame_re = r" +file '(.*?)', line ([0-9]+)"
@@ -291,6 +255,34 @@ def stylus(self):
         init_shell(page)
 
     self.handler.define('shell_new', init_shell)
+
+    @self.define_key('f1')
+    def info_target(evt):
+        buf = self.FindFocus()
+        if not isinstance(buf, wx.stc.StyledTextCtrl):
+            buf = self.current_shell
+        text = buf.SelectedText or buf.expr_at_caret
+        try:
+            buf.help(buf.eval(text))
+        except Exception as e:
+            if isinstance(buf, type(self.rootshell)):
+                self.About()
+            else:
+                self.post_message(e)
+
+    @self.define_key('f2')
+    def load_target(evt):
+        buf = self.FindFocus()
+        if not isinstance(buf, wx.stc.StyledTextCtrl):
+            buf = self.current_shell
+        text = buf.SelectedText or buf.expr_at_caret
+        try:
+            if isinstance(buf, type(self.rootshell)):
+                self.load(buf.eval(text) if text else buf.target)
+            else:
+                self.load(buf.eval(text))
+        except Exception as e:
+            self.post_message(e)
 
     @self.define_key('S-f5', load=True)
     @self.define_key('f5')
