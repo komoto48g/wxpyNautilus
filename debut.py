@@ -258,7 +258,7 @@ def stylus(self):
         try:
             buf.help(buf.eval(text))
         except Exception as e:
-            if isinstance(buf, type(self.rootshell)):
+            if buf is self.current_shell:
                 self.About()
             else:
                 self.post_message(e)
@@ -270,7 +270,7 @@ def stylus(self):
             buf = self.current_shell
         text = buf.SelectedText or buf.expr_at_caret
         try:
-            if isinstance(buf, type(self.rootshell)):
+            if buf is self.current_shell:
                 self.load(buf.eval(text) if text else buf.target)
             else:
                 self.load(buf.eval(text))
