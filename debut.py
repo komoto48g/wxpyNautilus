@@ -177,13 +177,6 @@ def init_shell(self):
     def close_shell():
         self.parent.delete_shell(self)
 
-    @self.define_key('C-f2')
-    def HL():
-        try:
-            highlight(self.eval(self.expr_at_caret))
-        except Exception:
-            pass
-
 
 @ignore(UserWarning)
 def stylus(self):
@@ -283,6 +276,16 @@ def stylus(self):
                 self.load(buf.eval(text))
         except Exception as e:
             self.post_message(e)
+
+    @self.define_key('C-f2')
+    def HL():
+        buf = self.FindFocus()
+        if not isinstance(buf, wx.stc.StyledTextCtrl):
+            buf = self.current_shell
+        try:
+            highlight(buf.eval(buf.expr_at_caret))
+        except Exception:
+            pass
 
     @self.define_key('S-f5', load=True)
     @self.define_key('f5')
