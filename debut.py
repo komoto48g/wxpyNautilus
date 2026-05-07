@@ -120,13 +120,6 @@ def init_editor(self):
     self.define_key('C-x S-s', self.save_buffer_as)
     self.define_key('C-x C-f', self.find_file)
 
-    @self.define_key('S-f5', load=True)
-    @self.define_key('f5')
-    def eval_buffer(evt, load=False):
-        if load:
-            self.load_buffer()
-        self.buffer.exec_region()
-
     @self.define_key('f1')
     def info_target(evt):
         text = self.buffer.SelectedText or self.buffer.expr_at_caret
@@ -298,6 +291,13 @@ def stylus(self):
         init_shell(page)
 
     self.handler.define('shell_new', init_shell)
+
+    @self.define_key('S-f5', load=True)
+    @self.define_key('f5')
+    def eval_buffer(evt, load=False):
+        if load:
+            self.current_editor.load_buffer()
+        self.current_editor.buffer.exec_region()
 
     @self.define_key('C-x f11', win=self.ghost)
     @self.define_key('C-x S-f11', win=self.watcher)
